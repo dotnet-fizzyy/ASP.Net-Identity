@@ -16,8 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="BL" />
-      <Folder Include="PL\Controllers" />
+      <Folder Include="PL\Models" />
     </ItemGroup>
 
 </Project>

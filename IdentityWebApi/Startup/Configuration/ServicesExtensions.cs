@@ -1,3 +1,5 @@
+using IdentityWebApi.BL.Interfaces;
+using IdentityWebApi.BL.Services;
 using IdentityWebApi.Startup.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +11,9 @@ namespace IdentityWebApi.Startup.Configuration
         {
             //AppSettings
             services.AddSingleton(appSettings);
+            
+            //Services
+            services.AddTransient<IUserService, UserService>();
         }
     }
 }

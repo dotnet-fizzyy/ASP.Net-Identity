@@ -1,3 +1,4 @@
+using System;
 using IdentityWebApi.Startup.Configuration;
 using IdentityWebApi.Startup.Settings;
 using Microsoft.AspNetCore.Builder;
@@ -25,13 +26,15 @@ namespace IdentityWebApi.Startup
             services.RegisterServices(appSettings);
             services.AddControllers();
             
-            services.RegisterDatabase(appSettings.DbSettings);
+            services.RegisterIdentityServer(appSettings.DbSettings);
             services.RegisterSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
+            var appSettings = ReadAppSettings(Configuration);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -56,15 +59,19 @@ namespace IdentityWebApi.Startup
             {
                 endpoints.MapControllers();
             });
+
+            IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
         }
 
         private static AppSettings ReadAppSettings(IConfiguration configuration)
         {
             var dbSettings = configuration.GetSection(nameof(AppSettings.DbSettings)).Get<DbSettings>();
+            var identitySettings = configuration.GetSection(nameof(AppSettings.IdentitySettings)).Get<IdentitySettings>();
 
             return new AppSettings
             {
-                DbSettings = dbSettings
+                DbSettings = dbSettings,
+                IdentitySettings = identitySettings
             };
         }
     }
