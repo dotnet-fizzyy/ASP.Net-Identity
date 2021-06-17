@@ -5,6 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.7">
@@ -13,10 +15,6 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.7" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="PL\Models" />
     </ItemGroup>
 
 </Project>

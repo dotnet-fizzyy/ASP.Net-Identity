@@ -24,9 +24,10 @@ namespace IdentityWebApi.Startup
             var appSettings = ReadAppSettings(Configuration);
             
             services.RegisterServices(appSettings);
+            services.RegisterAutomapper();
             services.AddControllers();
             
-            services.RegisterIdentityServer(appSettings.DbSettings);
+            services.RegisterIdentityServer(appSettings.DbSettings, appSettings.IdentitySettings.Password);
             services.RegisterSwagger();
         }
 

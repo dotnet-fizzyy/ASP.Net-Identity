@@ -13,11 +13,19 @@ namespace IdentityWebApi.Startup.Configuration
 {
     public static class IdentityServerExtensions
     {
-        public static void RegisterIdentityServer(this IServiceCollection services, DbSettings dbSettings)
+        public static void RegisterIdentityServer(this IServiceCollection services, DbSettings dbSettings, IdentitySettingsPassword settingsPassword)
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(dbSettings.ConnectionString));
             
-            services.AddIdentity<User, IdentityRole<Guid>>()
+            services.AddIdentity<User, IdentityRole<Guid>>(options =>
+                {
+                    options.Password.RequireDigit = settingsPassword.RequireDigit;
+                    options.Password.RequireLowercase = settingsPassword.RequireLowercase;
+                    options.Password.RequireUppercase = settingsPassword.RequireUppercase;
+                    options.Password.RequireNonAlphanumeric = settingsPassword.RequireNonAlphanumeric;
+                    options.Password.RequiredLength = settingsPassword.RequiredLength;
+                    options.Password.RequiredUniqueChars = settingsPassword.RequiredUniqueChars;
+                })
                 .AddEntityFrameworkStores<DatabaseContext>()
                 .AddDefaultTokenProviders();
         }
