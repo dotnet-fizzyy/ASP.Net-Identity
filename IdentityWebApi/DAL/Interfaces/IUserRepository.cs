@@ -3,8 +3,8 @@ using IdentityWebApi.DAL.Entities;
 
 namespace IdentityWebApi.DAL.Interfaces
 {
-    public interface IUserRepository : IBaseRepository<User>
+    public interface IUserRepository : IBaseRepository<AppUser>
     {
-        Task<User> UpdateUser(User user);
+        Task<AppUser> UpdateUser(AppUser appUser);
     }
 }

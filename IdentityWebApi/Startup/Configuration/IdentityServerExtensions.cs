@@ -17,7 +17,7 @@ namespace IdentityWebApi.Startup.Configuration
         {
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(dbSettings.ConnectionString));
             
-            services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            services.AddIdentity<AppUser, AppRole>(options =>
                 {
                     options.Password.RequireDigit = settingsPassword.RequireDigit;
                     options.Password.RequireLowercase = settingsPassword.RequireLowercase;
@@ -26,6 +26,7 @@ namespace IdentityWebApi.Startup.Configuration
                     options.Password.RequiredLength = settingsPassword.RequiredLength;
                     options.Password.RequiredUniqueChars = settingsPassword.RequiredUniqueChars;
                 })
+                .AddRoles<AppRole>()
                 .AddEntityFrameworkStores<DatabaseContext>()
                 .AddDefaultTokenProviders();
         }
@@ -37,13 +38,13 @@ namespace IdentityWebApi.Startup.Configuration
                 return;
             }
             
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
 
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
                 {
-                    await roleManager.CreateAsync(new IdentityRole<Guid> { Name = role });
+                    await roleManager.CreateAsync(new AppRole { Name = role });
                 }
             }
         }

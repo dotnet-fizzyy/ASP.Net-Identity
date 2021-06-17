@@ -8,8 +8,8 @@ namespace IdentityWebApi.BL.Mappers
     {
         public UserProfile()
         {
-            CreateMap<User, UserDto>();
-            CreateMap<UserDto, User>();
+            CreateMap<AppUser, UserDto>();
+            CreateMap<UserDto, AppUser>();
         }
     }
 }

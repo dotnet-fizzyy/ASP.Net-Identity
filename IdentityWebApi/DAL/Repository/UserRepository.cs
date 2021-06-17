@@ -8,50 +8,50 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityWebApi.DAL.Repository
 {
-    public class UserRepository : BaseRepository<User>, IUserRepository
+    public class UserRepository : BaseRepository<AppUser>, IUserRepository
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly AppSettings _appSettings;
         
-        public UserRepository(DatabaseContext databaseContext, UserManager<User> userManager, AppSettings appSettings) : base(databaseContext)
+        public UserRepository(DatabaseContext databaseContext, UserManager<AppUser> userManager, AppSettings appSettings) : base(databaseContext)
         {
             _userManager = userManager;
             _appSettings = appSettings;
         }
 
-        public async Task<User> UpdateUser(User user)
+        public async Task<AppUser> UpdateUser(AppUser appUser)
         {
-            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
+            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == appUser.Id);
             if (existingUser == null)
             {
                 return null;
             }
 
-            existingUser.Id = user.Id;
-            existingUser.Email = user.Email;
-            existingUser.PhoneNumber = user.PhoneNumber;
+            existingUser.Id = appUser.Id;
+            existingUser.Email = appUser.Email;
+            existingUser.PhoneNumber = appUser.PhoneNumber;
             
             databaseContext.Update(existingUser);
 
-            return user;
+            return appUser;
         }
 
-        public override async Task<User> CreateItemAsync(User user)
+        public override async Task<AppUser> CreateItemAsync(AppUser appUser)
         {
             if (!DatabaseUtilities.RoleExists(_appSettings.IdentitySettings.Roles, ""))
             {
                 
             }
             
-            var result = await _userManager.CreateAsync(user, user.PasswordHash);
+            var result = await _userManager.CreateAsync(appUser, appUser.PasswordHash);
             if (!result.Succeeded)
             {
                 
             }
             
-            await _userManager.AddToRoleAsync(user, "");
+            await _userManager.AddToRoleAsync(appUser, "");
             
-            return user;
+            return appUser;
         }
     }
 }
