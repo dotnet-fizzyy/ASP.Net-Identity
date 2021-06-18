@@ -12,6 +12,8 @@ namespace IdentityWebApi.PL.DTO
         
         public string UserRole { get; set; }
         
+        public string ConcurrencyStamp { get; set; }
+        
         public string Email { get; set; }
     }
 }

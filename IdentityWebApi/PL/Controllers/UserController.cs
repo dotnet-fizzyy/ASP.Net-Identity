@@ -18,15 +18,10 @@ namespace IdentityWebApi.PL.Controllers
             _userService = userService;
         }
 
-        
         [HttpGet("id/{id:guid}")]
-        public async Task<ActionResult<UserDto>> GetUser(Guid id)
-        {
-            var user = await _userService.GetUser(id);
-            
-            return user;
-        }
-        
+        public async Task<ActionResult<UserDto>> GetUser(Guid id) 
+            => await _userService.GetUser(id);
+
         [HttpPost]
         public async Task<ActionResult<UserDto>> CreateUser([FromBody, BindRequired] UserDto user)
             => await _userService.CreateUser(user);

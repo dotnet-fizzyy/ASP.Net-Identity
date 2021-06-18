@@ -1,10 +1,13 @@
 using System.Threading.Tasks;
+using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
 
 namespace IdentityWebApi.DAL.Interfaces
 {
     public interface IUserRepository : IBaseRepository<AppUser>
     {
-        Task<AppUser> UpdateUser(AppUser appUser);
+        Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser);
+
+        Task<ServiceResult<AppUser>> CreateUserAsync(AppUser appUser, string password, string role);
     }
 }

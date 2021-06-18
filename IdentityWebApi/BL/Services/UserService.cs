@@ -30,7 +30,7 @@ namespace IdentityWebApi.BL.Services
         {
             var userEntity = _mapper.Map<AppUser>(user);
             
-            var createdEntity = await _userRepository.CreateItemAsync(userEntity);
+            var createdEntity = await _userRepository.CreateUserAsync(userEntity, user.Password, user.UserRole);
             
             return _mapper.Map<UserDto>(createdEntity);
         }
@@ -39,7 +39,7 @@ namespace IdentityWebApi.BL.Services
         {
             var userEntity = _mapper.Map<AppUser>(user);
 
-            var updateUser = await _userRepository.UpdateUser(userEntity);
+            var updateUser = await _userRepository.UpdateUserAsync(userEntity);
 
             return _mapper.Map<UserDto>(updateUser);
         }

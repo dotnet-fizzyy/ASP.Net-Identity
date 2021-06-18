@@ -19,7 +19,7 @@ namespace IdentityWebApi.DAL.Repository
         
         public async Task<T> SearchForSingleItemAsync(Expression<Func<T, bool>> expression)
         {
-            var item = await _entity.SingleOrDefaultAsync(expression);
+            var item = await _entity.AsNoTracking().SingleOrDefaultAsync(expression);
 
             return item;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using IdentityWebApi.Startup.Configuration;
 using IdentityWebApi.Startup.Settings;
 using Microsoft.AspNetCore.Builder;
@@ -25,7 +26,11 @@ namespace IdentityWebApi.Startup
             
             services.RegisterServices(appSettings);
             services.RegisterAutomapper();
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+            });
             
             services.RegisterIdentityServer(appSettings.DbSettings, appSettings.IdentitySettings.Password);
             services.RegisterSwagger();

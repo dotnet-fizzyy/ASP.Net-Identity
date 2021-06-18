@@ -1,4 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using IdentityWebApi.BL.Enums;
+using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
 using IdentityWebApi.DAL.Interfaces;
 using IdentityWebApi.DAL.Utilities;
@@ -19,39 +23,66 @@ namespace IdentityWebApi.DAL.Repository
             _appSettings = appSettings;
         }
 
-        public async Task<AppUser> UpdateUser(AppUser appUser)
+        public async Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser)
         {
             var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == appUser.Id);
-            if (existingUser == null)
+            if (existingUser is null)
             {
-                return null;
+                return new ServiceResult<AppUser>
+                {
+                    ServiceResultType = ServiceResultType.NotFound
+                };
             }
 
-            existingUser.Id = appUser.Id;
+            existingUser.UserName = appUser.UserName;
             existingUser.Email = appUser.Email;
             existingUser.PhoneNumber = appUser.PhoneNumber;
+            existingUser.ConcurrencyStamp = appUser.ConcurrencyStamp;
             
-            databaseContext.Update(existingUser);
+            await _userManager.UpdateAsync(existingUser);
 
-            return appUser;
+            return new ServiceResult<AppUser>
+            {
+                ServiceResultType = ServiceResultType.Success, 
+                Data = existingUser
+            };
         }
 
-        public override async Task<AppUser> CreateItemAsync(AppUser appUser)
+        public async Task<ServiceResult<AppUser>> CreateUserAsync(AppUser appUser, string password, string role)
         {
-            if (!DatabaseUtilities.RoleExists(_appSettings.IdentitySettings.Roles, ""))
+            if (!DatabaseUtilities.RoleExists(_appSettings.IdentitySettings.Roles, role))
             {
-                
+                return new ServiceResult<AppUser>
+                {
+                    ServiceResultType = ServiceResultType.InvalidData, 
+                    Message = "No such role exists"
+                };
             }
-            
-            var result = await _userManager.CreateAsync(appUser, appUser.PasswordHash);
-            if (!result.Succeeded)
+
+            var userCreationResult = await _userManager.CreateAsync(appUser, password);
+            if (!userCreationResult.Succeeded)
             {
-                
+                return CreateErrorMessage(userCreationResult.Errors);
             }
-            
-            await _userManager.AddToRoleAsync(appUser, "");
-            
-            return appUser;
+
+            var roleAssignmentResult = await _userManager.AddToRoleAsync(appUser, role);
+            if (!roleAssignmentResult.Succeeded)
+            {
+                return CreateErrorMessage(roleAssignmentResult.Errors);
+            }
+
+            return new ServiceResult<AppUser>
+            {
+                ServiceResultType = ServiceResultType.Success,
+                Data = appUser
+            };
         }
+
+        private static ServiceResult<AppUser> CreateErrorMessage(IEnumerable<IdentityError> errors)
+            => new()
+            {
+                ServiceResultType = ServiceResultType.InternalError, 
+                Message = string.Join(",", errors.Select(e => e.Description))
+            };
     }
 }
