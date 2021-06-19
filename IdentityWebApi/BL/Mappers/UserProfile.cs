@@ -1,6 +1,6 @@
 using AutoMapper;
 using IdentityWebApi.DAL.Entities;
-using IdentityWebApi.PL.DTO;
+using IdentityWebApi.PL.Models.DTO;
 
 namespace IdentityWebApi.BL.Mappers
 {

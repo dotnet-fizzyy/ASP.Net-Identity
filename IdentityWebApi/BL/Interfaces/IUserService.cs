@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.ResultWrappers;
-using IdentityWebApi.PL.DTO;
+using IdentityWebApi.PL.Models.DTO;
 
 namespace IdentityWebApi.BL.Interfaces
 {

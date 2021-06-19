@@ -1,6 +1,6 @@
 using System;
 
-namespace IdentityWebApi.PL.DTO
+namespace IdentityWebApi.PL.Models.DTO
 {
     public class UserDto
     {

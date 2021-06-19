@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
-using IdentityWebApi.PL.DTO;
+using IdentityWebApi.PL.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 

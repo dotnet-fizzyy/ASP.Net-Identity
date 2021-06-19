@@ -1,6 +1,6 @@
-namespace IdentityWebApi.PL.DTO
+namespace IdentityWebApi.PL.Models.Action
 {
-    public class UserAuthDto
+    public class UserAuthActionModel
     {
         public string UserName { get; set; }
         

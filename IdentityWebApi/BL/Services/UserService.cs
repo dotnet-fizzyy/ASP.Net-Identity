@@ -7,7 +7,7 @@ using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
 using IdentityWebApi.DAL.Interfaces;
-using IdentityWebApi.PL.DTO;
+using IdentityWebApi.PL.Models.DTO;
 
 namespace IdentityWebApi.BL.Services
 {
