@@ -22,7 +22,7 @@ namespace IdentityWebApi.BL.ResultWrappers
         public string Message { get; set; }
     }
 
-    public class ServiceResult<T> : ServiceResult where T : class
+    public class ServiceResult<T> : ServiceResult
     {
         public ServiceResult() {}
         

@@ -30,25 +30,20 @@ namespace IdentityWebApi.BL.Services
                 return new ServiceResult<UserDto>(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
             }
 
-            return new ServiceResult<UserDto> 
-            {
-                ServiceResultType = ServiceResultType.Success,
-                Data = _mapper.Map<UserDto>(user)
-            };
+            return new ServiceResult<UserDto>(ServiceResultType.Success,_mapper.Map<UserDto>(user));
         }
 
         public async Task<ServiceResult<UserDto>> CreateUserAsync(UserDto user)
         {
             var userEntity = _mapper.Map<AppUser>(user);
             
-            var createdUserResult = await _userRepository.CreateUserAsync(userEntity, user.Password, user.UserRole);
-            
-            return new ServiceResult<UserDto>
-            {
-                ServiceResultType = createdUserResult.ServiceResultType,
-                Message = createdUserResult.Message,
-                Data = createdUserResult.Data != null ? _mapper.Map<UserDto>(createdUserResult.Data) : default
-            };
+            var createdUserResult = await _userRepository.CreateUserAsync(userEntity, user.Password, user.UserRole, true);
+
+            return new ServiceResult<UserDto>(
+                createdUserResult.ServiceResultType, 
+                createdUserResult.Message,
+                createdUserResult.Data.appUser is not null ? _mapper.Map<UserDto>(createdUserResult.Data.appUser) : default
+            );
         }
 
         public async Task<ServiceResult<UserDto>> UpdateUserAsync(UserDto user)
@@ -57,12 +52,11 @@ namespace IdentityWebApi.BL.Services
 
             var updatedUserResult = await _userRepository.UpdateUserAsync(userEntity);
 
-            return new ServiceResult<UserDto>
-            {
-                ServiceResultType = updatedUserResult.ServiceResultType,
-                Message = updatedUserResult.Message,
-                Data = updatedUserResult.Data != null ? _mapper.Map<UserDto>(updatedUserResult.Data) : default
-            };
+            return new ServiceResult<UserDto>(
+                updatedUserResult.ServiceResultType,
+                updatedUserResult.Message,
+                updatedUserResult.Data is not null ? _mapper.Map<UserDto>(updatedUserResult.Data) : default
+            );
         }
 
         public async Task<ServiceResult> RemoveUserAsync(Guid id)

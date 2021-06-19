@@ -4,4 +4,9 @@ namespace IdentityWebApi.BL.Constants
     {
         public const string MissingUser = "No such user exists";
     }
+
+    public static class EmailSubjects
+    {
+        public const string AccountConfirmation = "Account confirmation";
+    }
 }

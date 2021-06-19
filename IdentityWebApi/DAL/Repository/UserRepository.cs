@@ -25,6 +25,47 @@ namespace IdentityWebApi.DAL.Repository
             _appSettings = appSettings;
         }
 
+        public async Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(AppUser appUser, string password, string role, bool confirmImmediately)
+        {
+            var token = string.Empty;
+            var userCreationResult = await _userManager.CreateAsync(appUser, password);
+            
+            if (!userCreationResult.Succeeded)
+            {
+                return CreateInternalErrorMessageOnCreate(userCreationResult.Errors);
+            }
+
+            if (!string.IsNullOrWhiteSpace(role))
+            {
+                if (!DatabaseUtilities.RoleExists(_appSettings.IdentitySettings.Roles, role))
+                {
+                    return new ServiceResult<(AppUser appUser, string token)>(ServiceResultType.NotFound, "No such role exists");
+                }
+            
+                var roleAssignmentResult = await _userManager.AddToRoleAsync(appUser, role);
+                if (!roleAssignmentResult.Succeeded)
+                {
+                    return CreateInternalErrorMessageOnCreate(roleAssignmentResult.Errors);
+                }
+            }
+            
+            if (_appSettings.IdentitySettings.Email.RequireConfirmation)
+            {
+                token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
+
+                if (confirmImmediately)
+                {
+                    await _userManager.ConfirmEmailAsync(appUser, token);
+                }
+            }
+            
+            return new ServiceResult<(AppUser appUser, string token)>
+            {
+                ServiceResultType = ServiceResultType.Success,
+                Data = (appUser, token)
+            };
+        }
+        
         public async Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser)
         {
             var existingUser = await GetUserWithChildren(appUser.Id);
@@ -51,35 +92,6 @@ namespace IdentityWebApi.DAL.Repository
             };
         }
 
-        public async Task<ServiceResult<AppUser>> CreateUserAsync(AppUser appUser, string password, string role)
-        {
-            var userCreationResult = await _userManager.CreateAsync(appUser, password);
-            if (!userCreationResult.Succeeded)
-            {
-                return CreateInternalErrorMessage(userCreationResult.Errors);
-            }
-
-            if (!string.IsNullOrWhiteSpace(role))
-            {
-                if (!DatabaseUtilities.RoleExists(_appSettings.IdentitySettings.Roles, role))
-                {
-                    return new ServiceResult<AppUser>(ServiceResultType.NotFound, "No such role exists");
-                }
-            
-                var roleAssignmentResult = await _userManager.AddToRoleAsync(appUser, role);
-                if (!roleAssignmentResult.Succeeded)
-                {
-                    return CreateInternalErrorMessage(roleAssignmentResult.Errors);
-                }
-            }
-
-            return new ServiceResult<AppUser>
-            {
-                ServiceResultType = ServiceResultType.Success,
-                Data = appUser
-            };
-        }
-
         public async Task<ServiceResult> RemoveUserAsync(Guid id)
         {
             var user = await GetUserWithChildren(id);
@@ -103,11 +115,18 @@ namespace IdentityWebApi.DAL.Repository
             .ThenInclude(x => x.AppRole)
             .FirstOrDefaultAsync(x => x.Id == id);
         
+        private static ServiceResult<(AppUser appUser, string token)> CreateInternalErrorMessageOnCreate(IEnumerable<IdentityError> errors)
+            => new()
+            {
+                ServiceResultType = ServiceResultType.InternalError, 
+                Message = string.Join(",", errors.Select(e => e.Description)),
+            };
+        
         private static ServiceResult<AppUser> CreateInternalErrorMessage(IEnumerable<IdentityError> errors)
             => new()
             {
                 ServiceResultType = ServiceResultType.InternalError, 
-                Message = string.Join(",", errors.Select(e => e.Description))
+                Message = string.Join(",", errors.Select(e => e.Description)),
             };
     }
 }
