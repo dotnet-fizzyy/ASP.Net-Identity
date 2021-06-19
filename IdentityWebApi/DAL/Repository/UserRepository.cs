@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityWebApi.BL.Constants;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
@@ -16,7 +18,7 @@ namespace IdentityWebApi.DAL.Repository
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly AppSettings _appSettings;
-        
+
         public UserRepository(DatabaseContext databaseContext, UserManager<AppUser> userManager, AppSettings appSettings) : base(databaseContext)
         {
             _userManager = userManager;
@@ -25,13 +27,10 @@ namespace IdentityWebApi.DAL.Repository
 
         public async Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser)
         {
-            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == appUser.Id);
+            var existingUser = await GetUserWithChildren(appUser.Id);
             if (existingUser is null)
             {
-                return new ServiceResult<AppUser>
-                {
-                    ServiceResultType = ServiceResultType.NotFound
-                };
+                return new ServiceResult<AppUser>(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
             }
 
             existingUser.UserName = appUser.UserName;
@@ -39,8 +38,12 @@ namespace IdentityWebApi.DAL.Repository
             existingUser.PhoneNumber = appUser.PhoneNumber;
             existingUser.ConcurrencyStamp = appUser.ConcurrencyStamp;
             
-            await _userManager.UpdateAsync(existingUser);
-
+            var updateResult = await _userManager.UpdateAsync(existingUser);
+            if (!updateResult.Succeeded)
+            {
+                return CreateInternalErrorMessage(updateResult.Errors);
+            }
+            
             return new ServiceResult<AppUser>
             {
                 ServiceResultType = ServiceResultType.Success, 
@@ -50,25 +53,24 @@ namespace IdentityWebApi.DAL.Repository
 
         public async Task<ServiceResult<AppUser>> CreateUserAsync(AppUser appUser, string password, string role)
         {
-            if (!DatabaseUtilities.RoleExists(_appSettings.IdentitySettings.Roles, role))
-            {
-                return new ServiceResult<AppUser>
-                {
-                    ServiceResultType = ServiceResultType.InvalidData, 
-                    Message = "No such role exists"
-                };
-            }
-
             var userCreationResult = await _userManager.CreateAsync(appUser, password);
             if (!userCreationResult.Succeeded)
             {
-                return CreateErrorMessage(userCreationResult.Errors);
+                return CreateInternalErrorMessage(userCreationResult.Errors);
             }
 
-            var roleAssignmentResult = await _userManager.AddToRoleAsync(appUser, role);
-            if (!roleAssignmentResult.Succeeded)
+            if (!string.IsNullOrWhiteSpace(role))
             {
-                return CreateErrorMessage(roleAssignmentResult.Errors);
+                if (!DatabaseUtilities.RoleExists(_appSettings.IdentitySettings.Roles, role))
+                {
+                    return new ServiceResult<AppUser>(ServiceResultType.NotFound, "No such role exists");
+                }
+            
+                var roleAssignmentResult = await _userManager.AddToRoleAsync(appUser, role);
+                if (!roleAssignmentResult.Succeeded)
+                {
+                    return CreateInternalErrorMessage(roleAssignmentResult.Errors);
+                }
             }
 
             return new ServiceResult<AppUser>
@@ -78,7 +80,30 @@ namespace IdentityWebApi.DAL.Repository
             };
         }
 
-        private static ServiceResult<AppUser> CreateErrorMessage(IEnumerable<IdentityError> errors)
+        public async Task<ServiceResult> RemoveUserAsync(Guid id)
+        {
+            var user = await GetUserWithChildren(id);
+            if (user is null)
+            {
+                return new ServiceResult(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
+            }
+
+            var userRoles = user.UserRoles.Select(x => x.AppRole.Name);
+            
+            await _userManager.RemoveFromRolesAsync(user, userRoles);
+            await _userManager.DeleteAsync(user);
+
+            return new ServiceResult(ServiceResultType.Success);
+        }
+
+        
+        private async Task<AppUser> GetUserWithChildren(Guid id) 
+            => await _userManager.Users
+            .Include(x => x.UserRoles)
+            .ThenInclude(x => x.AppRole)
+            .FirstOrDefaultAsync(x => x.Id == id);
+        
+        private static ServiceResult<AppUser> CreateInternalErrorMessage(IEnumerable<IdentityError> errors)
             => new()
             {
                 ServiceResultType = ServiceResultType.InternalError, 

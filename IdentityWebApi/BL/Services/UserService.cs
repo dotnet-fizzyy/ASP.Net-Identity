@@ -1,7 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using IdentityWebApi.BL.Constants;
+using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
+using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
 using IdentityWebApi.DAL.Interfaces;
 using IdentityWebApi.PL.DTO;
@@ -19,29 +22,52 @@ namespace IdentityWebApi.BL.Services
             _mapper = mapper;
         }
 
-        public async Task<UserDto> GetUser(Guid id)
+        public async Task<ServiceResult<UserDto>> GetUserAsync(Guid id)
         {
-            var user = await _userRepository.SearchForSingleItemAsync(x => x.Id == id);
+            var user = await _userRepository.SearchForSingleItemAsync(x => x.Id == id, inc => inc.UserRoles);
+            if (user is null)
+            {
+                return new ServiceResult<UserDto>(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
+            }
 
-            return _mapper.Map<UserDto>(user);
+            return new ServiceResult<UserDto> 
+            {
+                ServiceResultType = ServiceResultType.Success,
+                Data = _mapper.Map<UserDto>(user)
+            };
         }
 
-        public async Task<UserDto> CreateUser(UserDto user)
+        public async Task<ServiceResult<UserDto>> CreateUserAsync(UserDto user)
         {
             var userEntity = _mapper.Map<AppUser>(user);
             
-            var createdEntity = await _userRepository.CreateUserAsync(userEntity, user.Password, user.UserRole);
+            var createdUserResult = await _userRepository.CreateUserAsync(userEntity, user.Password, user.UserRole);
             
-            return _mapper.Map<UserDto>(createdEntity);
+            return new ServiceResult<UserDto>
+            {
+                ServiceResultType = createdUserResult.ServiceResultType,
+                Message = createdUserResult.Message,
+                Data = createdUserResult.Data != null ? _mapper.Map<UserDto>(createdUserResult.Data) : default
+            };
         }
 
-        public async Task<UserDto> UpdateUser(UserDto user)
+        public async Task<ServiceResult<UserDto>> UpdateUserAsync(UserDto user)
         {
             var userEntity = _mapper.Map<AppUser>(user);
 
-            var updateUser = await _userRepository.UpdateUserAsync(userEntity);
+            var updatedUserResult = await _userRepository.UpdateUserAsync(userEntity);
 
-            return _mapper.Map<UserDto>(updateUser);
+            return new ServiceResult<UserDto>
+            {
+                ServiceResultType = updatedUserResult.ServiceResultType,
+                Message = updatedUserResult.Message,
+                Data = updatedUserResult.Data != null ? _mapper.Map<UserDto>(updatedUserResult.Data) : default
+            };
+        }
+
+        public async Task<ServiceResult> RemoveUserAsync(Guid id)
+        {
+            return await _userRepository.RemoveUserAsync(id);
         }
     }
 }

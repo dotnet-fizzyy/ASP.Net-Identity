@@ -1,15 +1,18 @@
 using System;
 using System.Threading.Tasks;
+using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.PL.DTO;
 
 namespace IdentityWebApi.BL.Interfaces
 {
     public interface IUserService
     {
-        Task<UserDto> GetUser(Guid id);
+        Task<ServiceResult<UserDto>> GetUserAsync(Guid id);
         
-        Task<UserDto> CreateUser(UserDto user);
+        Task<ServiceResult<UserDto>> CreateUserAsync(UserDto user);
         
-        Task<UserDto> UpdateUser(UserDto user);
+        Task<ServiceResult<UserDto>> UpdateUserAsync(UserDto user);
+
+        Task<ServiceResult> RemoveUserAsync(Guid id);
     }
 }
