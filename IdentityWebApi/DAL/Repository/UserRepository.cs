@@ -65,7 +65,24 @@ namespace IdentityWebApi.DAL.Repository
                 Data = (appUser, token)
             };
         }
-        
+
+        public async Task<ServiceResult<AppUser>> ConfirmUserEmailAsync(string email, string token)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+            {
+                return new ServiceResult<AppUser>(ServiceResultType.NotFound);
+            }
+
+            var confirmationResult = await _userManager.ConfirmEmailAsync(user, token);
+            if (!confirmationResult.Succeeded)
+            {
+                return CreateInternalErrorMessage(confirmationResult.Errors);
+            }
+            
+            return new ServiceResult<AppUser>(ServiceResultType.Success);
+        }
+
         public async Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser)
         {
             var existingUser = await GetUserWithChildren(appUser.Id);
