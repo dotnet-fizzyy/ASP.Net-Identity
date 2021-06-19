@@ -32,7 +32,7 @@ namespace IdentityWebApi.Startup
                 options.JsonSerializerOptions.IgnoreNullValues = true;
             });
             
-            services.RegisterIdentityServer(appSettings.DbSettings, appSettings.IdentitySettings.Password);
+            services.RegisterIdentityServer(appSettings);
             services.RegisterSwagger();
         }
 
@@ -67,6 +67,7 @@ namespace IdentityWebApi.Startup
             });
 
             IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
+            IdentityServerExtensions.InitializeDefaultAdmin(serviceProvider, appSettings.IdentitySettings.DefaultAdmin).Wait();
         }
 
         private static AppSettings ReadAppSettings(IConfiguration configuration)

@@ -13,18 +13,19 @@ namespace IdentityWebApi.Startup.Configuration
 {
     public static class IdentityServerExtensions
     {
-        public static void RegisterIdentityServer(this IServiceCollection services, DbSettings dbSettings, IdentitySettingsPassword settingsPassword)
+        public static void RegisterIdentityServer(this IServiceCollection services, AppSettings appSettings)
         {
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(dbSettings.ConnectionString));
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(appSettings.DbSettings.ConnectionString));
             
             services.AddIdentity<AppUser, AppRole>(options =>
                 {
-                    options.Password.RequireDigit = settingsPassword.RequireDigit;
-                    options.Password.RequireLowercase = settingsPassword.RequireLowercase;
-                    options.Password.RequireUppercase = settingsPassword.RequireUppercase;
-                    options.Password.RequireNonAlphanumeric = settingsPassword.RequireNonAlphanumeric;
-                    options.Password.RequiredLength = settingsPassword.RequiredLength;
-                    options.Password.RequiredUniqueChars = settingsPassword.RequiredUniqueChars;
+                    options.User.RequireUniqueEmail = appSettings.IdentitySettings.Email.RequiredUniqueEmail;
+                    options.Password.RequireDigit = appSettings.IdentitySettings.Password.RequireDigit;
+                    options.Password.RequireLowercase = appSettings.IdentitySettings.Password.RequireLowercase;
+                    options.Password.RequireUppercase = appSettings.IdentitySettings.Password.RequireUppercase;
+                    options.Password.RequireNonAlphanumeric = appSettings.IdentitySettings.Password.RequireNonAlphanumeric;
+                    options.Password.RequiredLength = appSettings.IdentitySettings.Password.RequiredLength;
+                    options.Password.RequiredUniqueChars = appSettings.IdentitySettings.Password.RequiredUniqueChars;
                 })
                 .AddRoles<AppRole>()
                 .AddEntityFrameworkStores<DatabaseContext>()
@@ -47,6 +48,34 @@ namespace IdentityWebApi.Startup.Configuration
                     await roleManager.CreateAsync(new AppRole { Name = role });
                 }
             }
+        }
+
+        public static async Task InitializeDefaultAdmin(IServiceProvider serviceProvider, DefaultAdminSettings defaultAdmin)
+        {
+            if (defaultAdmin is null || 
+                string.IsNullOrEmpty(defaultAdmin.Name) ||
+                string.IsNullOrEmpty(defaultAdmin.Password) || 
+                string.IsNullOrEmpty(defaultAdmin.Role) || 
+                string.IsNullOrEmpty(defaultAdmin.Email))
+            {
+                return;
+            }
+
+            var userManage = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            var existingAdmin = await userManage.FindByEmailAsync(defaultAdmin.Email);
+            if (existingAdmin is not null)
+            {
+                return;
+            }
+            
+            var appUserAdmin = new AppUser
+            {
+                UserName = defaultAdmin.Name,
+                Email = defaultAdmin.Email
+            };
+            
+            await userManage.CreateAsync(appUserAdmin, defaultAdmin.Password);
+            await userManage.AddToRoleAsync(appUserAdmin, defaultAdmin.Role);
         }
     }
 }
