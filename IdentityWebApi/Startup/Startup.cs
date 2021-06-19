@@ -54,7 +54,9 @@ namespace IdentityWebApi.Startup
                 .AllowAnyMethod()
                 .AllowCredentials()
             );
-            
+
+            app.RegisterExceptionHandler();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
