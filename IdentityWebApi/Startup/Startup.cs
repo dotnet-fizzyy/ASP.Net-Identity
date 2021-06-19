@@ -67,7 +67,7 @@ namespace IdentityWebApi.Startup
             });
 
             IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
-            IdentityServerExtensions.InitializeDefaultAdmin(serviceProvider, appSettings.IdentitySettings.DefaultAdmin).Wait();
+            IdentityServerExtensions.InitializeDefaultAdmin(serviceProvider, appSettings.IdentitySettings.DefaultAdmin, appSettings.IdentitySettings.Email.RequireConfirmation).Wait();
         }
 
         private static AppSettings ReadAppSettings(IConfiguration configuration)

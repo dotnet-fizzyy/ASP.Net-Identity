@@ -50,7 +50,7 @@ namespace IdentityWebApi.Startup.Configuration
             }
         }
 
-        public static async Task InitializeDefaultAdmin(IServiceProvider serviceProvider, DefaultAdminSettings defaultAdmin)
+        public static async Task InitializeDefaultAdmin(IServiceProvider serviceProvider, DefaultAdminSettings defaultAdmin, bool requireConfirmation)
         {
             if (defaultAdmin is null || 
                 string.IsNullOrEmpty(defaultAdmin.Name) ||
@@ -61,10 +61,12 @@ namespace IdentityWebApi.Startup.Configuration
                 return;
             }
 
-            var userManage = serviceProvider.GetRequiredService<UserManager<AppUser>>();
-            var existingAdmin = await userManage.FindByEmailAsync(defaultAdmin.Email);
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            var existingAdmin = await userManager.FindByEmailAsync(defaultAdmin.Email);
             if (existingAdmin is not null)
             {
+                await ConfirmDefaultAdminEmail(userManager, existingAdmin, requireConfirmation);
+                
                 return;
             }
             
@@ -74,8 +76,20 @@ namespace IdentityWebApi.Startup.Configuration
                 Email = defaultAdmin.Email
             };
             
-            await userManage.CreateAsync(appUserAdmin, defaultAdmin.Password);
-            await userManage.AddToRoleAsync(appUserAdmin, defaultAdmin.Role);
+            await userManager.CreateAsync(appUserAdmin, defaultAdmin.Password);
+            await userManager.AddToRoleAsync(appUserAdmin, defaultAdmin.Role);
+
+            await ConfirmDefaultAdminEmail(userManager, appUserAdmin, requireConfirmation);
+        }
+
+        
+        private static async Task ConfirmDefaultAdminEmail(UserManager<AppUser> userManager, AppUser appUserAdmin, bool requireConfirmation)
+        {
+            if (requireConfirmation && !await userManager.IsEmailConfirmedAsync(appUserAdmin))
+            {
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(appUserAdmin);
+                await userManager.ConfirmEmailAsync(appUserAdmin, token);
+            }
         }
     }
 }
