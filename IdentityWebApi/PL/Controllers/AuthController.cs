@@ -43,7 +43,7 @@ namespace IdentityWebApi.PL.Controllers
             var signInResult = await _authService.SignInUserAsync(userModel);
             if (signInResult.ServiceResultType is ServiceResultType.InvalidData)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, "Unable to find user with provided parameters");
+                return StatusCode((int)HttpStatusCode.BadRequest, signInResult.Message);
             }
             
             return StatusCode((int)HttpStatusCode.OK, signInResult);

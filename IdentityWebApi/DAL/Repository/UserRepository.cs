@@ -37,13 +37,13 @@ namespace IdentityWebApi.DAL.Repository
             var appUser = await _userManager.FindByEmailAsync(email);
             if (appUser is null)
             {
-                return new ServiceResult<AppUser>(ServiceResultType.InvalidData);
+                return new ServiceResult<AppUser>(ServiceResultType.InvalidData, ExceptionMessageConstants.InvalidAuthData);
             }
 
             var authResult = await _signInManager.PasswordSignInAsync(appUser, password, false, false);
             if (!authResult.Succeeded)
             {
-                return new ServiceResult<AppUser>(ServiceResultType.InvalidData);
+                return new ServiceResult<AppUser>(ServiceResultType.InvalidData, ExceptionMessageConstants.InvalidAuthData);
             }
 
             await _signInManager.SignInAsync(appUser, false);
