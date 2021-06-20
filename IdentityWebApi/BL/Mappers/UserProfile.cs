@@ -9,8 +9,7 @@ namespace IdentityWebApi.BL.Mappers
     {
         public UserProfile()
         {
-            CreateMap<AppUser, UserDto>();
-            CreateMap<UserDto, AppUser>();
+            CreateMap<AppUser, UserDto>().ReverseMap();
             CreateMap<UserRegistrationActionModel, AppUser>();
         }
     }

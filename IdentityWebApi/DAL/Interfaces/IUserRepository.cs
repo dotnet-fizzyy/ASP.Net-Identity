@@ -7,6 +7,8 @@ namespace IdentityWebApi.DAL.Interfaces
 {
     public interface IUserRepository : IBaseRepository<AppUser>
     {
+        Task<ServiceResult<AppUser>> SignInUserAsync(string email, string password);
+
         Task<ServiceResult<AppUser>> ConfirmUserEmailAsync(string email, string token);
         
         Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser);

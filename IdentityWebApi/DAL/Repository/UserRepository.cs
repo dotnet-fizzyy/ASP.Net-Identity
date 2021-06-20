@@ -17,14 +17,40 @@ namespace IdentityWebApi.DAL.Repository
     public class UserRepository : BaseRepository<AppUser>, IUserRepository
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly AppSettings _appSettings;
 
-        public UserRepository(DatabaseContext databaseContext, UserManager<AppUser> userManager, AppSettings appSettings) : base(databaseContext)
+        public UserRepository(
+            DatabaseContext databaseContext, 
+            UserManager<AppUser> userManager, 
+            SignInManager<AppUser> signInManager, 
+            AppSettings appSettings
+        ) : base(databaseContext)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _appSettings = appSettings;
         }
+        
+        public async Task<ServiceResult<AppUser>> SignInUserAsync(string email, string password)
+        {
+            var appUser = await _userManager.FindByEmailAsync(email);
+            if (appUser is null)
+            {
+                return new ServiceResult<AppUser>(ServiceResultType.InvalidData);
+            }
 
+            var authResult = await _signInManager.PasswordSignInAsync(appUser, password, false, false);
+            if (!authResult.Succeeded)
+            {
+                return new ServiceResult<AppUser>(ServiceResultType.InvalidData);
+            }
+
+            await _signInManager.SignInAsync(appUser, false);
+
+            return new ServiceResult<AppUser>(ServiceResultType.Success, appUser);
+        }
+        
         public async Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(AppUser appUser, string password, string role, bool confirmImmediately)
         {
             var token = string.Empty;

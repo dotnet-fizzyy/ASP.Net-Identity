@@ -1,13 +1,17 @@
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
+using IdentityWebApi.PL.Constants;
 using IdentityWebApi.PL.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace IdentityWebApi.PL.Controllers
 {
+    [Authorize(Roles = UserRoleConstants.Admin)]
     [ApiController]
     [Route("api/user")]
     public class UserController : ControllerBase
@@ -22,22 +26,22 @@ namespace IdentityWebApi.PL.Controllers
         [HttpGet("id/{id:guid}")]
         public async Task<ActionResult<UserDto>> GetUser(Guid id)
         {
-            var result = await _userService.GetUserAsync(id);
-            if (result.ServiceResultType == ServiceResultType.NotFound)
+            var userResult = await _userService.GetUserAsync(id);
+            if (userResult.ServiceResultType is ServiceResultType.NotFound)
             {
-                return NotFound();
+                return StatusCode((int)HttpStatusCode.NotFound);
             }
 
-            return result.Data;
+            return userResult.Data;
         }
 
         [HttpPost]
         public async Task<ActionResult<UserDto>> CreateUser([FromBody, BindRequired] UserDto user)
         {
             var userCreationResult = await _userService.CreateUserAsync(user);
-            if (userCreationResult.ServiceResultType == ServiceResultType.NotFound)
+            if (userCreationResult.ServiceResultType is ServiceResultType.NotFound)
             {
-                return NotFound(userCreationResult.Message);
+                return StatusCode((int)HttpStatusCode.NotFound, userCreationResult.Message);
             }
             
             return userCreationResult.Data;
@@ -47,9 +51,9 @@ namespace IdentityWebApi.PL.Controllers
         public async Task<ActionResult<UserDto>> UpdateUser([FromBody, BindRequired] UserDto user)
         {
             var userUpdateResult = await _userService.UpdateUserAsync(user);
-            if (userUpdateResult.ServiceResultType == ServiceResultType.NotFound)
+            if (userUpdateResult.ServiceResultType is ServiceResultType.NotFound)
             {
-                return NotFound(userUpdateResult.Message);
+                return StatusCode((int)HttpStatusCode.NotFound, userUpdateResult.Message);
             }
             
             return userUpdateResult.Data;
@@ -59,12 +63,12 @@ namespace IdentityWebApi.PL.Controllers
         public async Task<IActionResult> RemoveUser(Guid id)
         {
             var result = await _userService.RemoveUserAsync(id);
-            if (result.ServiceResultType == ServiceResultType.NotFound)
+            if (result.ServiceResultType is ServiceResultType.NotFound)
             {
-                return BadRequest();
+                return StatusCode((int)HttpStatusCode.BadRequest);
             }
 
-            return NoContent();
+            return StatusCode((int)HttpStatusCode.NoContent);
         }
     }
 }

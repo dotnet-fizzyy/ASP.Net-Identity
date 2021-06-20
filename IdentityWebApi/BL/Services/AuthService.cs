@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
@@ -26,12 +25,31 @@ namespace IdentityWebApi.BL.Services
             var userEntity = _mapper.Map<AppUser>(userModel);
             
             var createdResult = await _userRepository.CreateUserAsync(userEntity, userModel.Password, userModel.Role, false);
-            if (createdResult.ServiceResultType is not ServiceResultType.Success)
-            {
-                return new ServiceResult<(UserDto userDto, string token)>(createdResult.ServiceResultType, createdResult.Message);
-            }
 
-            return new ServiceResult<(UserDto userDto, string token)>(ServiceResultType.Success, (_mapper.Map<UserDto>(createdResult.Data.appUser),  createdResult.Data.token));
+            var userDtoModel = createdResult.Data.appUser is not null 
+                ? _mapper.Map<UserDto>(createdResult.Data.appUser) 
+                : default;
+            
+            return new ServiceResult<(UserDto userDto, string token)>(
+                createdResult.ServiceResultType,  
+                createdResult.Message, 
+                (userDtoModel,  createdResult.Data.token)
+            );
+        }
+
+        public async Task<ServiceResult<UserDto>> SignInUserAsync(UserSignInActionModel userModel)
+        {
+            var signInResult = await _userRepository.SignInUserAsync(userModel.Email, userModel.Password);
+         
+            var userDtoModel = signInResult.Data is not null 
+                ? _mapper.Map<UserDto>(signInResult.Data) 
+                : default;
+            
+            return new ServiceResult<UserDto>(
+                signInResult.ServiceResultType, 
+                signInResult.Message, 
+                userDtoModel
+            );
         }
 
         public async Task<ServiceResult> ConfirmUserEmailAsync(string email, string token)

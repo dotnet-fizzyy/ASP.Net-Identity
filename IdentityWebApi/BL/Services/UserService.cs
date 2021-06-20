@@ -39,10 +39,14 @@ namespace IdentityWebApi.BL.Services
             
             var createdUserResult = await _userRepository.CreateUserAsync(userEntity, user.Password, user.UserRole, true);
 
+            var userDtoModel = createdUserResult.Data.appUser is not null 
+                ? _mapper.Map<UserDto>(createdUserResult.Data.appUser) 
+                : default;
+            
             return new ServiceResult<UserDto>(
                 createdUserResult.ServiceResultType, 
                 createdUserResult.Message,
-                createdUserResult.Data.appUser is not null ? _mapper.Map<UserDto>(createdUserResult.Data.appUser) : default
+                userDtoModel
             );
         }
 
@@ -52,10 +56,14 @@ namespace IdentityWebApi.BL.Services
 
             var updatedUserResult = await _userRepository.UpdateUserAsync(userEntity);
 
+            var userDtoModel = updatedUserResult.Data is not null 
+                ? _mapper.Map<UserDto>(updatedUserResult.Data) 
+                : default;
+            
             return new ServiceResult<UserDto>(
                 updatedUserResult.ServiceResultType,
                 updatedUserResult.Message,
-                updatedUserResult.Data is not null ? _mapper.Map<UserDto>(updatedUserResult.Data) : default
+                userDtoModel
             );
         }
 

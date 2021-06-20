@@ -78,11 +78,9 @@ namespace IdentityWebApi.Startup
             var dbSettings = configuration.GetSection(nameof(AppSettings.DbSettings)).Get<DbSettings>();
             var smtpClientSettings = configuration.GetSection(nameof(AppSettings.SmtpClientSettings)).Get<SmtpClientSettings>();
             var identitySettings = configuration.GetSection(nameof(AppSettings.IdentitySettings)).Get<IdentitySettings>();
-            var url = configuration.GetSection(nameof(AppSettings.Url)).Get<string>();
 
             return new AppSettings
             {
-                Url = url,
                 DbSettings = dbSettings,
                 SmtpClientSettings = smtpClientSettings,
                 IdentitySettings = identitySettings

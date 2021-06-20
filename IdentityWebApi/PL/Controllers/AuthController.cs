@@ -1,9 +1,11 @@
+using System.Net;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.Constants;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Models.Action;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace IdentityWebApi.PL.Controllers
 {
@@ -21,24 +23,30 @@ namespace IdentityWebApi.PL.Controllers
         }
 
         [HttpPost("sign-up")]
-        public async Task<IActionResult> SignUpUser([FromBody] UserRegistrationActionModel userModel)
+        public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationActionModel userModel)
         {
             var creationResult = await _authService.SignUpUserAsync(userModel);
-            if (creationResult.ServiceResultType == ServiceResultType.NotFound)
+            if (creationResult.ServiceResultType is ServiceResultType.NotFound)
             {
-                return NotFound(creationResult.Message);
+                return StatusCode((int)HttpStatusCode.NotFound, creationResult.Message);
             }
             
             var confirmationLink = Url.Action("ConfirmEmail", "Auth", new { email = creationResult.Data.userDto.Email, creationResult.Data.token }, Request.Scheme);
             await _emailService.SendEmailAsync(creationResult.Data.userDto.Email, EmailSubjects.AccountConfirmation, $"<a href='{confirmationLink}'>confirm</a>");
 
-            return CreatedAtAction(nameof(SignUpUser), creationResult.Data);
+            return StatusCode((int)HttpStatusCode.Created, creationResult.Data.userDto);
         }
 
         [HttpPost("sign-in")]
-        public async Task<IActionResult> SignIn([FromBody] UserRegistrationActionModel userModel)
+        public async Task<IActionResult> SignIn([FromBody, BindRequired] UserRegistrationActionModel userModel)
         {
-            return Ok();
+            var signInResult = await _authService.SignInUserAsync(userModel);
+            if (signInResult.ServiceResultType is ServiceResultType.InvalidData)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, "Unable to find user with provided parameters");
+            }
+            
+            return StatusCode((int)HttpStatusCode.OK, signInResult);
         }
 
         [HttpGet("confirm-email")]
@@ -46,16 +54,16 @@ namespace IdentityWebApi.PL.Controllers
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
             {
-                return BadRequest("Missing email or token provided");
+                return StatusCode((int)HttpStatusCode.BadRequest,"Missing email or token provided");
             }
 
             var confirmationResult = await _authService.ConfirmUserEmailAsync(email, token);
-            if (confirmationResult.ServiceResultType != ServiceResultType.Success)
+            if (confirmationResult.ServiceResultType is not ServiceResultType.Success)
             {
-                return BadRequest(confirmationResult.Message);
+                return StatusCode((int)HttpStatusCode.BadRequest,confirmationResult.Message);
             }
             
-            return NoContent();
+            return StatusCode((int)HttpStatusCode.NoContent);
         }
     }
 }
