@@ -34,7 +34,10 @@ namespace IdentityWebApi.DAL.Repository
         
         public async Task<ServiceResult<AppUser>> SignInUserAsync(string email, string password)
         {
-            var appUser = await _userManager.FindByEmailAsync(email);
+            var appUser = await _userManager.Users
+                .Include(x => x.UserRoles)
+                .ThenInclude(x => x.AppRole)
+                .FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
             if (appUser is null)
             {
                 return new ServiceResult<AppUser>(ServiceResultType.InvalidData, ExceptionMessageConstants.InvalidAuthData);
@@ -45,8 +48,6 @@ namespace IdentityWebApi.DAL.Repository
             {
                 return new ServiceResult<AppUser>(ServiceResultType.InvalidData, ExceptionMessageConstants.InvalidAuthData);
             }
-
-            var qwe = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.AppRole).FirstOrDefaultAsync(x => x.Id == appUser.Id);
 
             return new ServiceResult<AppUser>(ServiceResultType.Success, appUser);
         }

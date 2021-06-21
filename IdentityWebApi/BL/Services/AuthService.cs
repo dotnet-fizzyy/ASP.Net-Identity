@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using IdentityWebApi.BL.Interfaces;
@@ -45,9 +44,7 @@ namespace IdentityWebApi.BL.Services
             var userDtoModel = signInResult.Data is not null 
                 ? _mapper.Map<UserDto>(signInResult.Data) 
                 : default;
-            
-            userDtoModel.UserRole = signInResult.Data.UserRoles.FirstOrDefault().AppRole.Name;
-            
+
             return new ServiceResult<UserDto>(
                 signInResult.Result, 
                 signInResult.Message, 

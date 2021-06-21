@@ -54,7 +54,7 @@ namespace IdentityWebApi.PL.Controllers
             
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims);
             
-            return StatusCode((int)HttpStatusCode.OK, signInResult);
+            return StatusCode((int)HttpStatusCode.OK, signInResult.Data);
         }
 
         [HttpGet("confirm-email")]

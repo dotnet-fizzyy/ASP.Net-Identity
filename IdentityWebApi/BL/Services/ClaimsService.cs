@@ -5,6 +5,7 @@ using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.PL.Models.DTO;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace IdentityWebApi.BL.Services
 {
@@ -52,7 +53,7 @@ namespace IdentityWebApi.BL.Services
                 new Claim(ClaimTypes.Role, userDto.UserRole)
             };
 
-            var claimsIdentity = new ClaimsIdentity(claims);
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             return new ClaimsPrincipal(claimsIdentity);
         }
