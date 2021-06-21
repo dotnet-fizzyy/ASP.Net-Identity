@@ -44,7 +44,7 @@ namespace IdentityWebApi.BL.Services
                 : default;
             
             return new ServiceResult<UserDto>(
-                createdUserResult.ServiceResultType, 
+                createdUserResult.Result, 
                 createdUserResult.Message,
                 userDtoModel
             );
@@ -61,7 +61,7 @@ namespace IdentityWebApi.BL.Services
                 : default;
             
             return new ServiceResult<UserDto>(
-                updatedUserResult.ServiceResultType,
+                updatedUserResult.Result,
                 updatedUserResult.Message,
                 userDtoModel
             );

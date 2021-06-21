@@ -1,5 +1,4 @@
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.Constants;
 using IdentityWebApi.BL.Enums;
@@ -18,18 +17,20 @@ namespace IdentityWebApi.PL.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IEmailService _emailService;
+        private readonly IClaimsService _claimsService;
         
-        public AuthController(IAuthService authService, IEmailService emailService)
+        public AuthController(IAuthService authService, IEmailService emailService, IClaimsService claimsService)
         {
             _authService = authService;
             _emailService = emailService;
+            _claimsService = claimsService;
         }
 
         [HttpPost("sign-up")]
         public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationActionModel userModel)
         {
             var creationResult = await _authService.SignUpUserAsync(userModel);
-            if (creationResult.ServiceResultType is ServiceResultType.NotFound)
+            if (creationResult.Result is ServiceResultType.NotFound)
             {
                 return StatusCode((int)HttpStatusCode.NotFound, creationResult.Message);
             }
@@ -44,12 +45,14 @@ namespace IdentityWebApi.PL.Controllers
         public async Task<IActionResult> SignIn([FromBody, BindRequired] UserRegistrationActionModel userModel)
         {
             var signInResult = await _authService.SignInUserAsync(userModel);
-            if (signInResult.ServiceResultType is ServiceResultType.InvalidData)
+            if (signInResult.Result is ServiceResultType.InvalidData)
             {
                 return StatusCode((int)HttpStatusCode.BadRequest, signInResult.Message);
             }
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(new ClaimsIdentity(new []{ new Claim(ClaimTypes.Email, signInResult.Data.Email), new Claim(ClaimTypes.Role, signInResult.Data.UserRole) }, CookieAuthenticationDefaults.AuthenticationScheme)));
+            var claims = _claimsService.AssignClaims(signInResult.Data);
+            
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims);
             
             return StatusCode((int)HttpStatusCode.OK, signInResult);
         }
@@ -63,7 +66,7 @@ namespace IdentityWebApi.PL.Controllers
             }
 
             var confirmationResult = await _authService.ConfirmUserEmailAsync(email, token);
-            if (confirmationResult.ServiceResultType is not ServiceResultType.Success)
+            if (confirmationResult.Result is not ServiceResultType.Success)
             {
                 return StatusCode((int)HttpStatusCode.BadRequest,confirmationResult.Message);
             }

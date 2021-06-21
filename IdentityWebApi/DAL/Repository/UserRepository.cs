@@ -87,7 +87,7 @@ namespace IdentityWebApi.DAL.Repository
             
             return new ServiceResult<(AppUser appUser, string token)>
             {
-                ServiceResultType = ServiceResultType.Success,
+                Result = ServiceResultType.Success,
                 Data = (appUser, token)
             };
         }
@@ -130,7 +130,7 @@ namespace IdentityWebApi.DAL.Repository
             
             return new ServiceResult<AppUser>
             {
-                ServiceResultType = ServiceResultType.Success, 
+                Result = ServiceResultType.Success, 
                 Data = existingUser
             };
         }
@@ -161,14 +161,14 @@ namespace IdentityWebApi.DAL.Repository
         private static ServiceResult<(AppUser appUser, string token)> CreateInternalErrorMessageOnCreate(IEnumerable<IdentityError> errors)
             => new()
             {
-                ServiceResultType = ServiceResultType.InternalError, 
+                Result = ServiceResultType.InternalError, 
                 Message = string.Join(",", errors.Select(e => e.Description)),
             };
         
         private static ServiceResult<AppUser> CreateInternalErrorMessage(IEnumerable<IdentityError> errors)
             => new()
             {
-                ServiceResultType = ServiceResultType.InternalError, 
+                Result = ServiceResultType.InternalError, 
                 Message = string.Join(",", errors.Select(e => e.Description)),
             };
     }

@@ -4,20 +4,20 @@ namespace IdentityWebApi.BL.ResultWrappers
 {
     public class ServiceResult
     {
-        public ServiceResult() {}
+        protected ServiceResult() {}
 
-        public ServiceResult(ServiceResultType serviceResultType)
+        public ServiceResult(ServiceResultType result)
         {
-            ServiceResultType = serviceResultType;
+            Result = result;
         }
         
-        public ServiceResult(ServiceResultType serviceResultType, string message)
+        public ServiceResult(ServiceResultType result, string message)
         {
-            ServiceResultType = serviceResultType;
+            Result = result;
             Message = message;
         }
         
-        public ServiceResultType ServiceResultType { get; set; }
+        public ServiceResultType Result { get; set; }
         
         public string Message { get; set; }
     }
@@ -26,26 +26,26 @@ namespace IdentityWebApi.BL.ResultWrappers
     {
         public ServiceResult() {}
         
-        public ServiceResult(ServiceResultType serviceResultType)
+        public ServiceResult(ServiceResultType result)
         {
-            ServiceResultType = serviceResultType;
+            Result = result;
         }
         
-        public ServiceResult(ServiceResultType serviceResultType, string message)
+        public ServiceResult(ServiceResultType result, string message)
         {
-            ServiceResultType = serviceResultType;
+            Result = result;
             Message = message;
         }
         
-        public ServiceResult(ServiceResultType serviceResultType, T data)
+        public ServiceResult(ServiceResultType result, T data)
         {
-            ServiceResultType = serviceResultType;
+            Result = result;
             Data = data;
         }
         
-        public ServiceResult(ServiceResultType serviceResultType, string message, T data)
+        public ServiceResult(ServiceResultType result, string message, T data)
         {
-            ServiceResultType = serviceResultType;
+            Result = result;
             Message = message;
             Data = data;
         }
