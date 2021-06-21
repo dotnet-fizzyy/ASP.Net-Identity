@@ -46,7 +46,7 @@ namespace IdentityWebApi.DAL.Repository
                 return new ServiceResult<AppUser>(ServiceResultType.InvalidData, ExceptionMessageConstants.InvalidAuthData);
             }
 
-            await _signInManager.SignInAsync(appUser, false);
+            var qwe = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.AppRole).FirstOrDefaultAsync(x => x.Id == appUser.Id);
 
             return new ServiceResult<AppUser>(ServiceResultType.Success, appUser);
         }

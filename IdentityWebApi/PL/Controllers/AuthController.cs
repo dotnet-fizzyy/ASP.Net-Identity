@@ -1,9 +1,12 @@
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.Constants;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Models.Action;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -45,6 +48,8 @@ namespace IdentityWebApi.PL.Controllers
             {
                 return StatusCode((int)HttpStatusCode.BadRequest, signInResult.Message);
             }
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(new ClaimsIdentity(new []{ new Claim(ClaimTypes.Email, signInResult.Data.Email), new Claim(ClaimTypes.Role, signInResult.Data.UserRole) }, CookieAuthenticationDefaults.AuthenticationScheme)));
             
             return StatusCode((int)HttpStatusCode.OK, signInResult);
         }

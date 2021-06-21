@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using IdentityWebApi.BL.Interfaces;
@@ -40,11 +41,11 @@ namespace IdentityWebApi.BL.Services
         public async Task<ServiceResult<UserDto>> SignInUserAsync(UserSignInActionModel userModel)
         {
             var signInResult = await _userRepository.SignInUserAsync(userModel.Email, userModel.Password);
-         
+
             var userDtoModel = signInResult.Data is not null 
                 ? _mapper.Map<UserDto>(signInResult.Data) 
                 : default;
-            
+            userDtoModel.UserRole = signInResult.Data.UserRoles.FirstOrDefault().AppRole.Name;
             return new ServiceResult<UserDto>(
                 signInResult.ServiceResultType, 
                 signInResult.Message, 
