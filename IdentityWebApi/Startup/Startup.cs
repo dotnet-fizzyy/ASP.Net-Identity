@@ -25,7 +25,7 @@ namespace IdentityWebApi.Startup
             var appSettings = ReadAppSettings(Configuration);
             
             services.RegisterServices(appSettings);
-            services.RegisterAuthSettings();
+            services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
             services.RegisterAutomapper();
             services.AddControllers().AddJsonOptions(options =>
             {

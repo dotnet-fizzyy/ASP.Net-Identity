@@ -36,6 +36,7 @@ namespace IdentityWebApi.PL.Controllers
             }
             
             var confirmationLink = Url.Action("ConfirmEmail", "Auth", new { email = creationResult.Data.userDto.Email, creationResult.Data.token }, Request.Scheme);
+            
             await _emailService.SendEmailAsync(creationResult.Data.userDto.Email, EmailSubjects.AccountConfirmation, $"<a href='{confirmationLink}'>confirm</a>");
 
             return StatusCode((int)HttpStatusCode.Created, creationResult.Data.userDto);

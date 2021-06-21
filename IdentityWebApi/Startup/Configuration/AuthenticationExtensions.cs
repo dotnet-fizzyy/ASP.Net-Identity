@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using IdentityWebApi.Startup.Settings;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,14 +9,14 @@ namespace IdentityWebApi.Startup.Configuration
 {
     public static class AuthenticationExtensions
     {
-        public static void RegisterAuthSettings(this IServiceCollection services)
+        public static void RegisterAuthSettings(this IServiceCollection services, CookiesSettings cookiesSettings)
         {
             services
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
-                    options.SlidingExpiration = true;
-                    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                    options.SlidingExpiration = cookiesSettings.SlidingExpiration;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(cookiesSettings.ExpirationMinutes);
                     
                     options.Events.OnRedirectToLogin = context =>
                     {

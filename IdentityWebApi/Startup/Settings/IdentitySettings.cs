@@ -11,5 +11,7 @@ namespace IdentityWebApi.Startup.Settings
         public DefaultAdminSettings DefaultAdmin { get; set; }
         
         public EmailSettings Email { get; set; }
+        
+        public CookiesSettings Cookies { get; set; }
     }
 }
