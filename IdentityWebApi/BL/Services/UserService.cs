@@ -67,9 +67,7 @@ namespace IdentityWebApi.BL.Services
             );
         }
 
-        public async Task<ServiceResult> RemoveUserAsync(Guid id)
-        {
-            return await _userRepository.RemoveUserAsync(id);
-        }
+        public async Task<ServiceResult> RemoveUserAsync(Guid id) => 
+            await _userRepository.RemoveUserAsync(id);
     }
 }

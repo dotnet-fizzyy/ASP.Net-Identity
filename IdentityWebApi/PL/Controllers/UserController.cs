@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace IdentityWebApi.PL.Controllers
 {
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = UserRoleConstants.Admin)]
     [ApiController]
     [Route("api/user")]
     public class UserController : ControllerBase
@@ -24,6 +23,7 @@ namespace IdentityWebApi.PL.Controllers
             _userService = userService;
         }
 
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         [HttpGet("id/{id:guid}")]
         public async Task<ActionResult<UserDto>> GetUser(Guid id)
         {
@@ -36,6 +36,7 @@ namespace IdentityWebApi.PL.Controllers
             return userResult.Data;
         }
 
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = UserRoleConstants.Admin)]
         [HttpPost]
         public async Task<ActionResult<UserDto>> CreateUser([FromBody, BindRequired] UserDto user)
         {
@@ -48,6 +49,7 @@ namespace IdentityWebApi.PL.Controllers
             return userCreationResult.Data;
         }
 
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = UserRoleConstants.Admin)]
         [HttpPut]
         public async Task<ActionResult<UserDto>> UpdateUser([FromBody, BindRequired] UserDto user)
         {
@@ -60,6 +62,7 @@ namespace IdentityWebApi.PL.Controllers
             return userUpdateResult.Data;
         }
 
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = UserRoleConstants.Admin)]
         [HttpDelete("id/{id:guid}")]
         public async Task<IActionResult> RemoveUser(Guid id)
         {

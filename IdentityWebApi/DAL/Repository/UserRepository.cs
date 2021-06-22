@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.Constants;
@@ -59,7 +58,7 @@ namespace IdentityWebApi.DAL.Repository
             
             if (!userCreationResult.Succeeded)
             {
-                return CreateInternalErrorMessageOnCreate(userCreationResult.Errors);
+                return new ServiceResult<(AppUser appUser, string token)>(ServiceResultType.InternalError, DatabaseUtilities.CreateErrorMessage(userCreationResult.Errors));
             }
 
             if (!string.IsNullOrWhiteSpace(role))
@@ -72,7 +71,7 @@ namespace IdentityWebApi.DAL.Repository
                 var roleAssignmentResult = await _userManager.AddToRoleAsync(appUser, role);
                 if (!roleAssignmentResult.Succeeded)
                 {
-                    return CreateInternalErrorMessageOnCreate(roleAssignmentResult.Errors);
+                    return new ServiceResult<(AppUser appUser, string token)>(ServiceResultType.InternalError, DatabaseUtilities.CreateErrorMessage(roleAssignmentResult.Errors));
                 }
             }
             
@@ -104,7 +103,7 @@ namespace IdentityWebApi.DAL.Repository
             var confirmationResult = await _userManager.ConfirmEmailAsync(user, token);
             if (!confirmationResult.Succeeded)
             {
-                return CreateInternalErrorMessage(confirmationResult.Errors);
+                return new ServiceResult<AppUser>(ServiceResultType.InternalError, DatabaseUtilities.CreateErrorMessage(confirmationResult.Errors));
             }
             
             return new ServiceResult<AppUser>(ServiceResultType.Success);
@@ -126,7 +125,7 @@ namespace IdentityWebApi.DAL.Repository
             var updateResult = await _userManager.UpdateAsync(existingUser);
             if (!updateResult.Succeeded)
             {
-                return CreateInternalErrorMessage(updateResult.Errors);
+                return new ServiceResult<AppUser>(ServiceResultType.InternalError, DatabaseUtilities.CreateErrorMessage(updateResult.Errors));
             }
             
             return new ServiceResult<AppUser>
@@ -157,20 +156,6 @@ namespace IdentityWebApi.DAL.Repository
             => await _userManager.Users
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.AppRole)
-            .FirstOrDefaultAsync(x => x.Id == id);
-        
-        private static ServiceResult<(AppUser appUser, string token)> CreateInternalErrorMessageOnCreate(IEnumerable<IdentityError> errors)
-            => new()
-            {
-                Result = ServiceResultType.InternalError, 
-                Message = string.Join(",", errors.Select(e => e.Description)),
-            };
-        
-        private static ServiceResult<AppUser> CreateInternalErrorMessage(IEnumerable<IdentityError> errors)
-            => new()
-            {
-                Result = ServiceResultType.InternalError, 
-                Message = string.Join(",", errors.Select(e => e.Description)),
-            };
+            .SingleOrDefaultAsync(x => x.Id == id);
     }
 }
