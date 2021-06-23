@@ -5,6 +5,7 @@ using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
 using IdentityWebApi.DAL.Interfaces;
+using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
 
 namespace IdentityWebApi.BL.Services
@@ -19,7 +20,13 @@ namespace IdentityWebApi.BL.Services
             _roleRepository = roleRepository;
             _mapper = mapper;
         }
-        
+
+        public async Task<ServiceResult> GrantRoleToUserAsync(UserRoleActionModel roleActionModel) =>
+            await _roleRepository.GrantRoleToUserAsync(roleActionModel.UserId, roleActionModel.RoleId);
+
+        public async Task<ServiceResult> RevokeRoleFromUser(UserRoleActionModel roleActionModel) =>
+            await _roleRepository.RevokeRoleFromUserAsync(roleActionModel.UserId, roleActionModel.RoleId);
+
         public async Task<ServiceResult<RoleDto>> CreateRoleAsync(RoleDto roleDto) => 
             await HandleAppRoleEntity(_roleRepository.CreateRoleAsync, roleDto);
 

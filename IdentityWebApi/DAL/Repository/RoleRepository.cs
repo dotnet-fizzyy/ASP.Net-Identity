@@ -15,11 +15,23 @@ namespace IdentityWebApi.DAL.Repository
         private const string MissingRoleExceptionMessage = "No such role exists";
         
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public RoleRepository(DatabaseContext databaseContext, RoleManager<AppRole> roleManager) : base(databaseContext)
+        public RoleRepository(
+            DatabaseContext databaseContext, 
+            RoleManager<AppRole> roleManager, 
+            UserManager<AppUser> userManager
+        ) : base(databaseContext)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
         }
+
+        public async Task<ServiceResult> GrantRoleToUserAsync(Guid userId, Guid roleId) =>
+            await ManageUserRole(userId, roleId, _userManager.AddToRoleAsync);
+
+        public async Task<ServiceResult> RevokeRoleFromUserAsync(Guid userId, Guid roleId) =>
+            await ManageUserRole(userId, roleId, _userManager.RemoveFromRoleAsync);
 
         public async Task<ServiceResult<AppRole>> CreateRoleAsync(AppRole entity)
         {
@@ -78,9 +90,35 @@ namespace IdentityWebApi.DAL.Repository
 
             return new ServiceResult(ServiceResultType.Success);
         }
-        
+
+
+        private async Task<ServiceResult> ManageUserRole(Guid userId, Guid roleId, Func<AppUser, string, Task<IdentityResult>> userManagerCall)
+        {
+            var appRole = await GetAppRole(roleId);
+            if (appRole is null)
+            {
+                return new ServiceResult<AppRole>(ServiceResultType.NotFound, MissingRoleExceptionMessage);
+            }
+
+            var appUser = await GetAppUser(userId);
+            if (appUser is null)
+            {
+                return new ServiceResult<AppRole>(ServiceResultType.NotFound, "No such user exists");
+            }
+
+            var roleGrantResult = await userManagerCall(appUser, appRole.Name);
+            if (!roleGrantResult.Succeeded)
+            {
+                return new ServiceResult(ServiceResultType.InternalError, DatabaseUtilities.CreateErrorMessage(roleGrantResult.Errors));
+            }
+            
+            return new ServiceResult(ServiceResultType.Success);
+        }
         
         private async Task<AppRole> GetAppRole(Guid id) => 
             await _roleManager.Roles.SingleOrDefaultAsync(x => x.Id == id);
+
+        private async Task<AppUser> GetAppUser(Guid id) =>
+            await _userManager.Users.SingleOrDefaultAsync(x => x.Id == id);
     }
 }

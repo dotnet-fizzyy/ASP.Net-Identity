@@ -1,9 +1,9 @@
 using System;
-using System.Net;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Constants;
+using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +23,30 @@ namespace IdentityWebApi.PL.Controllers
         {
             _roleService = roleService;
         }
+
+        [HttpPost("grant")]
+        public async Task<IActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleActionModel userRoleActionModel)
+        {
+            var roleGrantResult = await _roleService.GrantRoleToUserAsync(userRoleActionModel);
+            if (roleGrantResult.Result is not ServiceResultType.Success)
+            {
+                return StatusCode((int)roleGrantResult.Result, roleGrantResult.Message);
+            }
+            
+            return NoContent();
+        }
+        
+        [HttpPost("revoke")]
+        public async Task<IActionResult> RevokeRoleFromUser([FromBody, BindRequired] UserRoleActionModel userRoleActionModel)
+        {
+            var roleGrantResult = await _roleService.RevokeRoleFromUser(userRoleActionModel);
+            if (roleGrantResult.Result is not ServiceResultType.Success)
+            {
+                return StatusCode((int)roleGrantResult.Result, roleGrantResult.Message);
+            }
+            
+            return NoContent();
+        }
         
         [HttpPost]
         public async Task<IActionResult> CreateRole([FromBody, BindRequired] RoleDto roleDto)
@@ -30,13 +54,10 @@ namespace IdentityWebApi.PL.Controllers
             var roleCreationResult = await _roleService.CreateRoleAsync(roleDto);
             if (roleCreationResult.Result is not ServiceResultType.Success)
             {
-                return StatusCode((int)(roleCreationResult.Result is ServiceResultType.InvalidData 
-                    ? HttpStatusCode.BadRequest 
-                    : HttpStatusCode.InternalServerError
-                ), roleCreationResult.Message);
+                return StatusCode((int)roleCreationResult.Result, roleCreationResult.Message);
             }
             
-            return StatusCode((int)HttpStatusCode.Created, roleCreationResult.Data);
+            return CreatedAtAction(nameof(CreateRole) ,roleCreationResult.Data);
         }
 
         [HttpPut]
@@ -45,13 +66,10 @@ namespace IdentityWebApi.PL.Controllers
             var roleUpdateResult = await _roleService.UpdateRoleAsync(roleDto);
             if (roleUpdateResult.Result is not ServiceResultType.Success)
             {
-                return StatusCode((int)(roleUpdateResult.Result is ServiceResultType.InvalidData 
-                        ? HttpStatusCode.BadRequest 
-                        : HttpStatusCode.InternalServerError
-                    ), roleUpdateResult.Message);
+                return StatusCode((int)roleUpdateResult.Result, roleUpdateResult.Message);
             }
             
-            return StatusCode((int)HttpStatusCode.OK);
+            return Ok();
         }
 
         [HttpDelete("id/{id:guid}")]
@@ -60,13 +78,10 @@ namespace IdentityWebApi.PL.Controllers
             var roleRemoveResult = await _roleService.RemoveRoleAsync(id);
             if (roleRemoveResult.Result is not ServiceResultType.Success)
             {
-                return StatusCode((int)(roleRemoveResult.Result is ServiceResultType.NotFound 
-                        ? HttpStatusCode.NotFound 
-                        : HttpStatusCode.InternalServerError
-                    ), roleRemoveResult.Message);
+                return StatusCode((int)roleRemoveResult.Result, roleRemoveResult.Message);
             }
             
-            return StatusCode((int)HttpStatusCode.NoContent);
+            return NoContent();
         }
     }
 }
