@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.Constants;
 using IdentityWebApi.BL.Enums;
@@ -33,16 +34,13 @@ namespace IdentityWebApi.DAL.Repository
         
         public async Task<ServiceResult<AppUser>> SignInUserAsync(string email, string password)
         {
-            var appUser = await _userManager.Users
-                .Include(x => x.UserRoles)
-                .ThenInclude(x => x.AppRole)
-                .FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
+            var appUser = await GetUserWithChildren(x => x.Email.ToLower() == email.ToLower());
             if (appUser is null)
             {
                 return new ServiceResult<AppUser>(ServiceResultType.InvalidData, ExceptionMessageConstants.InvalidAuthData);
             }
 
-            var authResult = await _signInManager.PasswordSignInAsync(appUser, password, false, false);
+            var authResult = await _signInManager.CheckPasswordSignInAsync(appUser, password, false);
             if (!authResult.Succeeded)
             {
                 return new ServiceResult<AppUser>(ServiceResultType.InvalidData, ExceptionMessageConstants.InvalidAuthData);
@@ -111,7 +109,7 @@ namespace IdentityWebApi.DAL.Repository
 
         public async Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser)
         {
-            var existingUser = await GetUserWithChildren(appUser.Id);
+            var existingUser = await GetUserWithChildren(x => x.Id == appUser.Id);
             if (existingUser is null)
             {
                 return new ServiceResult<AppUser>(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
@@ -137,25 +135,25 @@ namespace IdentityWebApi.DAL.Repository
 
         public async Task<ServiceResult> RemoveUserAsync(Guid id)
         {
-            var user = await GetUserWithChildren(id);
-            if (user is null)
+            var existingUser = await GetUserWithChildren(x => x.Id == id);
+            if (existingUser is null)
             {
                 return new ServiceResult(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
             }
 
-            var userRoles = user.UserRoles.Select(x => x.AppRole.Name);
+            var userRoles = existingUser.UserRoles.Select(x => x.AppRole.Name);
             
-            await _userManager.RemoveFromRolesAsync(user, userRoles);
-            await _userManager.DeleteAsync(user);
+            await _userManager.RemoveFromRolesAsync(existingUser, userRoles);
+            await _userManager.DeleteAsync(existingUser);
 
             return new ServiceResult(ServiceResultType.Success);
         }
 
         
-        private async Task<AppUser> GetUserWithChildren(Guid id) 
+        private async Task<AppUser> GetUserWithChildren(Expression<Func<AppUser, bool>> expression) 
             => await _userManager.Users
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.AppRole)
-            .SingleOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(expression);
     }
 }
