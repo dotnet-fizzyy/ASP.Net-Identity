@@ -1,0 +1,15 @@
+using IdentityWebApi.Startup.Settings;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace IdentityWebApi.Startup.Configuration
+{
+    public static class ValidationSettingsExtensions
+    {
+        public static void ValidateSettingParameters(this IServiceCollection services, IConfiguration configuration, AppSettings appSettings)
+        {
+            services.UseConfigurationValidation();
+            services.ConfigureValidatableSetting<AppSettings>(configuration);
+        }
+    }
+}
