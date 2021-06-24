@@ -24,7 +24,7 @@ namespace IdentityWebApi.Startup
         {
             var appSettings = ReadAppSettings(Configuration);
 
-            services.ValidateSettingParameters(Configuration, appSettings);
+            services.ValidateSettingParameters(Configuration);
             services.RegisterServices(appSettings);
             services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
             services.RegisterAutomapper();

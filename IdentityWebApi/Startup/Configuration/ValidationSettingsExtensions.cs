@@ -6,7 +6,7 @@ namespace IdentityWebApi.Startup.Configuration
 {
     public static class ValidationSettingsExtensions
     {
-        public static void ValidateSettingParameters(this IServiceCollection services, IConfiguration configuration, AppSettings appSettings)
+        public static void ValidateSettingParameters(this IServiceCollection services, IConfiguration configuration)
         {
             services.UseConfigurationValidation();
             services.ConfigureValidatableSetting<AppSettings>(configuration);
