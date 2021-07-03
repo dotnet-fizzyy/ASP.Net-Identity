@@ -26,7 +26,7 @@ namespace IdentityWebApi.Startup
 
             services.ValidateSettingParameters(Configuration);
             services.RegisterServices(appSettings);
-            services.RegisterIdentityServer(appSettings);
+            services.RegisterIdentityServer(appSettings); // Identity server setup should go before Auth setup
             services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
             services.RegisterAutomapper();
             services.AddControllers().AddJsonOptions(options =>
@@ -56,6 +56,8 @@ namespace IdentityWebApi.Startup
                 .AllowCredentials()
             );
 
+            app.UseStaticFiles();
+            
             app.RegisterExceptionHandler();
 
             app.UseHttpsRedirection();

@@ -13,7 +13,7 @@ namespace IdentityWebApi.Startup.Configuration
         {
             services
                 .AddAuthentication(opt =>
-                {
+                {   // Default schemes that must be applied for cookies validation
                     opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     opt.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     opt.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
