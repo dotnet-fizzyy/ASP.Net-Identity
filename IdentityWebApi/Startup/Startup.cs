@@ -26,6 +26,7 @@ namespace IdentityWebApi.Startup
 
             services.ValidateSettingParameters(Configuration);
             services.RegisterServices(appSettings);
+            services.RegisterIdentityServer(appSettings);
             services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
             services.RegisterAutomapper();
             services.AddControllers().AddJsonOptions(options =>
@@ -34,7 +35,6 @@ namespace IdentityWebApi.Startup
                 options.JsonSerializerOptions.IgnoreNullValues = true;
             });
             
-            services.RegisterIdentityServer(appSettings);
             services.RegisterSwagger();
         }
 

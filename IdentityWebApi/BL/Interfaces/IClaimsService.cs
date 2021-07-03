@@ -7,11 +7,11 @@ namespace IdentityWebApi.BL.Interfaces
 {
     public interface IClaimsService
     {
-        ServiceResult<Guid> GetUserIdFromIdentityUser(ClaimsIdentity user);
+        ServiceResult<Guid> GetUserIdFromIdentityUser(ClaimsPrincipal user);
         
-        ServiceResult<string> GetUserEmailFromIdentityUser(ClaimsIdentity user);
+        ServiceResult<string> GetUserEmailFromIdentityUser(ClaimsPrincipal user);
         
-        ServiceResult<string> GetUserRoleFromIdentityUser(ClaimsIdentity user);
+        ServiceResult<string> GetUserRoleFromIdentityUser(ClaimsPrincipal user);
 
         ClaimsPrincipal AssignClaims(UserDto userDto);
     }

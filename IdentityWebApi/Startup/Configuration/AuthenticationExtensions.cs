@@ -12,7 +12,12 @@ namespace IdentityWebApi.Startup.Configuration
         public static void RegisterAuthSettings(this IServiceCollection services, CookiesSettings cookiesSettings)
         {
             services
-                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddAuthentication(opt =>
+                {
+                    opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    opt.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    opt.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
                     options.SlidingExpiration = cookiesSettings.SlidingExpiration;

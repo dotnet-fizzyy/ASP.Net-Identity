@@ -43,7 +43,7 @@ namespace IdentityWebApi.PL.Controllers
         }
 
         [HttpPost("sign-in")]
-        public async Task<IActionResult> SignIn([FromBody, BindRequired] UserRegistrationActionModel userModel)
+        public async Task<IActionResult> SignIn([FromBody, BindRequired] UserSignInActionModel userModel)
         {
             var signInResult = await _authService.SignInUserAsync(userModel);
             if (signInResult.Result is ServiceResultType.InvalidData)

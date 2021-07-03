@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Security.Claims;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
@@ -11,9 +10,9 @@ namespace IdentityWebApi.BL.Services
 {
     public class ClaimsService : IClaimsService
     {
-        public ServiceResult<Guid> GetUserIdFromIdentityUser(ClaimsIdentity user)
+        public ServiceResult<Guid> GetUserIdFromIdentityUser(ClaimsPrincipal user)
         {
-            var id = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var id = user.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out var userId))
             {
                 return new ServiceResult<Guid>(ServiceResultType.InvalidData);
@@ -22,26 +21,24 @@ namespace IdentityWebApi.BL.Services
             return new ServiceResult<Guid>(ServiceResultType.Success, userId);
         }
 
-        public ServiceResult<string> GetUserEmailFromIdentityUser(ClaimsIdentity user)
+        public ServiceResult<string> GetUserEmailFromIdentityUser(ClaimsPrincipal user)
         {
-            var email = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            if (string.IsNullOrEmpty(email))
-            {
-                return new ServiceResult<string>(ServiceResultType.InvalidData);
-            }
+            var email = user.FindFirstValue(ClaimTypes.Email);
 
-            return new ServiceResult<string>(ServiceResultType.Success, email);
+            return new ServiceResult<string>(string.IsNullOrEmpty(email) 
+                ? ServiceResultType.InvalidData 
+                : ServiceResultType.Success, 
+                email);
         }
         
-        public ServiceResult<string> GetUserRoleFromIdentityUser(ClaimsIdentity user)
+        public ServiceResult<string> GetUserRoleFromIdentityUser(ClaimsPrincipal user)
         {
-            var role = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
-            if (string.IsNullOrEmpty(role))
-            {
-                return new ServiceResult<string>(ServiceResultType.InvalidData);
-            }
-
-            return new ServiceResult<string>(ServiceResultType.Success, role);
+            var role = user.FindFirstValue(ClaimTypes.Role);
+            
+            return new ServiceResult<string>(string.IsNullOrEmpty(role) 
+                    ? ServiceResultType.InvalidData 
+                    : ServiceResultType.Success, 
+                role);
         }
 
         public ClaimsPrincipal AssignClaims(UserDto userDto)

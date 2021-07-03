@@ -4,7 +4,6 @@ using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Constants;
 using IdentityWebApi.PL.Models.DTO;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -16,18 +15,35 @@ namespace IdentityWebApi.PL.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IClaimsService _claimsService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IClaimsService claimsService)
         {
             _userService = userService;
+            _claimsService = claimsService;
         }
 
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetUserByToken()
+        {
+            var userId = _claimsService.GetUserIdFromIdentityUser(User);
+            
+            var userResult = await _userService.GetUserAsync(userId.Data);
+            if (userResult.Result is ServiceResultType.NotFound)
+            {
+                return NotFound();
+            }
+
+            return userResult.Data;
+        }
+        
+        [Authorize]
         [HttpGet("id/{id:guid}")]
         public async Task<ActionResult<UserDto>> GetUser(Guid id)
         {
             var userResult = await _userService.GetUserAsync(id);
-            if (userResult.Result is not ServiceResultType.NotFound)
+            if (userResult.Result is ServiceResultType.NotFound)
             {
                 return NotFound();
             }
@@ -35,7 +51,7 @@ namespace IdentityWebApi.PL.Controllers
             return userResult.Data;
         }
 
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = UserRoleConstants.Admin)]
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<UserDto>> CreateUser([FromBody, BindRequired] UserDto user)
         {
@@ -48,7 +64,7 @@ namespace IdentityWebApi.PL.Controllers
             return userCreationResult.Data;
         }
 
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = UserRoleConstants.Admin)]
+        [Authorize(Roles = UserRoleConstants.Admin)]
         [HttpPut]
         public async Task<ActionResult<UserDto>> UpdateUser([FromBody, BindRequired] UserDto user)
         {
@@ -61,7 +77,7 @@ namespace IdentityWebApi.PL.Controllers
             return userUpdateResult.Data;
         }
 
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = UserRoleConstants.Admin)]
+        [Authorize(Roles = UserRoleConstants.Admin)]
         [HttpDelete("id/{id:guid}")]
         public async Task<IActionResult> RemoveUser(Guid id)
         {

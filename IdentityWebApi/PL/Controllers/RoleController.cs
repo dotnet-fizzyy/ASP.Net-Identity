@@ -5,14 +5,13 @@ using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Constants;
 using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace IdentityWebApi.PL.Controllers
 {
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = UserRoleConstants.Admin)]
+    [Authorize(Roles = UserRoleConstants.Admin)]
     [ApiController]
     [Route("api/role")]
     public class RoleController : ControllerBase
@@ -61,7 +60,7 @@ namespace IdentityWebApi.PL.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateRole([FromBody, BindRequired] RoleDto roleDto)
+        public async Task<ActionResult<RoleDto>> UpdateRole([FromBody, BindRequired] RoleDto roleDto)
         {
             var roleUpdateResult = await _roleService.UpdateRoleAsync(roleDto);
             if (roleUpdateResult.Result is not ServiceResultType.Success)
@@ -69,7 +68,7 @@ namespace IdentityWebApi.PL.Controllers
                 return StatusCode((int)roleUpdateResult.Result, roleUpdateResult.Message);
             }
             
-            return Ok();
+            return roleUpdateResult.Data;
         }
 
         [HttpDelete("id/{id:guid}")]
