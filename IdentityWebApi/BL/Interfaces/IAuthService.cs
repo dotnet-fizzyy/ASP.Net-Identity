@@ -7,9 +7,9 @@ namespace IdentityWebApi.BL.Interfaces
 {
     public interface IAuthService
     {
-        Task<ServiceResult<(UserDto userDto, string token)>> SignUpUserAsync(UserRegistrationActionModel userModel);
+        Task<ServiceResult<(UserResultDto userDto, string token)>> SignUpUserAsync(UserRegistrationActionModel userModel);
 
-        Task<ServiceResult<UserDto>> SignInUserAsync(UserSignInActionModel userModel);
+        Task<ServiceResult<UserResultDto>> SignInUserAsync(UserSignInActionModel userModel);
         
         Task<ServiceResult> ConfirmUserEmailAsync(string email, string token);
     }

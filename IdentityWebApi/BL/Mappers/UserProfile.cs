@@ -10,12 +10,13 @@ namespace IdentityWebApi.BL.Mappers
     {
         public UserProfile()
         {
-            CreateMap<AppUser, UserDto>()
+            CreateMap<AppUser, UserResultDto>()
                 .ForMember(
-                    dist => dist.UserRole, 
-                    ex => ex.MapFrom(en => en.UserRoles.Any() ? en.UserRoles.FirstOrDefault().AppRole.Name : null)
+                    dist => dist.Roles, 
+                    ex => ex.MapFrom(en => en.UserRoles.Select(x => x.Role.Name))
                 );
-            CreateMap<UserDto, AppRole>();
+            
+            CreateMap<UserActionDto, AppUser>();
             CreateMap<UserRegistrationActionModel, AppUser>();
         }
     }

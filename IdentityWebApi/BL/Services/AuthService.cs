@@ -20,32 +20,32 @@ namespace IdentityWebApi.BL.Services
             _mapper = mapper;
         }
 
-        public async Task<ServiceResult<(UserDto userDto, string token)>> SignUpUserAsync(UserRegistrationActionModel userModel)
+        public async Task<ServiceResult<(UserResultDto userDto, string token)>> SignUpUserAsync(UserRegistrationActionModel userModel)
         {
             var userEntity = _mapper.Map<AppUser>(userModel);
             
             var createdResult = await _userRepository.CreateUserAsync(userEntity, userModel.Password, userModel.Role, false);
 
             var userDtoModel = createdResult.Data.appUser is not null 
-                ? _mapper.Map<UserDto>(createdResult.Data.appUser) 
+                ? _mapper.Map<UserResultDto>(createdResult.Data.appUser) 
                 : default;
             
-            return new ServiceResult<(UserDto userDto, string token)>(
+            return new ServiceResult<(UserResultDto userDto, string token)>(
                 createdResult.Result,  
                 createdResult.Message, 
                 (userDtoModel,  createdResult.Data.token)
             );
         }
 
-        public async Task<ServiceResult<UserDto>> SignInUserAsync(UserSignInActionModel userModel)
+        public async Task<ServiceResult<UserResultDto>> SignInUserAsync(UserSignInActionModel userModel)
         {
             var signInResult = await _userRepository.SignInUserAsync(userModel.Email, userModel.Password);
 
             var userDtoModel = signInResult.Data is not null 
-                ? _mapper.Map<UserDto>(signInResult.Data) 
+                ? _mapper.Map<UserResultDto>(signInResult.Data) 
                 : default;
 
-            return new ServiceResult<UserDto>(
+            return new ServiceResult<UserResultDto>(
                 signInResult.Result, 
                 signInResult.Message, 
                 userDtoModel

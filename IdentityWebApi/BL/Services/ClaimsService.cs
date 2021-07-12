@@ -41,13 +41,13 @@ namespace IdentityWebApi.BL.Services
                 role);
         }
 
-        public ClaimsPrincipal AssignClaims(UserDto userDto)
+        public ClaimsPrincipal AssignClaims(UserResultDto userDto)
         {
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
                 new Claim(ClaimTypes.Email, userDto.Email),
-                new Claim(ClaimTypes.Role, userDto.UserRole)
+                new Claim(ClaimTypes.Role, string.Join(",", userDto.Roles))
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

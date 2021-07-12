@@ -7,11 +7,11 @@ namespace IdentityWebApi.BL.Interfaces
 {
     public interface IUserService
     {
-        Task<ServiceResult<UserDto>> GetUserAsync(Guid id);
+        Task<ServiceResult<UserResultDto>> GetUserAsync(Guid id);
         
-        Task<ServiceResult<UserDto>> CreateUserAsync(UserDto user);
+        Task<ServiceResult<UserResultDto>> CreateUserAsync(UserActionDto user);
         
-        Task<ServiceResult<UserDto>> UpdateUserAsync(UserDto user);
+        Task<ServiceResult<UserResultDto>> UpdateUserAsync(UserActionDto user);
 
         Task<ServiceResult> RemoveUserAsync(Guid id);
     }

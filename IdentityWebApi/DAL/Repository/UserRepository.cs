@@ -31,8 +31,19 @@ namespace IdentityWebApi.DAL.Repository
             _signInManager = signInManager;
             _appSettings = appSettings;
         }
-        
-        public async Task<ServiceResult<AppUser>> SignInUserAsync(string email, string password)
+
+        public async Task<ServiceResult<AppUser>> GetUserWithRoles(Guid id)
+        {
+            var appUser = await GetUserWithChildren(x => x.Id == id);
+            if (appUser is null)
+            {
+                return new ServiceResult<AppUser>(ServiceResultType.NotFound, ExceptionMessageConstants.InvalidAuthData);
+            }
+            
+            return new ServiceResult<AppUser>(ServiceResultType.Success, appUser);
+        }
+
+            public async Task<ServiceResult<AppUser>> SignInUserAsync(string email, string password)
         {
             var appUser = await GetUserWithChildren(x => x.Email.ToLower() == email.ToLower());
             if (appUser is null)
@@ -141,7 +152,7 @@ namespace IdentityWebApi.DAL.Repository
                 return new ServiceResult(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
             }
 
-            var userRoles = existingUser.UserRoles.Select(x => x.AppRole.Name);
+            var userRoles = existingUser.UserRoles.Select(x => x.Role.Name);
             
             await _userManager.RemoveFromRolesAsync(existingUser, userRoles);
             await _userManager.DeleteAsync(existingUser);
@@ -152,8 +163,9 @@ namespace IdentityWebApi.DAL.Repository
         
         private async Task<AppUser> GetUserWithChildren(Expression<Func<AppUser, bool>> expression) 
             => await _userManager.Users
+            .AsNoTracking()
             .Include(x => x.UserRoles)
-            .ThenInclude(x => x.AppRole)
+            .ThenInclude(x => x.Role)
             .FirstOrDefaultAsync(expression);
     }
 }

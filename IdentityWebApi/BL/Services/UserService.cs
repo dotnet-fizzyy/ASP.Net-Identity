@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using IdentityWebApi.BL.Constants;
-using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
@@ -22,45 +20,49 @@ namespace IdentityWebApi.BL.Services
             _mapper = mapper;
         }
 
-        public async Task<ServiceResult<UserDto>> GetUserAsync(Guid id)
+        public async Task<ServiceResult<UserResultDto>> GetUserAsync(Guid id)
         {
-            var user = await _userRepository.SearchForSingleItemAsync(x => x.Id == id, inc => inc.UserRoles);
-            if (user is null)
-            {
-                return new ServiceResult<UserDto>(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
-            }
+            var searchUserResult = await _userRepository.GetUserWithRoles(id);
+            
+            var userDtoModel = searchUserResult.Data is not null 
+                ? _mapper.Map<UserResultDto>(searchUserResult.Data) 
+                : default;
 
-            return new ServiceResult<UserDto>(ServiceResultType.Success,_mapper.Map<UserDto>(user));
+            return new ServiceResult<UserResultDto>(
+                searchUserResult.Result, 
+                searchUserResult.Message,
+                userDtoModel
+            );
         }
 
-        public async Task<ServiceResult<UserDto>> CreateUserAsync(UserDto user)
+        public async Task<ServiceResult<UserResultDto>> CreateUserAsync(UserActionDto user)
         {
             var userEntity = _mapper.Map<AppUser>(user);
             
             var createdUserResult = await _userRepository.CreateUserAsync(userEntity, user.Password, user.UserRole, true);
 
             var userDtoModel = createdUserResult.Data.appUser is not null 
-                ? _mapper.Map<UserDto>(createdUserResult.Data.appUser) 
+                ? _mapper.Map<UserResultDto>(createdUserResult.Data.appUser) 
                 : default;
             
-            return new ServiceResult<UserDto>(
+            return new ServiceResult<UserResultDto>(
                 createdUserResult.Result, 
                 createdUserResult.Message,
                 userDtoModel
             );
         }
 
-        public async Task<ServiceResult<UserDto>> UpdateUserAsync(UserDto user)
+        public async Task<ServiceResult<UserResultDto>> UpdateUserAsync(UserActionDto user)
         {
             var userEntity = _mapper.Map<AppUser>(user);
 
             var updatedUserResult = await _userRepository.UpdateUserAsync(userEntity);
 
             var userDtoModel = updatedUserResult.Data is not null 
-                ? _mapper.Map<UserDto>(updatedUserResult.Data) 
+                ? _mapper.Map<UserResultDto>(updatedUserResult.Data) 
                 : default;
             
-            return new ServiceResult<UserDto>(
+            return new ServiceResult<UserResultDto>(
                 updatedUserResult.Result,
                 updatedUserResult.Message,
                 userDtoModel

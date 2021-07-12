@@ -8,16 +8,17 @@ namespace IdentityWebApi.DAL.Configuration
     {
         public void Configure(EntityTypeBuilder<AppUserRole> builder)
         {
-            builder.HasKey(x => new { x.UserId, x.RoleId });
             builder
-                .HasOne(x => x.AppRole)
+                .HasOne(x => x.Role)
                 .WithMany(x => x.UserRoles)
                 .HasForeignKey(x => x.RoleId)
+                .HasPrincipalKey(x => x.Id)
                 .IsRequired();
             builder
                 .HasOne(x => x.AppUser)
                 .WithMany(x => x.UserRoles)
                 .HasForeignKey(x => x.UserId)
+                .HasPrincipalKey(x => x.Id)
                 .IsRequired();
         }
     }

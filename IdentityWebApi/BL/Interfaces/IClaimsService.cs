@@ -13,6 +13,6 @@ namespace IdentityWebApi.BL.Interfaces
         
         ServiceResult<string> GetUserRoleFromIdentityUser(ClaimsPrincipal user);
 
-        ClaimsPrincipal AssignClaims(UserDto userDto);
+        ClaimsPrincipal AssignClaims(UserResultDto userDto);
     }
 }

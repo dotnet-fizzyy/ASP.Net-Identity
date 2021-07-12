@@ -7,6 +7,6 @@ namespace IdentityWebApi.DAL.Entities
     {
         public AppUser AppUser { get; set; }
         
-        public AppRole AppRole { get; set; }
+        public AppRole Role { get; set; }
     }
 }
