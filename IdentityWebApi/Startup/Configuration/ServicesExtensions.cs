@@ -24,6 +24,7 @@ namespace IdentityWebApi.Startup.Configuration
             //Repository
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
+            services.AddTransient<IEmailTemplateRepository, EmailTemplateRepository>();
         }
     }
 }

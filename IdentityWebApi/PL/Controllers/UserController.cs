@@ -25,7 +25,7 @@ namespace IdentityWebApi.PL.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<UserDto>> GetUserByToken()
+        public async Task<ActionResult<UserResultDto>> GetUserByToken()
         {
             var userId = _claimsService.GetUserIdFromIdentityUser(User);
             
@@ -53,7 +53,7 @@ namespace IdentityWebApi.PL.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<UserDto>> CreateUser([FromBody, BindRequired] UserActionDto user)
+        public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserActionDto user)
         {
             var userCreationResult = await _userService.CreateUserAsync(user);
             if (userCreationResult.Result is ServiceResultType.NotFound)
@@ -66,7 +66,7 @@ namespace IdentityWebApi.PL.Controllers
 
         [Authorize(Roles = UserRoleConstants.Admin)]
         [HttpPut]
-        public async Task<ActionResult<UserDto>> UpdateUser([FromBody, BindRequired] UserActionDto user)
+        public async Task<ActionResult<UserResultDto>> UpdateUser([FromBody, BindRequired] UserActionDto user)
         {
             var userUpdateResult = await _userService.UpdateUserAsync(user);
             if (userUpdateResult.Result is ServiceResultType.NotFound)

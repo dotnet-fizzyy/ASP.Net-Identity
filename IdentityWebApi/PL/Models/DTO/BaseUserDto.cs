@@ -3,7 +3,7 @@ using IdentityWebApi.PL.Validation;
 
 namespace IdentityWebApi.PL.Models.DTO
 {
-    public abstract class UserDto
+    public abstract class BaseUserDto
     {
         [DefaultValue]
         public Guid Id { get; set; }
