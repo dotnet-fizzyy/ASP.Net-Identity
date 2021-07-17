@@ -54,15 +54,7 @@ namespace IdentityWebApi.PL.Controllers
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserActionDto user)
-        {
-            var userCreationResult = await _userService.CreateUserAsync(user);
-            if (userCreationResult.Result is ServiceResultType.NotFound)
-            {
-                return NotFound(userCreationResult.Message);
-            }
-            
-            return userCreationResult.Data;
-        }
+            => (await _userService.CreateUserAsync(user)).Data;
 
         [Authorize(Roles = UserRoleConstants.Admin)]
         [HttpPut]

@@ -1,6 +1,5 @@
 
 .idea/
 
-IdentityWebApi/bin/
-
-IdentityWebApi/obj/
+**/bin/
+**/obj/
