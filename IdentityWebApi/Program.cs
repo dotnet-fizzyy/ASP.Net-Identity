@@ -17,8 +17,6 @@ namespace IdentityWebApi
                 {
                     config.AddEnvironmentVariables();
                 })
-                .UseKestrel()
-                .UseIISIntegration()
                 .UseStartup<Startup.Startup>();
     }
 }

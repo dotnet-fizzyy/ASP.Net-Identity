@@ -20,6 +20,7 @@ namespace IdentityWebApi.Startup.Configuration
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IClaimsService, ClaimsService>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<IEmailTemplateService, EmailTemplateService>();
 
             //Repository
             services.AddTransient<IUserRepository, UserRepository>();
