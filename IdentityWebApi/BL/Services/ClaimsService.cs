@@ -25,9 +25,10 @@ namespace IdentityWebApi.BL.Services
         {
             var email = user.FindFirstValue(ClaimTypes.Email);
 
-            return new ServiceResult<string>(string.IsNullOrEmpty(email) 
-                ? ServiceResultType.InvalidData 
-                : ServiceResultType.Success, 
+            return new ServiceResult<string>(
+                string.IsNullOrEmpty(email) 
+                    ? ServiceResultType.InvalidData 
+                    : ServiceResultType.Success, 
                 email);
         }
         
@@ -35,7 +36,8 @@ namespace IdentityWebApi.BL.Services
         {
             var role = user.FindFirstValue(ClaimTypes.Role);
             
-            return new ServiceResult<string>(string.IsNullOrEmpty(role) 
+            return new ServiceResult<string>(
+                string.IsNullOrEmpty(role) 
                     ? ServiceResultType.InvalidData 
                     : ServiceResultType.Success, 
                 role);

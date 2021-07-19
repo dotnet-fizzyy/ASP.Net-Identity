@@ -1,5 +1,5 @@
 using System;
-using IdentityWebApi.DAL.Configuration;
+using System.Reflection;
 using IdentityWebApi.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -26,9 +26,8 @@ namespace IdentityWebApi.DAL
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            
-            builder.ApplyConfiguration(new AppUserRoleConfiguration());
-            builder.ApplyConfiguration(new EmailTemplateConfiguration());
+
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }
