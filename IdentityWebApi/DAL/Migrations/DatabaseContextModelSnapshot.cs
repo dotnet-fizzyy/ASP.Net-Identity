@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace IdentityWebApi.DAL
+namespace IdentityWebApi.DAL.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
     partial class DatabaseContextModelSnapshot : ModelSnapshot
@@ -252,7 +252,7 @@ namespace IdentityWebApi.DAL
 
             modelBuilder.Entity("IdentityWebApi.DAL.Entities.AppUserRole", b =>
                 {
-                    b.HasOne("IdentityWebApi.DAL.Entities.AppRole", "AppRole")
+                    b.HasOne("IdentityWebApi.DAL.Entities.AppRole", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -264,9 +264,9 @@ namespace IdentityWebApi.DAL
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AppRole");
-
                     b.Navigation("AppUser");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

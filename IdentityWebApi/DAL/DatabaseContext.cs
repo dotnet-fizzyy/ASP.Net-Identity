@@ -20,7 +20,7 @@ namespace IdentityWebApi.DAL
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
