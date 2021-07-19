@@ -5,6 +5,7 @@ using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.Services;
 using IdentityWebApi.PL.Controllers;
+using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -148,7 +149,7 @@ namespace UnitTests.Tests.Controllers
             var userDtoModel = UserDtoTestsData.GetUserActionDtoModel(new Guid(UserConstants.UserId));
             var userCreationResult = UserControllerTestsDataFactory.GetUserResult(ServiceResultType.Success, userRoles: new [] { userDtoModel.UserRole });
 
-            userService.Setup(x => x.CreateUserAsync(It.IsAny<UserActionDto>())).ReturnsAsync(userCreationResult);
+            userService.Setup(x => x.CreateUserAsync(It.IsAny<UserActionModel>())).ReturnsAsync(userCreationResult);
 
             //Act
             var actionResult = await userController.CreateUser(userDtoModel);
@@ -159,7 +160,7 @@ namespace UnitTests.Tests.Controllers
             Assert.AreEqual(userCreationResult.Data.UserName, actionResult.Value.UserName);
             Assert.True(userCreationResult.Data.Roles.Any(x => string.Equals(x, userDtoModel.UserRole, StringComparison.OrdinalIgnoreCase)));
 
-            userService.Verify(x => x.CreateUserAsync(It.IsAny<UserActionDto>()));
+            userService.Verify(x => x.CreateUserAsync(It.IsAny<UserActionModel>()));
         }
 
         [Test]
@@ -174,7 +175,7 @@ namespace UnitTests.Tests.Controllers
             var userDtoModel = UserDtoTestsData.GetUserActionDtoModel(new Guid(UserConstants.UserId));
             var userUpdateResult = UserControllerTestsDataFactory.GetUserResult(ServiceResultType.Success, userDtoModel.Id);
 
-            userService.Setup(x => x.UpdateUserAsync(It.IsAny<UserActionDto>())).ReturnsAsync(userUpdateResult);
+            userService.Setup(x => x.UpdateUserAsync(It.IsAny<UserActionModel>())).ReturnsAsync(userUpdateResult);
 
             //Act
             var actionResult = await userController.UpdateUser(userDtoModel);
@@ -184,7 +185,7 @@ namespace UnitTests.Tests.Controllers
             Assert.AreEqual(userUpdateResult.Data.Id, actionResult.Value.Id);
             Assert.AreEqual(userUpdateResult.Data.UserName, actionResult.Value.UserName);
 
-            userService.Verify(x => x.UpdateUserAsync(It.IsAny<UserActionDto>()));
+            userService.Verify(x => x.UpdateUserAsync(It.IsAny<UserActionModel>()));
         }
         
         [Test]
@@ -199,7 +200,7 @@ namespace UnitTests.Tests.Controllers
             var userDtoModel = UserDtoTestsData.GetUserActionDtoModel(new Guid(UserConstants.UserId));
             var userUpdateResult = UserControllerTestsDataFactory.GetUserResult(ServiceResultType.NotFound, message: ErrorMessage);
 
-            userService.Setup(x => x.UpdateUserAsync(It.IsAny<UserActionDto>())).ReturnsAsync(userUpdateResult);
+            userService.Setup(x => x.UpdateUserAsync(It.IsAny<UserActionModel>())).ReturnsAsync(userUpdateResult);
 
             //Act
             var actionResult = await userController.UpdateUser(userDtoModel);
@@ -211,7 +212,7 @@ namespace UnitTests.Tests.Controllers
             Assert.AreEqual(ErrorMessage, notFoundResult.Value);
             Assert.Null(actionResult.Value);
 
-            userService.Verify(x => x.UpdateUserAsync(It.IsAny<UserActionDto>()));
+            userService.Verify(x => x.UpdateUserAsync(It.IsAny<UserActionModel>()));
         }
         
         [Test]

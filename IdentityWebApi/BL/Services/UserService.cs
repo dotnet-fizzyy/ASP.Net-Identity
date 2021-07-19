@@ -5,6 +5,7 @@ using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
 using IdentityWebApi.DAL.Interfaces;
+using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
 
 namespace IdentityWebApi.BL.Services
@@ -35,7 +36,7 @@ namespace IdentityWebApi.BL.Services
             );
         }
 
-        public async Task<ServiceResult<UserResultDto>> CreateUserAsync(UserActionDto user)
+        public async Task<ServiceResult<UserResultDto>> CreateUserAsync(UserActionModel user)
         {
             var userEntity = _mapper.Map<AppUser>(user);
             
@@ -52,7 +53,7 @@ namespace IdentityWebApi.BL.Services
             );
         }
 
-        public async Task<ServiceResult<UserResultDto>> UpdateUserAsync(UserActionDto user)
+        public async Task<ServiceResult<UserResultDto>> UpdateUserAsync(UserActionModel user)
         {
             var userEntity = _mapper.Map<AppUser>(user);
 

@@ -1,4 +1,5 @@
 using System;
+using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
 using UnitTests.Shared.Constants;
 
@@ -6,7 +7,7 @@ namespace UnitTests.Shared.DTO
 {
     public static class UserDtoTestsData
     {
-        public static UserActionDto GetUserActionDtoModel(Guid id, string userName = default, string userRole = default, string email = default)
+        public static UserActionModel GetUserActionDtoModel(Guid id, string userName = default, string userRole = default, string email = default)
             => new()
             {
                 Id = id,

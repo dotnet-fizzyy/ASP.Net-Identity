@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Constants;
+using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -53,12 +54,12 @@ namespace IdentityWebApi.PL.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserActionDto user)
+        public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserActionModel user)
             => (await _userService.CreateUserAsync(user)).Data;
 
         [Authorize(Roles = UserRoleConstants.Admin)]
         [HttpPut]
-        public async Task<ActionResult<UserResultDto>> UpdateUser([FromBody, BindRequired] UserActionDto user)
+        public async Task<ActionResult<UserResultDto>> UpdateUser([FromBody, BindRequired] UserActionModel user)
         {
             var userUpdateResult = await _userService.UpdateUserAsync(user);
             if (userUpdateResult.Result is ServiceResultType.NotFound)

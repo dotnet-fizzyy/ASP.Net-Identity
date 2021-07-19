@@ -16,7 +16,7 @@ namespace IdentityWebApi.BL.Mappers
                     ex => ex.MapFrom(en => en.UserRoles.Select(x => x.Role.Name))
                 );
             
-            CreateMap<UserActionDto, AppUser>();
+            CreateMap<UserActionModel, AppUser>();
             CreateMap<UserRegistrationActionModel, AppUser>();
         }
     }
