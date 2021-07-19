@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using NetEscapades.Configuration.Validation;
 
 namespace IdentityWebApi.Startup.Settings
 {
-    public class DefaultAdminSettings : IValidatable
+    public class DefaultUserSettings
     {
         [Required]
         public string Name { get; set; }

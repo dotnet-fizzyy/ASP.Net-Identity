@@ -22,12 +22,15 @@ namespace IdentityWebApi.DAL.Configuration
             builder.HasIndex(x => x.Name)
                 .IsUnique();
 
+            builder.HasQueryFilter(x => !x.IsDeleted);
+            
             builder.HasData(new
             {
                 Id = new Guid("f8fd1c61-584c-4c37-8be9-54d39dd1c92c"),
                 Name = EmailNames.EmailConfirmationTemplate,
                 Layout = TemplateReader.ReadTemplateFromFolder(EmailNames.EmailConfirmationTemplate),
-                CreationDate = new DateTime(2021, 7, 4)
+                CreationDate = new DateTime(2021, 7, 4),
+                IsDeleted = false
             });
         }
     }

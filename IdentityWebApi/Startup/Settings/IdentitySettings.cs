@@ -11,7 +11,9 @@ namespace IdentityWebApi.Startup.Settings
         
         public IdentitySettingsPassword Password { get; set; }
         
-        public DefaultAdminSettings DefaultAdmin { get; set; }
+        public DefaultUserSettings DefaultAdmin { get; set; }
+        
+        public DefaultUserSettings DefaultUser { get; set; }
         
         public EmailSettings Email { get; set; }
         

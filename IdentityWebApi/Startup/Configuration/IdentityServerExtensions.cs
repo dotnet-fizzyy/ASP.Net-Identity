@@ -50,19 +50,19 @@ namespace IdentityWebApi.Startup.Configuration
             }
         }
 
-        public static async Task InitializeDefaultAdmin(IServiceProvider serviceProvider, DefaultAdminSettings defaultAdmin, bool requireConfirmation)
+        public static async Task InitializeDefaultUser(IServiceProvider serviceProvider, DefaultUserSettings defaultUser, bool requireConfirmation)
         {
-            if (defaultAdmin is null || 
-                string.IsNullOrEmpty(defaultAdmin.Name) ||
-                string.IsNullOrEmpty(defaultAdmin.Password) || 
-                string.IsNullOrEmpty(defaultAdmin.Role) || 
-                string.IsNullOrEmpty(defaultAdmin.Email))
+            if (defaultUser is null || 
+                string.IsNullOrEmpty(defaultUser.Name) ||
+                string.IsNullOrEmpty(defaultUser.Password) || 
+                string.IsNullOrEmpty(defaultUser.Role) || 
+                string.IsNullOrEmpty(defaultUser.Email))
             {
                 return;
             }
 
             var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
-            var existingAdmin = await userManager.FindByEmailAsync(defaultAdmin.Email);
+            var existingAdmin = await userManager.FindByEmailAsync(defaultUser.Email);
             if (existingAdmin is not null)
             {
                 await ConfirmDefaultAdminEmail(userManager, existingAdmin, requireConfirmation);
@@ -72,12 +72,12 @@ namespace IdentityWebApi.Startup.Configuration
             
             var appUserAdmin = new AppUser
             {
-                UserName = defaultAdmin.Name,
-                Email = defaultAdmin.Email
+                UserName = defaultUser.Name,
+                Email = defaultUser.Email
             };
             
-            await userManager.CreateAsync(appUserAdmin, defaultAdmin.Password);
-            await userManager.AddToRoleAsync(appUserAdmin, defaultAdmin.Role);
+            await userManager.CreateAsync(appUserAdmin, defaultUser.Password);
+            await userManager.AddToRoleAsync(appUserAdmin, defaultUser.Role);
 
             await ConfirmDefaultAdminEmail(userManager, appUserAdmin, requireConfirmation);
         }
