@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.PL.Models.DTO;
@@ -11,7 +12,7 @@ namespace IdentityWebApi.BL.Interfaces
         
         ServiceResult<string> GetUserEmailFromIdentityUser(ClaimsPrincipal user);
         
-        ServiceResult<string> GetUserRoleFromIdentityUser(ClaimsPrincipal user);
+        ServiceResult<IEnumerable<string>> GetUserRolesFromIdentityUser(ClaimsPrincipal user);
 
         ClaimsPrincipal AssignClaims(UserResultDto userDto);
     }

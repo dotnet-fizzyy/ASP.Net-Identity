@@ -30,19 +30,19 @@ namespace UnitTests.Shared.Controllers
         {
             var userClaims = new List<Claim>();
             
-            if (userId is not null)
+            if (!string.IsNullOrWhiteSpace(userId))
             {
                 userClaims.Add(new Claim(ClaimTypes.NameIdentifier, userId));
             }
             
-            if (email is not null)
+            if (!string.IsNullOrWhiteSpace(email))
             {
                 userClaims.Add(new Claim(ClaimTypes.Email, email));
             }
             
             if (roles != null && roles.Any())
             {
-                userClaims.Add(new Claim(ClaimTypes.Email, string.Join(",", roles)));
+                userClaims.Add(new Claim(ClaimTypes.Role, string.Join(",", roles)));
             }
             
             return new ClaimsPrincipal(new ClaimsIdentity(userClaims));

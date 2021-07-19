@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
@@ -29,18 +30,18 @@ namespace IdentityWebApi.BL.Services
                 string.IsNullOrEmpty(email) 
                     ? ServiceResultType.InvalidData 
                     : ServiceResultType.Success, 
-                email);
+                data: email);
         }
         
-        public ServiceResult<string> GetUserRoleFromIdentityUser(ClaimsPrincipal user)
+        public ServiceResult<IEnumerable<string>> GetUserRolesFromIdentityUser(ClaimsPrincipal user)
         {
             var role = user.FindFirstValue(ClaimTypes.Role);
+            if (string.IsNullOrEmpty(role))
+            {
+                return new ServiceResult<IEnumerable<string>>(ServiceResultType.InvalidData);
+            }
             
-            return new ServiceResult<string>(
-                string.IsNullOrEmpty(role) 
-                    ? ServiceResultType.InvalidData 
-                    : ServiceResultType.Success, 
-                role);
+            return new ServiceResult<IEnumerable<string>>(ServiceResultType.Success, role.Split(','));
         }
 
         public ClaimsPrincipal AssignClaims(UserResultDto userDto)
