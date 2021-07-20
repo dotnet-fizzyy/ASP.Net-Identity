@@ -50,36 +50,39 @@ namespace IdentityWebApi.Startup.Configuration
             }
         }
 
-        public static async Task InitializeDefaultUser(IServiceProvider serviceProvider, DefaultUserSettings defaultUser, bool requireConfirmation)
+        public static async Task InitializeDefaultUser(IServiceProvider serviceProvider, IEnumerable<DefaultUserSettings> defaultUsers, bool requireConfirmation)
         {
-            if (defaultUser is null || 
-                string.IsNullOrEmpty(defaultUser.Name) ||
-                string.IsNullOrEmpty(defaultUser.Password) || 
-                string.IsNullOrEmpty(defaultUser.Role) || 
-                string.IsNullOrEmpty(defaultUser.Email))
+            foreach (var defaultUser in defaultUsers)
             {
-                return;
-            }
+                if (defaultUser is null || 
+                    string.IsNullOrEmpty(defaultUser.Name) ||
+                    string.IsNullOrEmpty(defaultUser.Password) || 
+                    string.IsNullOrEmpty(defaultUser.Role) || 
+                    string.IsNullOrEmpty(defaultUser.Email))
+                {
+                    return;
+                }
 
-            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
-            var existingAdmin = await userManager.FindByEmailAsync(defaultUser.Email);
-            if (existingAdmin is not null)
-            {
-                await ConfirmDefaultAdminEmail(userManager, existingAdmin, requireConfirmation);
+                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+                var existingAdmin = await userManager.FindByEmailAsync(defaultUser.Email);
+                if (existingAdmin is not null)
+                {
+                    await ConfirmDefaultAdminEmail(userManager, existingAdmin, requireConfirmation);
                 
-                return;
-            }
+                    return;
+                }
             
-            var appUserAdmin = new AppUser
-            {
-                UserName = defaultUser.Name,
-                Email = defaultUser.Email
-            };
+                var appUserAdmin = new AppUser
+                {
+                    UserName = defaultUser.Name,
+                    Email = defaultUser.Email
+                };
             
-            await userManager.CreateAsync(appUserAdmin, defaultUser.Password);
-            await userManager.AddToRoleAsync(appUserAdmin, defaultUser.Role);
+                await userManager.CreateAsync(appUserAdmin, defaultUser.Password);
+                await userManager.AddToRoleAsync(appUserAdmin, defaultUser.Role);
 
-            await ConfirmDefaultAdminEmail(userManager, appUserAdmin, requireConfirmation);
+                await ConfirmDefaultAdminEmail(userManager, appUserAdmin, requireConfirmation);   
+            }
         }
 
         

@@ -10,10 +10,8 @@ namespace IdentityWebApi.Startup.Settings
         public ICollection<string> Roles { get; set; } = new List<string>();
         
         public IdentitySettingsPassword Password { get; set; }
-        
-        public DefaultUserSettings DefaultAdmin { get; set; }
-        
-        public DefaultUserSettings DefaultUser { get; set; }
+
+        public ICollection<DefaultUserSettings> DefaultUsers { get; set; } = new List<DefaultUserSettings>();
         
         public EmailSettings Email { get; set; }
         
@@ -22,9 +20,13 @@ namespace IdentityWebApi.Startup.Settings
         public void Validate()
         {
             Validator.ValidateObject(this, new ValidationContext(this), true);
+
+            foreach (var user in DefaultUsers)
+            {
+                user.Validate();
+            }
             
             Password.Validate();
-            DefaultAdmin.Validate();
             Cookies.Validate();
         }
     }
