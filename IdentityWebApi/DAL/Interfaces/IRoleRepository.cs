@@ -7,6 +7,8 @@ namespace IdentityWebApi.DAL.Interfaces
 {
     public interface IRoleRepository
     {
+        Task<ServiceResult<AppRole>> GetRoleByIdAsync(Guid id);
+        
         Task<ServiceResult> GrantRoleToUserAsync(Guid userId, Guid roleId);
         
         Task<ServiceResult> RevokeRoleFromUserAsync(Guid userId, Guid roleId);

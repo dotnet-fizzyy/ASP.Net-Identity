@@ -6,6 +6,7 @@ using IdentityWebApi.PL.Constants;
 using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -23,6 +24,20 @@ namespace IdentityWebApi.PL.Controllers
             _roleService = roleService;
         }
 
+        [HttpGet("id/{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<RoleDto>> GetRoleById(Guid id)
+        {
+            var roleResult = await _roleService.GetRoleByIdAsync(id);
+            if (roleResult.Result is ServiceResultType.NotFound)
+            {
+                return NotFound();
+            }
+            
+            return roleResult.Data;
+        }
+        
         [HttpPost("grant")]
         public async Task<IActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleActionModel userRoleActionModel)
         {
@@ -48,7 +63,7 @@ namespace IdentityWebApi.PL.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> CreateRole([FromBody, BindRequired] RoleDto roleDto)
+        public async Task<ActionResult<RoleDto>> CreateRole([FromBody, BindRequired] RoleCreationActionModel roleDto)
         {
             var roleCreationResult = await _roleService.CreateRoleAsync(roleDto);
             if (roleCreationResult.Result is not ServiceResultType.Success)
@@ -56,7 +71,7 @@ namespace IdentityWebApi.PL.Controllers
                 return StatusCode((int)roleCreationResult.Result, roleCreationResult.Message);
             }
             
-            return CreatedAtAction(nameof(CreateRole) ,roleCreationResult.Data);
+            return CreatedAtAction(nameof(CreateRole), roleCreationResult.Data);
         }
 
         [HttpPut]

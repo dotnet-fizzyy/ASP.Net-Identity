@@ -50,12 +50,16 @@ namespace IdentityWebApi.Startup.Configuration
             }
         }
 
-        public static async Task InitializeDefaultUser(IServiceProvider serviceProvider, IEnumerable<DefaultUserSettings> defaultUsers, bool requireConfirmation)
+        public static async Task InitializeDefaultUser(IServiceProvider serviceProvider, ICollection<DefaultUserSettings> defaultUsers, bool requireConfirmation)
         {
+            if (defaultUsers == null || !defaultUsers.Any())
+            {
+                return;
+            }
+            
             foreach (var defaultUser in defaultUsers)
             {
-                if (defaultUser is null || 
-                    string.IsNullOrEmpty(defaultUser.Name) ||
+                if (string.IsNullOrEmpty(defaultUser.Name) ||
                     string.IsNullOrEmpty(defaultUser.Password) || 
                     string.IsNullOrEmpty(defaultUser.Role) || 
                     string.IsNullOrEmpty(defaultUser.Email))

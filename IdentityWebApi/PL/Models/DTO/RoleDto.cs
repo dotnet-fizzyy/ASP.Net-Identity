@@ -9,5 +9,7 @@ namespace IdentityWebApi.PL.Models.DTO
         public string Name { get; set; }
         
         public string ConcurrencyStamp { get; set; }
+        
+        public DateTime CreationDate { get; set; }
     }
 }

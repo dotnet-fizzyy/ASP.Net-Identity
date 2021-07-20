@@ -8,11 +8,13 @@ namespace IdentityWebApi.BL.Interfaces
 {
     public interface IRoleService
     {
+        Task<ServiceResult<RoleDto>> GetRoleByIdAsync(Guid id);
+
         Task<ServiceResult> GrantRoleToUserAsync(UserRoleActionModel roleActionModel);
         
         Task<ServiceResult> RevokeRoleFromUser(UserRoleActionModel roleActionModel);
         
-        Task<ServiceResult<RoleDto>> CreateRoleAsync(RoleDto roleDto);
+        Task<ServiceResult<RoleDto>> CreateRoleAsync(RoleCreationActionModel roleDto);
         
         Task<ServiceResult<RoleDto>> UpdateRoleAsync(RoleDto roleDto);
         

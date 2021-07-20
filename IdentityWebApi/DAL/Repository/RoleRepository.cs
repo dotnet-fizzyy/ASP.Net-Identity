@@ -27,6 +27,17 @@ namespace IdentityWebApi.DAL.Repository
             _userManager = userManager;
         }
 
+        public async Task<ServiceResult<AppRole>> GetRoleByIdAsync(Guid id)
+        {
+            var appRole = await GetAppRole(id);
+            if (appRole is null)
+            {
+                return new ServiceResult<AppRole>(ServiceResultType.NotFound);
+            }
+
+            return new ServiceResult<AppRole>(ServiceResultType.Success, appRole);
+        }
+
         public async Task<ServiceResult> GrantRoleToUserAsync(Guid userId, Guid roleId) =>
             await ManageUserRole(userId, roleId, _userManager.AddToRoleAsync);
 
@@ -35,8 +46,8 @@ namespace IdentityWebApi.DAL.Repository
 
         public async Task<ServiceResult<AppRole>> CreateRoleAsync(AppRole entity)
         {
-            var existingRole = await _roleManager.RoleExistsAsync(entity.Name);
-            if (existingRole)
+            var appRole = await _roleManager.RoleExistsAsync(entity.Name);
+            if (appRole)
             {
                 return new ServiceResult<AppRole>(ServiceResultType.InvalidData, "This role already exists");
             }
@@ -100,7 +111,7 @@ namespace IdentityWebApi.DAL.Repository
                 return new ServiceResult<AppRole>(ServiceResultType.NotFound, MissingRoleExceptionMessage);
             }
 
-            var appUser = await GetAppUser(userId);
+            var appUser = await _userManager.Users.SingleOrDefaultAsync(x => x.Id == userId);
             if (appUser is null)
             {
                 return new ServiceResult<AppRole>(ServiceResultType.NotFound, "No such user exists");
@@ -115,10 +126,8 @@ namespace IdentityWebApi.DAL.Repository
             return new ServiceResult(ServiceResultType.Success);
         }
         
+        
         private async Task<AppRole> GetAppRole(Guid id) => 
             await _roleManager.Roles.SingleOrDefaultAsync(x => x.Id == id);
-
-        private async Task<AppUser> GetAppUser(Guid id) =>
-            await _userManager.Users.SingleOrDefaultAsync(x => x.Id == id);
     }
 }
