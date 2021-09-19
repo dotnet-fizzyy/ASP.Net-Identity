@@ -11,18 +11,18 @@ namespace IdentityWebApi.BL.Services
 {
     public class EmailTemplateService : IEmailTemplateService
     {
-        private readonly IEmailTemplateRepository _emailTemplateRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public EmailTemplateService(IEmailTemplateRepository emailTemplateRepository, IMapper mapper)
+        public EmailTemplateService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _emailTemplateRepository = emailTemplateRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         
         public async Task<ServiceResult<EmailTemplateDto>> GetEmailTemplateDtoAsync(Guid id)
         {
-            var emailTemplateEntity = await _emailTemplateRepository.SearchForSingleItemAsync(x => x.Id == id);
+            var emailTemplateEntity = await _unitOfWork.EmailTemplateRepository.SearchForSingleItemAsync(x => x.Id == id);
 
             if (emailTemplateEntity is null)
             {

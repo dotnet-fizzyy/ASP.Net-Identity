@@ -12,18 +12,18 @@ namespace IdentityWebApi.BL.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<ServiceResult<UserResultDto>> GetUserAsync(Guid id)
         {
-            var searchUserResult = await _userRepository.GetUserWithRoles(id);
+            var searchUserResult = await _unitOfWork.UserRepository.GetUserWithRoles(id);
             
             var userDtoModel = searchUserResult.Data is not null 
                 ? _mapper.Map<UserResultDto>(searchUserResult.Data) 
@@ -40,7 +40,7 @@ namespace IdentityWebApi.BL.Services
         {
             var userEntity = _mapper.Map<AppUser>(user);
             
-            var createdUserResult = await _userRepository.CreateUserAsync(userEntity, user.Password, user.UserRole, true);
+            var createdUserResult = await _unitOfWork.UserRepository.CreateUserAsync(userEntity, user.Password, user.UserRole, true);
 
             var userDtoModel = createdUserResult.Data.appUser is not null 
                 ? _mapper.Map<UserResultDto>(createdUserResult.Data.appUser) 
@@ -57,7 +57,7 @@ namespace IdentityWebApi.BL.Services
         {
             var userEntity = _mapper.Map<AppUser>(user);
 
-            var updatedUserResult = await _userRepository.UpdateUserAsync(userEntity);
+            var updatedUserResult = await _unitOfWork.UserRepository.UpdateUserAsync(userEntity);
 
             var userDtoModel = updatedUserResult.Data is not null 
                 ? _mapper.Map<UserResultDto>(updatedUserResult.Data) 
@@ -71,6 +71,6 @@ namespace IdentityWebApi.BL.Services
         }
 
         public async Task<ServiceResult> RemoveUserAsync(Guid id) => 
-            await _userRepository.RemoveUserAsync(id);
+            await _unitOfWork.UserRepository.RemoveUserAsync(id);
     }
 }

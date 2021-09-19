@@ -1,7 +1,7 @@
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.Services;
+using IdentityWebApi.DAL;
 using IdentityWebApi.DAL.Interfaces;
-using IdentityWebApi.DAL.Repository;
 using IdentityWebApi.Startup.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,9 +23,7 @@ namespace IdentityWebApi.Startup.Configuration
             services.AddTransient<IEmailTemplateService, EmailTemplateService>();
 
             //Repository
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IRoleRepository, RoleRepository>();
-            services.AddTransient<IEmailTemplateRepository, EmailTemplateRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

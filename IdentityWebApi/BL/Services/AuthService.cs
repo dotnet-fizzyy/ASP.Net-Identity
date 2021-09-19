@@ -11,12 +11,12 @@ namespace IdentityWebApi.BL.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AuthService(IUserRepository userRepository, IMapper mapper)
+        public AuthService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -24,7 +24,7 @@ namespace IdentityWebApi.BL.Services
         {
             var userEntity = _mapper.Map<AppUser>(userModel);
             
-            var createdResult = await _userRepository.CreateUserAsync(userEntity, userModel.Password, userModel.Role, false);
+            var createdResult = await _unitOfWork.UserRepository.CreateUserAsync(userEntity, userModel.Password, userModel.Role, false);
 
             var userDtoModel = createdResult.Data.appUser is not null 
                 ? _mapper.Map<UserResultDto>(createdResult.Data.appUser) 
@@ -39,7 +39,7 @@ namespace IdentityWebApi.BL.Services
 
         public async Task<ServiceResult<UserResultDto>> SignInUserAsync(UserSignInActionModel userModel)
         {
-            var signInResult = await _userRepository.SignInUserAsync(userModel.Email, userModel.Password);
+            var signInResult = await _unitOfWork.UserRepository.SignInUserAsync(userModel.Email, userModel.Password);
 
             var userDtoModel = signInResult.Data is not null 
                 ? _mapper.Map<UserResultDto>(signInResult.Data) 
@@ -54,7 +54,7 @@ namespace IdentityWebApi.BL.Services
 
         public async Task<ServiceResult> ConfirmUserEmailAsync(string email, string token)
         {
-            var emailConfirmationResult = await _userRepository.ConfirmUserEmailAsync(email, token);
+            var emailConfirmationResult = await _unitOfWork.UserRepository.ConfirmUserEmailAsync(email, token);
 
             return emailConfirmationResult;
         }
