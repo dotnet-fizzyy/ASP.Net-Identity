@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using IdentityWebApi.BL.Constants;
@@ -16,6 +15,8 @@ namespace IdentityWebApi.DAL.Repository
 {
     public class UserRepository : BaseRepository<AppUser>, IUserRepository
     {
+        public const string MissingUserEntityExceptionMessage = "No such user exists";
+        
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly AppSettings _appSettings;
@@ -60,7 +61,7 @@ namespace IdentityWebApi.DAL.Repository
             return new ServiceResult<AppUser>(ServiceResultType.Success, appUser);
         }
         
-        public async Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(AppUser appUser, string password, string role, bool confirmImmediately)
+        public async Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(AppUser appUser, string password, string role, bool shouldConfirmImmediately)
         {
             var token = string.Empty;
             var userCreationResult = await _userManager.CreateAsync(appUser, password);
@@ -74,7 +75,7 @@ namespace IdentityWebApi.DAL.Repository
             {
                 if (!DatabaseUtilities.RoleExists(_appSettings.IdentitySettings.Roles, role))
                 {
-                    return new ServiceResult<(AppUser appUser, string token)>(ServiceResultType.NotFound, "No such role exists");
+                    return new ServiceResult<(AppUser appUser, string token)>(ServiceResultType.NotFound, RoleRepository.MissingRoleExceptionMessage);
                 }
             
                 var roleAssignmentResult = await _userManager.AddToRoleAsync(appUser, role);
@@ -88,7 +89,7 @@ namespace IdentityWebApi.DAL.Repository
             {
                 token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
 
-                if (confirmImmediately)
+                if (shouldConfirmImmediately)
                 {
                     await _userManager.ConfirmEmailAsync(appUser, token);
                 }
@@ -130,13 +131,7 @@ namespace IdentityWebApi.DAL.Repository
             existingUser.Email = appUser.Email;
             existingUser.PhoneNumber = appUser.PhoneNumber;
             existingUser.ConcurrencyStamp = appUser.ConcurrencyStamp;
-            
-            var updateResult = await _userManager.UpdateAsync(existingUser);
-            if (!updateResult.Succeeded)
-            {
-                return new ServiceResult<AppUser>(ServiceResultType.InternalError, DatabaseUtilities.CreateErrorMessage(updateResult.Errors));
-            }
-            
+
             return new ServiceResult<AppUser>
             {
                 Result = ServiceResultType.Success, 
@@ -152,17 +147,15 @@ namespace IdentityWebApi.DAL.Repository
                 return new ServiceResult(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
             }
 
-            var userRoles = existingUser.UserRoles.Select(x => x.Role.Name);
-            
-            await _userManager.RemoveFromRolesAsync(existingUser, userRoles);
-            await _userManager.DeleteAsync(existingUser);
+            DatabaseContext.UserRoles.RemoveRange(existingUser.UserRoles);
+            DatabaseContext.Users.Remove(existingUser);
 
             return new ServiceResult(ServiceResultType.Success);
         }
 
         
         private async Task<AppUser> GetUserWithChildren(Expression<Func<AppUser, bool>> expression) 
-            => await _userManager.Users
+            => await DatabaseContext.Users
             .AsNoTracking()
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.Role)

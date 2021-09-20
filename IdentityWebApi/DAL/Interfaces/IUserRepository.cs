@@ -15,7 +15,7 @@ namespace IdentityWebApi.DAL.Interfaces
         
         Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser);
 
-        Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(AppUser appUser, string password, string role,  bool confirmImmediately);
+        Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(AppUser appUser, string password, string role,  bool shouldConfirmImmediately);
 
         Task<ServiceResult> RemoveUserAsync(Guid id);
     }

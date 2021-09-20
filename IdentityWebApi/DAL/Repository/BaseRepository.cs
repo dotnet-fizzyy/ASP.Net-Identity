@@ -9,12 +9,12 @@ namespace IdentityWebApi.DAL.Repository
 {
     public abstract class BaseRepository<T> : IBaseRepository<T> where T: class
     {
-        private readonly DatabaseContext _databaseContext;
+        protected readonly DatabaseContext DatabaseContext;
         private readonly DbSet<T> _entity;
         
         protected BaseRepository(DatabaseContext databaseContext)
         {
-            _databaseContext = databaseContext;
+            DatabaseContext = databaseContext;
             _entity = databaseContext.Set<T>();
         }
         
@@ -58,9 +58,9 @@ namespace IdentityWebApi.DAL.Repository
 
         public virtual async Task<T> CreateItemAsync(T entity)
         {
-            var createdEntity = await _databaseContext.AddAsync(entity);
+            var createdEntity = await DatabaseContext.AddAsync(entity);
 
-            await _databaseContext.SaveChangesAsync();
+            await DatabaseContext.SaveChangesAsync();
 
             createdEntity.State = EntityState.Detached;
             

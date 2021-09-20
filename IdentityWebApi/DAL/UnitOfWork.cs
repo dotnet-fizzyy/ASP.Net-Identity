@@ -20,7 +20,6 @@ namespace IdentityWebApi.DAL
 
         public UnitOfWork(DatabaseContext databaseContext, 
             UserManager<AppUser> userManager,
-            RoleManager<AppRole> roleManager, 
             SignInManager<AppUser> signInManager, 
             AppSettings appSettings
             )
@@ -28,7 +27,7 @@ namespace IdentityWebApi.DAL
             _databaseContext = databaseContext;
             
             UserRepository = new UserRepository(databaseContext, userManager, signInManager, appSettings);
-            RoleRepository = new RoleRepository(databaseContext, roleManager, userManager);
+            RoleRepository = new RoleRepository(databaseContext);
             EmailTemplateRepository = new EmailTemplateRepository(databaseContext);
         }
         

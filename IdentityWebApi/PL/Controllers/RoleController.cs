@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace IdentityWebApi.PL.Controllers
 {
-    [Authorize(Roles = UserRoleConstants.Admin)]
+    //[Authorize(Roles = UserRoleConstants.Admin)]
     [ApiController]
     [Route("api/role")]
     public class RoleController : ControllerBase
