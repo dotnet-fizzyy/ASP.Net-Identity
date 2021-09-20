@@ -72,12 +72,13 @@ namespace IdentityWebApi.DAL.Repository
         public async Task<ServiceResult<AppRole>> CreateRoleAsync(AppRole entity)
         {
             var appRole = await DatabaseContext.Roles.FirstOrDefaultAsync(x => x.Name == entity.Name);
-            if (appRole is null)
+            if (appRole is not null)
             {
                 return new ServiceResult<AppRole>(ServiceResultType.InvalidData, ExistingRoleEntityExceptionMessage);
             }
 
             entity.ConcurrencyStamp = Guid.NewGuid().ToString();
+            entity.CreationDate = DateTime.UtcNow;
             
             var roleCreationResult = await DatabaseContext.Roles.AddAsync(entity);
             
