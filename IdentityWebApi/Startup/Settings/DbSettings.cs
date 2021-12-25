@@ -21,7 +21,7 @@ namespace IdentityWebApi.Startup.Settings
         [Required]
         public string Password { get; set; }
 
-        public string ConnectionString => $"Server=tcp:{Host},{Port};Database={Instance};User={User};Password={Password};MultipleActiveResultSets=True;";
+        public string ConnectionString => $"Server=tcp:{Host},{Port};Database={Instance};User={User};Password={Password};MultipleActiveResultSets=True;TrustServerCertificate=True;";
         
         public void Validate()
         {

@@ -8,7 +8,6 @@ namespace IdentityWebApi.DAL.Interfaces
     {
         Task<T> SearchForSingleItemAsync(Expression<Func<T, bool>> expression);
         
-        
         Task<T> SearchForSingleItemAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes);
 
         Task<T> CreateItemAsync(T entity);

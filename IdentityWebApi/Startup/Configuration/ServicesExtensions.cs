@@ -2,6 +2,7 @@ using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.Services;
 using IdentityWebApi.DAL;
 using IdentityWebApi.DAL.Interfaces;
+using IdentityWebApi.DAL.Repository;
 using IdentityWebApi.Startup.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +25,9 @@ namespace IdentityWebApi.Startup.Configuration
 
             //Repository
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
         }
     }
 }
