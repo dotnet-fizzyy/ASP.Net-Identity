@@ -1,13 +1,15 @@
-using System;
-using System.Threading.Tasks;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Constants;
 using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+using System;
+using System.Threading.Tasks;
 
 namespace IdentityWebApi.PL.Controllers
 {

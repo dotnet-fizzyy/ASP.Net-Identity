@@ -59,6 +59,8 @@ namespace IdentityWebApi.Startup.Configuration
                 return;
             }
             
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            
             foreach (var defaultUser in defaultUsers)
             {
                 if (string.IsNullOrEmpty(defaultUser.Name) ||
@@ -68,8 +70,7 @@ namespace IdentityWebApi.Startup.Configuration
                 {
                     return;
                 }
-
-                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+                
                 var existingAdmin = await userManager.FindByEmailAsync(defaultUser.Email);
                 if (existingAdmin is not null)
                 {
@@ -97,6 +98,7 @@ namespace IdentityWebApi.Startup.Configuration
             if (requireConfirmation && !await userManager.IsEmailConfirmedAsync(appUserAdmin))
             {
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(appUserAdmin);
+                
                 await userManager.ConfirmEmailAsync(appUserAdmin, token);
             }
         }

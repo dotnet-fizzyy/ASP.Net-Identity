@@ -1,13 +1,14 @@
-using System.Net;
-using System.Threading.Tasks;
 using IdentityWebApi.BL.Constants;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Models.Action;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+using System.Threading.Tasks;
 
 namespace IdentityWebApi.PL.Controllers
 {
@@ -32,14 +33,16 @@ namespace IdentityWebApi.PL.Controllers
             var creationResult = await _authService.SignUpUserAsync(userModel);
             if (creationResult.Result is ServiceResultType.NotFound)
             {
-                return StatusCode((int)HttpStatusCode.NotFound, creationResult.Message);
+                return NotFound(creationResult.Message);
             }
             
             var confirmationLink = Url.Action("ConfirmEmail", "Auth", new { email = creationResult.Data.userDto.Email, creationResult.Data.token }, Request.Scheme);
             
             await _emailService.SendEmailAsync(creationResult.Data.userDto.Email, EmailSubjects.AccountConfirmation, $"<a href='{confirmationLink}'>confirm</a>");
 
-            return StatusCode((int)HttpStatusCode.Created, creationResult.Data.userDto);
+            var getUserLink = Url.Action("GetUser", "User", new { id = creationResult.Data.userDto.Id }, Request.Scheme);
+            
+            return Created(getUserLink!, creationResult.Data.userDto);
         }
 
         [HttpPost("sign-in")]
@@ -48,14 +51,14 @@ namespace IdentityWebApi.PL.Controllers
             var signInResult = await _authService.SignInUserAsync(userModel);
             if (signInResult.Result is ServiceResultType.InvalidData)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, signInResult.Message);
+                return BadRequest(signInResult.Message);
             }
 
             var claims = _claimsService.AssignClaims(signInResult.Data);
             
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims);
             
-            return StatusCode((int)HttpStatusCode.OK, signInResult.Data);
+            return Ok(signInResult.Data);
         }
 
         [HttpGet("confirm-email")]
@@ -63,16 +66,16 @@ namespace IdentityWebApi.PL.Controllers
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
             {
-                return StatusCode((int)HttpStatusCode.BadRequest,"Missing email or token provided");
+                return BadRequest("Missing email or token provided");
             }
 
             var confirmationResult = await _authService.ConfirmUserEmailAsync(email, token);
             if (confirmationResult.Result is not ServiceResultType.Success)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest,confirmationResult.Message);
+                return BadRequest(confirmationResult.Message);
             }
             
-            return StatusCode((int)HttpStatusCode.NoContent);
+            return NoContent();
         }
     }
 }
