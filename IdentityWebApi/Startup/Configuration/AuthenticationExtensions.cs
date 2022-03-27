@@ -1,9 +1,11 @@
+using IdentityWebApi.Startup.Settings;
+
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.DependencyInjection;
+
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using IdentityWebApi.Startup.Settings;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityWebApi.Startup.Configuration
 {
