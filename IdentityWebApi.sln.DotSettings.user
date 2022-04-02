@@ -1,7 +1,4 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a147ec0e_002D6da0_002D47f2_002Dae0e_002Df78723f06dc9/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;TestAncestor&gt;
-    &lt;TestId&gt;NUnit3x::E6F267D5-8A07-446E-BF3A-72079F649DE9::net5.0::UnitTests.Tests.Controllers.UserControllerTests&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::E6F267D5-8A07-446E-BF3A-72079F649DE9::net5.0::UnitTests.Tests.Services.ClaimsServiceTests&lt;/TestId&gt;
-  &lt;/TestAncestor&gt;
+  &lt;Project Location="/Applications/TestProjects/IdentityWebApi/IdentityWebApi.UnitTests" Presentation="&amp;lt;IdentityWebApi.UnitTests&amp;gt;" /&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

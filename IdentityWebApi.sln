@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityWebApi", "IdentityWebApi\IdentityWebApi.csproj", "{04040511-EE86-4A54-99F3-32C08E1F5D70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E6F267D5-8A07-446E-BF3A-72079F649DE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityWebApi.UnitTests", "IdentityWebApi.UnitTests\IdentityWebApi.UnitTests.csproj", "{E6F267D5-8A07-446E-BF3A-72079F649DE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
