@@ -7,28 +7,27 @@ using IdentityWebApi.Startup.Settings;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IdentityWebApi.Startup.Configuration
-{
-    public static class ServicesExtensions
-    {
-        public static void RegisterServices(this IServiceCollection services, AppSettings appSettings)
-        {
-            //AppSettings
-            services.AddSingleton(appSettings);
-            
-            //Services
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IAuthService, AuthService>();
-            services.AddTransient<IEmailService, EmailService>();
-            services.AddTransient<IClaimsService, ClaimsService>();
-            services.AddTransient<IRoleService, RoleService>();
-            services.AddTransient<IEmailTemplateService, EmailTemplateService>();
+namespace IdentityWebApi.Startup.Configuration;
 
-            //Repository
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
-        }
+public static class ServicesExtensions
+{
+    public static void RegisterServices(this IServiceCollection services, AppSettings appSettings)
+    {
+        //AppSettings
+        services.AddSingleton(appSettings);
+
+        //Services
+        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IAuthService, AuthService>();
+        services.AddTransient<IEmailService, EmailService>();
+        services.AddTransient<IClaimsService, ClaimsService>();
+        services.AddTransient<IRoleService, RoleService>();
+        services.AddTransient<IEmailTemplateService, EmailTemplateService>();
+
+        //Repository
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
     }
 }

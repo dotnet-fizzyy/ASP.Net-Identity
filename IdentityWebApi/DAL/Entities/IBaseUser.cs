@@ -1,13 +1,12 @@
 using System;
 
-namespace IdentityWebApi.DAL.Entities
+namespace IdentityWebApi.DAL.Entities;
+
+public interface IBaseUser
 {
-    public interface IBaseUser
-    {
-        public Guid Id { get; set; }
-        
-        public DateTime CreationDate { get; set; }
-        
-        public bool IsDeleted { get; set; }
-    }
+    public Guid Id { get; set; }
+
+    public DateTime CreationDate { get; set; }
+
+    public bool IsDeleted { get; set; }
 }

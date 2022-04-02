@@ -1,41 +1,42 @@
-using System;
-using System.Threading.Tasks;
 using IdentityWebApi.DAL.Interfaces;
 
-namespace IdentityWebApi.DAL
+using System;
+using System.Threading.Tasks;
+
+
+namespace IdentityWebApi.DAL;
+
+public class UnitOfWork : IUnitOfWork, IDisposable
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    private readonly DatabaseContext _databaseContext;
+
+    public IUserRepository UserRepository { get; }
+
+    public IRoleRepository RoleRepository { get; }
+
+    public IEmailTemplateRepository EmailTemplateRepository { get; }
+
+    public UnitOfWork(
+        DatabaseContext databaseContext,
+        IUserRepository userRepository,
+        IRoleRepository roleRepository,
+        IEmailTemplateRepository emailTemplateRepository
+    )
     {
-        private readonly DatabaseContext _databaseContext;
-        
-        public IUserRepository UserRepository { get; }
-        
-        public IRoleRepository RoleRepository { get; }
-        
-        public IEmailTemplateRepository EmailTemplateRepository { get; }
+        _databaseContext = databaseContext;
 
-        public UnitOfWork(
-            DatabaseContext databaseContext, 
-            IUserRepository userRepository,
-            IRoleRepository roleRepository,
-            IEmailTemplateRepository emailTemplateRepository
-        )
-        {
-            _databaseContext = databaseContext;
+        UserRepository = userRepository;
+        RoleRepository = roleRepository;
+        EmailTemplateRepository = emailTemplateRepository;
+    }
 
-            UserRepository = userRepository;
-            RoleRepository = roleRepository;
-            EmailTemplateRepository = emailTemplateRepository;
-        }
-        
-        public async Task CommitAsync()
-        {
-            await _databaseContext.SaveChangesAsync();
-        }
+    public async Task CommitAsync()
+    {
+        await _databaseContext.SaveChangesAsync();
+    }
 
-        public void Dispose()
-        {
-            _databaseContext.Dispose();
-        }
+    public void Dispose()
+    {
+        _databaseContext.Dispose();
     }
 }

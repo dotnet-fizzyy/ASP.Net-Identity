@@ -9,31 +9,30 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.PL.Controllers
+namespace IdentityWebApi.PL.Controllers;
+
+[Authorize(Roles = UserRoleConstants.Admin)]
+[ApiController]
+[Route("api/email-template")]
+public class EmailTemplateController : ControllerBase
 {
-    [ApiController]
-    [Authorize(Roles = UserRoleConstants.Admin)]
-    [Route("api/email-template")]
-    public class EmailTemplateController : ControllerBase
+    private readonly IEmailTemplateService _emailTemplateService;
+
+    public EmailTemplateController(IEmailTemplateService emailTemplateService)
     {
-        private readonly IEmailTemplateService _emailTemplateService;
+        _emailTemplateService = emailTemplateService;
+    }
 
-        public EmailTemplateController(IEmailTemplateService emailTemplateService)
+    [HttpGet("id/{id:guid}")]
+    public async Task<ActionResult<EmailTemplateDto>> GetEmailTemplate(Guid id)
+    {
+        var emailTemplateResult = await _emailTemplateService.GetEmailTemplateDtoAsync(id);
+
+        if (emailTemplateResult.Result is ServiceResultType.NotFound)
         {
-            _emailTemplateService = emailTemplateService;
+            return NotFound();
         }
 
-        [HttpGet("id/{id:guid}")]
-        public async Task<ActionResult<EmailTemplateDto>> GetEmailTemplate(Guid id)
-        {
-            var emailTemplateResult = await _emailTemplateService.GetEmailTemplateDtoAsync(id);
-
-            if (emailTemplateResult.Result is ServiceResultType.NotFound)
-            {
-                return NotFound();
-            }
-            
-            return emailTemplateResult.Data;
-        }
+        return emailTemplateResult.Data;
     }
 }

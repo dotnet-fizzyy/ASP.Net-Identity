@@ -10,94 +10,100 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Text.Json.Serialization;
 
-namespace IdentityWebApi.Startup
+namespace IdentityWebApi.Startup;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        var appSettings = ReadAppSettings(Configuration);
+
+        services.ValidateSettingParameters(Configuration);
+
+        services.RegisterServices(appSettings);
+
+        services.RegisterIdentityServer(appSettings); // Identity server setup should go before Auth setup
+        services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
+
+        services.RegisterAutomapper();
+
+        services.RegisterHealthChecks(appSettings.DbSettings.ConnectionString);
+
+        services.AddRouting(opts =>
         {
-            Configuration = configuration;
+            opts.LowercaseUrls = true;
+        });
+        
+        services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+        });
+
+        services.RegisterSwagger();
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+    {
+        var appSettings = ReadAppSettings(Configuration);
+
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseSwaggerApp();
         }
 
-        public IConfiguration Configuration { get; }
+        app.UseCors(x => x
+            .SetIsOriginAllowed(_ => true)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+        );
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        app.UseStaticFiles();
+
+        app.RegisterExceptionHandler();
+
+        app.UseHttpsRedirection();
+
+        app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
         {
-            var appSettings = ReadAppSettings(Configuration);
+            endpoints.MapControllers();
 
-            services.ValidateSettingParameters(Configuration);
-            
-            services.RegisterServices(appSettings);
+            endpoints.RegisterHealthCheckEndpoint();
+        });
 
-            services.RegisterIdentityServer(appSettings); // Identity server setup should go before Auth setup
-            services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
-            
-            services.RegisterAutomapper();
-            
-            services.RegisterHealthChecks(appSettings.DbSettings.ConnectionString);
-            
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-            });
-            
-            services.RegisterSwagger();
-        }
+        IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
+        IdentityServerExtensions.InitializeDefaultUser(serviceProvider, appSettings.IdentitySettings.DefaultUsers,
+            appSettings.IdentitySettings.Email.RequireConfirmation).Wait();
+    }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+    private static AppSettings ReadAppSettings(IConfiguration configuration)
+    {
+        var dbSettings = configuration.GetSection(nameof(AppSettings.DbSettings)).Get<DbSettings>();
+        var smtpClientSettings =
+            configuration.GetSection(nameof(AppSettings.SmtpClientSettings)).Get<SmtpClientSettings>();
+        var identitySettings = configuration.GetSection(nameof(AppSettings.IdentitySettings)).Get<IdentitySettings>();
+
+        return new AppSettings
         {
-            var appSettings = ReadAppSettings(Configuration);
-            
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwaggerApp();
-            }
-
-            app.UseCors(x => x
-                .SetIsOriginAllowed(_ => true)
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials()
-            );
-
-            app.UseStaticFiles();
-            
-            app.RegisterExceptionHandler();
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-
-                endpoints.RegisterHealthCheckEndpoint();
-            });
-
-            IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
-            IdentityServerExtensions.InitializeDefaultUser(serviceProvider, appSettings.IdentitySettings.DefaultUsers, appSettings.IdentitySettings.Email.RequireConfirmation).Wait();
-        }
-
-        private static AppSettings ReadAppSettings(IConfiguration configuration)
-        {
-            var dbSettings = configuration.GetSection(nameof(AppSettings.DbSettings)).Get<DbSettings>();
-            var smtpClientSettings = configuration.GetSection(nameof(AppSettings.SmtpClientSettings)).Get<SmtpClientSettings>();
-            var identitySettings = configuration.GetSection(nameof(AppSettings.IdentitySettings)).Get<IdentitySettings>();
-
-            return new AppSettings
-            {
-                DbSettings = dbSettings,
-                SmtpClientSettings = smtpClientSettings,
-                IdentitySettings = identitySettings
-            };
-        }
+            DbSettings = dbSettings,
+            SmtpClientSettings = smtpClientSettings,
+            IdentitySettings = identitySettings
+        };
     }
 }

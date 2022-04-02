@@ -1,10 +1,9 @@
 using IdentityWebApi.PL.Validation;
 
-namespace IdentityWebApi.PL.Models.Action
+namespace IdentityWebApi.PL.Models.Action;
+
+public class RoleCreationActionModel
 {
-    public class RoleCreationActionModel
-    {
-        [DefaultValue]
-        public string Name { get; set; }
-    }
+    [DefaultValue] 
+    public string Name { get; set; }
 }

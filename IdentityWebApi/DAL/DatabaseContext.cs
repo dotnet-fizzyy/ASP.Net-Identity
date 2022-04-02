@@ -1,33 +1,34 @@
-using System;
-using System.Reflection;
 using IdentityWebApi.DAL.Entities;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityWebApi.DAL
+using System;
+using System.Reflection;
+
+namespace IdentityWebApi.DAL;
+
+public sealed class DatabaseContext : IdentityDbContext<
+    AppUser,
+    AppRole,
+    Guid,
+    IdentityUserClaim<Guid>,
+    AppUserRole,
+    IdentityUserLogin<Guid>,
+    IdentityRoleClaim<Guid>,
+    IdentityUserToken<Guid>
+>
 {
-    public class DatabaseContext : IdentityDbContext<
-        AppUser, 
-        AppRole, 
-        Guid,  
-        IdentityUserClaim<Guid>, 
-        AppUserRole, 
-        IdentityUserLogin<Guid>, 
-        IdentityRoleClaim<Guid>, 
-        IdentityUserToken<Guid>
-    >
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
     {
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
-        {
-            Database.Migrate();
-        }
+        Database.Migrate();
+    }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
 
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        }
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

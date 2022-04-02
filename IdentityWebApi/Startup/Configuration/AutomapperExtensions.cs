@@ -1,12 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IdentityWebApi.Startup.Configuration
+namespace IdentityWebApi.Startup.Configuration;
+
+public static class AutomapperExtensions
 {
-    public static class AutomapperExtensions
+    public static void RegisterAutomapper(this IServiceCollection services)
     {
-        public static void RegisterAutomapper(this IServiceCollection services)
-        {
-            services.AddAutoMapper(typeof(Startup));
-        }
+        services.AddAutoMapper(typeof(Startup));
     }
 }

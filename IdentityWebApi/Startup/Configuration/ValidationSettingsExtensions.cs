@@ -3,14 +3,13 @@ using IdentityWebApi.Startup.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IdentityWebApi.Startup.Configuration
+namespace IdentityWebApi.Startup.Configuration;
+
+public static class ValidationSettingsExtensions
 {
-    public static class ValidationSettingsExtensions
+    public static void ValidateSettingParameters(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void ValidateSettingParameters(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.UseConfigurationValidation();
-            services.ConfigureValidatableSetting<AppSettings>(configuration);
-        }
+        services.UseConfigurationValidation();
+        services.ConfigureValidatableSetting<AppSettings>(configuration);
     }
 }

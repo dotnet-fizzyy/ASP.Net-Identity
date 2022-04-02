@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 
-namespace IdentityWebApi.PL.Models.DTO
+namespace IdentityWebApi.PL.Models.DTO;
+
+public class UserResultDto : BaseUserDto
 {
-    public class UserResultDto : BaseUserDto
-    {
-        public IEnumerable<string> Roles { get; set; } = new List<string>();
-    }
+    public IEnumerable<string> Roles { get; set; } = new List<string>();
 }

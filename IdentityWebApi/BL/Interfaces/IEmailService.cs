@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.BL.Interfaces
+namespace IdentityWebApi.BL.Interfaces;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task SendEmailAsync(string emailToSend, string subject, string message);
-    }
+    Task SendEmailAsync(string emailToSend, string subject, string message);
 }

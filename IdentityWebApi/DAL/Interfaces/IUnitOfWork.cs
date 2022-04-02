@@ -1,15 +1,14 @@
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.DAL.Interfaces
-{
-    public interface IUnitOfWork
-    {
-        IUserRepository UserRepository { get; }
-        
-        IRoleRepository RoleRepository { get; }
+namespace IdentityWebApi.DAL.Interfaces;
 
-        IEmailTemplateRepository EmailTemplateRepository { get; }
-        
-        Task CommitAsync();
-    }
+public interface IUnitOfWork
+{
+    IUserRepository UserRepository { get; }
+
+    IRoleRepository RoleRepository { get; }
+
+    IEmailTemplateRepository EmailTemplateRepository { get; }
+
+    Task CommitAsync();
 }

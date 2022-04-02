@@ -1,8 +1,7 @@
-namespace IdentityWebApi.PL.Constants
+namespace IdentityWebApi.PL.Constants;
+
+public static class UserRoleConstants
 {
-    public static class UserRoleConstants
-    {
-        public const string Admin = "Administrator";
-        public const string User = "User";
-    }
+    public const string Admin = "Administrator";
+    public const string User = "User";
 }

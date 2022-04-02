@@ -1,22 +1,22 @@
-using System;
-using System.Threading.Tasks;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.DAL.Entities;
 
-namespace IdentityWebApi.DAL.Interfaces
+using System;
+using System.Threading.Tasks;
+
+namespace IdentityWebApi.DAL.Interfaces;
+
+public interface IRoleRepository
 {
-    public interface IRoleRepository
-    {
-        Task<ServiceResult<AppRole>> GetRoleByIdAsync(Guid id);
-        
-        Task<ServiceResult> GrantRoleToUserAsync(Guid userId, Guid roleId);
-        
-        Task<ServiceResult> RevokeRoleFromUserAsync(Guid userId, Guid roleId);
-        
-        Task<ServiceResult<AppRole>> CreateRoleAsync(AppRole entity);
-        
-        Task<ServiceResult<AppRole>> UpdateRoleAsync(AppRole entity);
-        
-        Task<ServiceResult> RemoveRoleAsync(Guid id);
-    }
+    Task<ServiceResult<AppRole>> GetRoleByIdAsync(Guid id);
+
+    Task<ServiceResult> GrantRoleToUserAsync(Guid userId, Guid roleId);
+
+    Task<ServiceResult> RevokeRoleFromUserAsync(Guid userId, Guid roleId);
+
+    Task<ServiceResult<AppRole>> CreateRoleAsync(AppRole entity);
+
+    Task<ServiceResult<AppRole>> UpdateRoleAsync(AppRole entity);
+
+    Task<ServiceResult> RemoveRoleAsync(Guid id);
 }

@@ -1,9 +1,8 @@
-namespace IdentityWebApi.Startup.Settings
+namespace IdentityWebApi.Startup.Settings;
+
+public class EmailSettings
 {
-    public class EmailSettings
-    {
-        public bool RequireConfirmation { get; set; }
-        
-        public bool RequiredUniqueEmail { get; set; }
-    }
+    public bool RequireConfirmation { get; set; }
+
+    public bool RequiredUniqueEmail { get; set; }
 }
