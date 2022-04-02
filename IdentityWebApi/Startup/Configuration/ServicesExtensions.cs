@@ -3,6 +3,8 @@ using IdentityWebApi.BL.Services;
 using IdentityWebApi.DAL;
 using IdentityWebApi.DAL.Interfaces;
 using IdentityWebApi.DAL.Repository;
+using IdentityWebApi.PL.Interfaces;
+using IdentityWebApi.PL.Services;
 using IdentityWebApi.Startup.Settings;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,8 @@ public static class ServicesExtensions
         services.AddTransient<IClaimsService, ClaimsService>();
         services.AddTransient<IRoleService, RoleService>();
         services.AddTransient<IEmailTemplateService, EmailTemplateService>();
+
+        services.AddScoped<IHttpContextService, HttpContextService>();
 
         //Repository
         services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -37,6 +37,8 @@ public class Startup
 
         services.RegisterHealthChecks(appSettings.DbSettings.ConnectionString);
 
+        services.AddHttpContextAccessor();
+        
         services.AddRouting(opts =>
         {
             opts.LowercaseUrls = true;
@@ -88,15 +90,17 @@ public class Startup
         });
 
         IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
-        IdentityServerExtensions.InitializeDefaultUser(serviceProvider, appSettings.IdentitySettings.DefaultUsers,
-            appSettings.IdentitySettings.Email.RequireConfirmation).Wait();
+        IdentityServerExtensions.InitializeDefaultUsers(
+            serviceProvider, 
+            appSettings.IdentitySettings.DefaultUsers,
+            appSettings.IdentitySettings.Email.RequireConfirmation
+        ).Wait();
     }
 
     private static AppSettings ReadAppSettings(IConfiguration configuration)
     {
         var dbSettings = configuration.GetSection(nameof(AppSettings.DbSettings)).Get<DbSettings>();
-        var smtpClientSettings =
-            configuration.GetSection(nameof(AppSettings.SmtpClientSettings)).Get<SmtpClientSettings>();
+        var smtpClientSettings = configuration.GetSection(nameof(AppSettings.SmtpClientSettings)).Get<SmtpClientSettings>();
         var identitySettings = configuration.GetSection(nameof(AppSettings.IdentitySettings)).Get<IdentitySettings>();
 
         return new AppSettings

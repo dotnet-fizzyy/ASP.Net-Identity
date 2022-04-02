@@ -2,6 +2,7 @@ using IdentityWebApi.BL.Constants;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Models.Action;
+using IdentityWebApi.PL.Interfaces;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -19,12 +20,19 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IEmailService _emailService;
     private readonly IClaimsService _claimsService;
-
-    public AuthController(IAuthService authService, IEmailService emailService, IClaimsService claimsService)
+    private readonly IHttpContextService _httpContextService;
+    
+    public AuthController(
+        IAuthService authService, 
+        IEmailService emailService, 
+        IClaimsService claimsService, 
+        IHttpContextService httpContextService
+    )
     {
         _authService = authService;
         _emailService = emailService;
         _claimsService = claimsService;
+        _httpContextService = httpContextService;
     }
 
     [HttpPost("sign-up")]
@@ -37,12 +45,7 @@ public class AuthController : ControllerBase
             return NotFound(creationResult.Message);
         }
 
-        var confirmationLink = Url.Action(
-            "ConfirmEmail", 
-            "Auth",
-            new { email = creationResult.Data.userDto.Email, creationResult.Data.token }, 
-            Request.Scheme
-        );
+        var confirmationLink = _httpContextService.GenerateConfirmEmailLink(creationResult.Data.userDto.Email, creationResult.Data.token);
 
         await _emailService.SendEmailAsync(
             creationResult.Data.userDto.Email, 
@@ -50,12 +53,7 @@ public class AuthController : ControllerBase
             $"<a href='{confirmationLink}'>confirm</a>"
         );
 
-        var getUserLink = Url.Action(
-            "GetUser", 
-            "User", 
-            new { id = creationResult.Data.userDto.Id }, 
-            Request.Scheme
-        );
+        var getUserLink = _httpContextService.GenerateGetUserLink(creationResult.Data.userDto.Id);
 
         return Created(getUserLink!, creationResult.Data.userDto);
     }

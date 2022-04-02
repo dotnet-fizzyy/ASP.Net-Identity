@@ -53,7 +53,7 @@ public static class IdentityServerExtensions
         }
     }
 
-    public static async Task InitializeDefaultUser(
+    public static async Task InitializeDefaultUsers(
         IServiceProvider serviceProvider,
         ICollection<DefaultUserSettings> defaultUsers, 
         bool requireConfirmation

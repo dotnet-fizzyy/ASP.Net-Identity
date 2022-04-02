@@ -45,6 +45,7 @@ public class RoleController : ControllerBase
     public async Task<IActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleActionModel userRoleActionModel)
     {
         var roleGrantResult = await _roleService.GrantRoleToUserAsync(userRoleActionModel);
+        
         if (roleGrantResult.Result is not ServiceResultType.Success)
         {
             return StatusCode((int)roleGrantResult.Result, roleGrantResult.Message);
