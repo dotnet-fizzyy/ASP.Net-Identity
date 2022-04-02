@@ -1,13 +1,15 @@
+using IdentityWebApi.DAL;
+using IdentityWebApi.DAL.Entities;
+using IdentityWebApi.Startup.Settings;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityWebApi.DAL;
-using IdentityWebApi.DAL.Entities;
-using IdentityWebApi.Startup.Settings;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityWebApi.Startup.Configuration
 {
@@ -57,6 +59,8 @@ namespace IdentityWebApi.Startup.Configuration
                 return;
             }
             
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            
             foreach (var defaultUser in defaultUsers)
             {
                 if (string.IsNullOrEmpty(defaultUser.Name) ||
@@ -66,8 +70,7 @@ namespace IdentityWebApi.Startup.Configuration
                 {
                     return;
                 }
-
-                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+                
                 var existingAdmin = await userManager.FindByEmailAsync(defaultUser.Email);
                 if (existingAdmin is not null)
                 {
@@ -95,6 +98,7 @@ namespace IdentityWebApi.Startup.Configuration
             if (requireConfirmation && !await userManager.IsEmailConfirmedAsync(appUserAdmin))
             {
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(appUserAdmin);
+                
                 await userManager.ConfirmEmailAsync(appUserAdmin, token);
             }
         }

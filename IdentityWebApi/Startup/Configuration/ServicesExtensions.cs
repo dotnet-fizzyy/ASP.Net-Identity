@@ -4,6 +4,7 @@ using IdentityWebApi.DAL;
 using IdentityWebApi.DAL.Interfaces;
 using IdentityWebApi.DAL.Repository;
 using IdentityWebApi.Startup.Settings;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityWebApi.Startup.Configuration
