@@ -1,6 +1,17 @@
 version: '3.4'
 
 services:
+    api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "13501:80"
+        environment:
+            ASPNETCORE_ENVIRONMENT: docker
+        depends_on:
+            - mssql
+    
     mssql:
         restart: always
         image: mcr.microsoft.com/mssql/server:2019-latest
