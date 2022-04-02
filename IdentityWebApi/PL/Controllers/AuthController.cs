@@ -1,5 +1,4 @@
 using IdentityWebApi.BL.Constants;
-using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Interfaces;
@@ -13,8 +12,6 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.PL.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -40,7 +37,7 @@ public class AuthController : ControllerBase
     {
         var creationResult = await _authService.SignUpUserAsync(userModel);
         
-        if (creationResult.Result is ServiceResultType.NotFound)
+        if (creationResult.IsResultNotFound)
         {
             return NotFound(creationResult.Message);
         }
@@ -55,7 +52,7 @@ public class AuthController : ControllerBase
 
         var getUserLink = _httpContextService.GenerateGetUserLink(creationResult.Data.userDto.Id);
 
-        return Created(getUserLink!, creationResult.Data.userDto);
+        return Created(getUserLink, creationResult.Data.userDto);
     }
 
     [HttpPost("sign-in")]
@@ -63,7 +60,7 @@ public class AuthController : ControllerBase
     {
         var signInResult = await _authService.SignInUserAsync(userModel);
         
-        if (signInResult.Result is ServiceResultType.InvalidData)
+        if (signInResult.IsResultFailed)
         {
             return BadRequest(signInResult.Message);
         }
@@ -79,8 +76,8 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ConfirmEmail([FromQuery, BindRequired] string email, [FromQuery, BindRequired] string token)
     {
         var confirmationResult = await _authService.ConfirmUserEmailAsync(email, token);
-     
-        if (confirmationResult.Result is not ServiceResultType.Success)
+
+        if (confirmationResult.IsResultFailed)
         {
             return BadRequest(confirmationResult.Message);
         }

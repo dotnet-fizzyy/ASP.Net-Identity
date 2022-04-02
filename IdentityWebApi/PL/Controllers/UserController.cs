@@ -1,4 +1,3 @@
-using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Constants;
 using IdentityWebApi.PL.Models.Action;
@@ -13,8 +12,6 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.PL.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -34,7 +31,7 @@ public class UserController : ControllerBase
 
         var userResult = await _userService.GetUserAsync(userId.Data);
 
-        if (userResult.Result is ServiceResultType.NotFound)
+        if (userResult.IsResultNotFound)
         {
             return NotFound();
         }
@@ -48,7 +45,7 @@ public class UserController : ControllerBase
     {
         var userResult = await _userService.GetUserAsync(id);
 
-        if (userResult.Result is ServiceResultType.NotFound)
+        if (userResult.IsResultNotFound)
         {
             return NotFound();
         }
@@ -58,8 +55,8 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserActionModel user)
-        => (await _userService.CreateUserAsync(user)).Data;
+    public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserActionModel user) => 
+        (await _userService.CreateUserAsync(user)).Data;
 
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpPut]
@@ -67,7 +64,7 @@ public class UserController : ControllerBase
     {
         var userUpdateResult = await _userService.UpdateUserAsync(user);
 
-        if (userUpdateResult.Result is ServiceResultType.NotFound)
+        if (userUpdateResult.IsResultNotFound)
         {
             return NotFound(userUpdateResult.Message);
         }
@@ -81,7 +78,7 @@ public class UserController : ControllerBase
     {
         var result = await _userService.RemoveUserAsync(id);
 
-        if (result.Result is ServiceResultType.NotFound)
+        if (result.IsResultNotFound)
         {
             return NotFound();
         }

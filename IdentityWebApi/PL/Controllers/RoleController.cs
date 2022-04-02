@@ -1,4 +1,3 @@
-using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Constants;
 using IdentityWebApi.PL.Models.Action;
@@ -15,8 +14,6 @@ using System.Threading.Tasks;
 namespace IdentityWebApi.PL.Controllers;
 
 [Authorize(Roles = UserRoleConstants.Admin)]
-[ApiController]
-[Route("api/[controller]")]
 public class RoleController : ControllerBase
 {
     private readonly IRoleService _roleService;
@@ -27,18 +24,18 @@ public class RoleController : ControllerBase
     }
 
     [HttpGet("id/{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<RoleDto>> GetRoleById(Guid id)
+    public async Task<IActionResult> GetRoleById(Guid id)
     {
         var roleResult = await _roleService.GetRoleByIdAsync(id);
 
-        if (roleResult.Result is ServiceResultType.NotFound)
+        if (roleResult.IsResultFailed)
         {
             return NotFound();
         }
 
-        return roleResult.Data;
+        return Ok(roleResult.Data);
     }
 
     [HttpPost("grant")]
@@ -46,23 +43,22 @@ public class RoleController : ControllerBase
     {
         var roleGrantResult = await _roleService.GrantRoleToUserAsync(userRoleActionModel);
         
-        if (roleGrantResult.Result is not ServiceResultType.Success)
+        if (roleGrantResult.IsResultFailed)
         {
-            return StatusCode((int)roleGrantResult.Result, roleGrantResult.Message);
+            return GetFailedResponseByServiceResult(roleGrantResult);
         }
 
         return NoContent();
     }
 
     [HttpPost("revoke")]
-    public async Task<IActionResult> RevokeRoleFromUser(
-        [FromBody, BindRequired] UserRoleActionModel userRoleActionModel)
+    public async Task<IActionResult> RevokeRoleFromUser([FromBody, BindRequired] UserRoleActionModel userRoleActionModel)
     {
         var roleGrantResult = await _roleService.RevokeRoleFromUser(userRoleActionModel);
 
-        if (roleGrantResult.Result is not ServiceResultType.Success)
+        if (roleGrantResult.IsResultFailed)
         {
-            return StatusCode((int)roleGrantResult.Result, roleGrantResult.Message);
+            return GetFailedResponseByServiceResult(roleGrantResult);
         }
 
         return NoContent();
@@ -73,9 +69,9 @@ public class RoleController : ControllerBase
     {
         var roleCreationResult = await _roleService.CreateRoleAsync(roleDto);
 
-        if (roleCreationResult.Result is not ServiceResultType.Success)
+        if (roleCreationResult.IsResultFailed)
         {
-            return StatusCode((int)roleCreationResult.Result, roleCreationResult.Message);
+            return GetFailedResponseByServiceResult(roleCreationResult);
         }
 
         return CreatedAtAction(nameof(CreateRole), roleCreationResult.Data);
@@ -86,9 +82,9 @@ public class RoleController : ControllerBase
     {
         var roleUpdateResult = await _roleService.UpdateRoleAsync(roleDto);
 
-        if (roleUpdateResult.Result is not ServiceResultType.Success)
+        if (roleUpdateResult.IsResultFailed)
         {
-            return StatusCode((int)roleUpdateResult.Result, roleUpdateResult.Message);
+            return GetFailedResponseByServiceResult(roleUpdateResult);
         }
 
         return roleUpdateResult.Data;
@@ -99,9 +95,9 @@ public class RoleController : ControllerBase
     {
         var roleRemoveResult = await _roleService.RemoveRoleAsync(id);
 
-        if (roleRemoveResult.Result is not ServiceResultType.Success)
+        if (roleRemoveResult.IsResultFailed)
         {
-            return StatusCode((int)roleRemoveResult.Result, roleRemoveResult.Message);
+            return GetFailedResponseByServiceResult(roleRemoveResult);
         }
 
         return NoContent();

@@ -1,61 +1,62 @@
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
 using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.BL.ResultWrappers;
 using IdentityWebApi.PL.Models.DTO;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace IdentityWebApi.BL.Services
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+
+namespace IdentityWebApi.BL.Services;
+
+public class ClaimsService : IClaimsService
 {
-    public class ClaimsService : IClaimsService
+    public ServiceResult<Guid> GetUserIdFromIdentityUser(ClaimsPrincipal user)
     {
-        public ServiceResult<Guid> GetUserIdFromIdentityUser(ClaimsPrincipal user)
+        var id = user.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out var userId))
         {
-            var id = user.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out var userId))
-            {
-                return new ServiceResult<Guid>(ServiceResultType.InvalidData);
-            }
-
-            return new ServiceResult<Guid>(ServiceResultType.Success, userId);
+            return new ServiceResult<Guid>(ServiceResultType.InvalidData);
         }
 
-        public ServiceResult<string> GetUserEmailFromIdentityUser(ClaimsPrincipal user)
+        return new ServiceResult<Guid>(ServiceResultType.Success, userId);
+    }
+
+    public ServiceResult<string> GetUserEmailFromIdentityUser(ClaimsPrincipal user)
+    {
+        var email = user.FindFirstValue(ClaimTypes.Email);
+
+        return new ServiceResult<string>(
+            string.IsNullOrEmpty(email)
+                ? ServiceResultType.InvalidData
+                : ServiceResultType.Success,
+            data: email);
+    }
+
+    public ServiceResult<IEnumerable<string>> GetUserRolesFromIdentityUser(ClaimsPrincipal user)
+    {
+        var role = user.FindFirstValue(ClaimTypes.Role);
+        if (string.IsNullOrEmpty(role))
         {
-            var email = user.FindFirstValue(ClaimTypes.Email);
-
-            return new ServiceResult<string>(
-                string.IsNullOrEmpty(email) 
-                    ? ServiceResultType.InvalidData 
-                    : ServiceResultType.Success, 
-                data: email);
+            return new ServiceResult<IEnumerable<string>>(ServiceResultType.InvalidData);
         }
-        
-        public ServiceResult<IEnumerable<string>> GetUserRolesFromIdentityUser(ClaimsPrincipal user)
+
+        return new ServiceResult<IEnumerable<string>>(ServiceResultType.Success, role.Split(','));
+    }
+
+    public ClaimsPrincipal AssignClaims(UserResultDto userDto)
+    {
+        var claims = new[]
         {
-            var role = user.FindFirstValue(ClaimTypes.Role);
-            if (string.IsNullOrEmpty(role))
-            {
-                return new ServiceResult<IEnumerable<string>>(ServiceResultType.InvalidData);
-            }
-            
-            return new ServiceResult<IEnumerable<string>>(ServiceResultType.Success, role.Split(','));
-        }
+            new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
+            new Claim(ClaimTypes.Email, userDto.Email),
+            new Claim(ClaimTypes.Role, string.Join(",", userDto.Roles))
+        };
 
-        public ClaimsPrincipal AssignClaims(UserResultDto userDto)
-        {
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
-                new Claim(ClaimTypes.Email, userDto.Email),
-                new Claim(ClaimTypes.Role, string.Join(",", userDto.Roles))
-            };
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            return new ClaimsPrincipal(claimsIdentity);
-        }
+        return new ClaimsPrincipal(claimsIdentity);
     }
 }

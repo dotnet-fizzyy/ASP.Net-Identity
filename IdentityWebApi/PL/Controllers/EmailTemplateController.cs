@@ -1,7 +1,5 @@
-using IdentityWebApi.BL.Enums;
 using IdentityWebApi.BL.Interfaces;
 using IdentityWebApi.PL.Constants;
-using IdentityWebApi.PL.Models.DTO;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +10,6 @@ using System.Threading.Tasks;
 namespace IdentityWebApi.PL.Controllers;
 
 [Authorize(Roles = UserRoleConstants.Admin)]
-[ApiController]
 [Route("api/email-template")]
 public class EmailTemplateController : ControllerBase
 {
@@ -24,15 +21,15 @@ public class EmailTemplateController : ControllerBase
     }
 
     [HttpGet("id/{id:guid}")]
-    public async Task<ActionResult<EmailTemplateDto>> GetEmailTemplate(Guid id)
+    public async Task<IActionResult> GetEmailTemplate(Guid id)
     {
         var emailTemplateResult = await _emailTemplateService.GetEmailTemplateDtoAsync(id);
 
-        if (emailTemplateResult.Result is ServiceResultType.NotFound)
+        if (emailTemplateResult.IsResultNotFound)
         {
             return NotFound();
         }
 
-        return emailTemplateResult.Data;
+        return Ok(emailTemplateResult.Data);
     }
 }

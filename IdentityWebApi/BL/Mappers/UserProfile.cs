@@ -1,23 +1,24 @@
-using System.Linq;
 using AutoMapper;
+
 using IdentityWebApi.DAL.Entities;
 using IdentityWebApi.PL.Models.Action;
 using IdentityWebApi.PL.Models.DTO;
 
-namespace IdentityWebApi.BL.Mappers
+using System.Linq;
+
+namespace IdentityWebApi.BL.Mappers;
+
+public class UserProfile : Profile
 {
-    public class UserProfile : Profile
+    public UserProfile()
     {
-        public UserProfile()
-        {
-            CreateMap<AppUser, UserResultDto>()
-                .ForMember(
-                    dist => dist.Roles, 
-                    ex => ex.MapFrom(en => en.UserRoles.Select(x => x.Role.Name))
-                );
-            
-            CreateMap<UserActionModel, AppUser>();
-            CreateMap<UserRegistrationActionModel, AppUser>();
-        }
+        CreateMap<AppUser, UserResultDto>()
+            .ForMember(
+                dist => dist.Roles,
+                ex => ex.MapFrom(en => en.UserRoles.Select(x => x.Role.Name))
+            );
+
+        CreateMap<UserActionModel, AppUser>();
+        CreateMap<UserRegistrationActionModel, AppUser>();
     }
 }
