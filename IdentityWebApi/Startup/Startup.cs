@@ -1,5 +1,3 @@
-using HealthChecks.UI.Client;
-
 using IdentityWebApi.Startup.Configuration;
 using IdentityWebApi.Startup.Settings;
 
@@ -8,7 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 using System;
 using System.Text.Json.Serialization;
@@ -82,15 +79,7 @@ namespace IdentityWebApi.Startup
             {
                 endpoints.MapControllers();
 
-                endpoints.MapHealthChecks("/health-check", new HealthCheckOptions
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
-                endpoints.MapHealthChecksUI(options =>
-                {
-                    options.UIPath = "/health-check-ui";
-                });
+                endpoints.RegisterHealthCheckEndpoint();
             });
 
             IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
