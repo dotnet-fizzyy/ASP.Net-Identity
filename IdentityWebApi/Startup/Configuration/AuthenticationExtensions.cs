@@ -2,9 +2,9 @@ using IdentityWebApi.Startup.Settings;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 
 using System;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Startup.Configuration;
@@ -28,14 +28,14 @@ public static class AuthenticationExtensions
 
                 options.Events.OnRedirectToLogin = context =>
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
                     return Task.CompletedTask;
                 };
 
                 options.Events.OnRedirectToAccessDenied = context =>
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
 
                     return Task.CompletedTask;
                 };
