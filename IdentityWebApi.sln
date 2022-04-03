@@ -17,6 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CC023A65-900
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityWebApi", "src\IdentityWebApi\IdentityWebApi.csproj", "{3FDC2111-631B-47A5-87A1-1B5C253A7CE8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{36E5C394-D9FB-4E12-AD70-54188D36CF2B}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\CreateMigration.sh = scripts\CreateMigration.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

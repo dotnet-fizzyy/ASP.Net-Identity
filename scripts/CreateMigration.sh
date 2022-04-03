@@ -1,4 +1,4 @@
-cd ./IdentityWebApi
+cd ../src/IdentityWebApi/ || exit
 
 echo "Please, enter migration name:"
 read migrationName
