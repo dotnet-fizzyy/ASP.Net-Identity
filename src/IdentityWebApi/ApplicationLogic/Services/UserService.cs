@@ -1,11 +1,10 @@
 using AutoMapper;
 
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Results;
-using IdentityWebApi.Presentation.Models.Action;
-using IdentityWebApi.Presentation.Models.DTO;
 
 using System;
 using System.Threading.Tasks;
@@ -38,7 +37,7 @@ public class UserService : IUserService
         );
     }
 
-    public async Task<ServiceResult<UserResultDto>> CreateUserAsync(UserActionModel user)
+    public async Task<ServiceResult<UserResultDto>> CreateUserAsync(UserDto user)
     {
         var userEntity = _mapper.Map<AppUser>(user);
 
@@ -55,7 +54,7 @@ public class UserService : IUserService
         );
     }
 
-    public async Task<ServiceResult<UserResultDto>> UpdateUserAsync(UserActionModel user)
+    public async Task<ServiceResult<UserResultDto>> UpdateUserAsync(UserDto user)
     {
         var userEntity = _mapper.Map<AppUser>(user);
 

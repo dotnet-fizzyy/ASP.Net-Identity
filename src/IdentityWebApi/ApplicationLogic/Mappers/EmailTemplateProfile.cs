@@ -1,7 +1,7 @@
 using AutoMapper;
 
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Entities;
-using IdentityWebApi.Presentation.Models.DTO;
 
 namespace IdentityWebApi.ApplicationLogic.Mappers;
 

@@ -1,7 +1,7 @@
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Results;
-using IdentityWebApi.Presentation.Models.DTO;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
 

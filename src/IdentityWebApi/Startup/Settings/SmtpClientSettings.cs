@@ -1,4 +1,4 @@
-using IdentityWebApi.Presentation.Validation;
+using IdentityWebApi.ApplicationLogic.Validation;
 
 using NetEscapades.Configuration.Validation;
 

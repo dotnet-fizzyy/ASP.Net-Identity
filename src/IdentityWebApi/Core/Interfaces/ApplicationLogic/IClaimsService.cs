@@ -1,8 +1,9 @@
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Results;
+
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using IdentityWebApi.Presentation.Models.DTO;
 
 namespace IdentityWebApi.Core.Interfaces.ApplicationLogic;
 

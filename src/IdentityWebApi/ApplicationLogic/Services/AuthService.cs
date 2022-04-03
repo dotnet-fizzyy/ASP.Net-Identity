@@ -1,12 +1,12 @@
 using AutoMapper;
 
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Results;
+
 using System.Threading.Tasks;
-using IdentityWebApi.Presentation.Models.Action;
-using IdentityWebApi.Presentation.Models.DTO;
 
 namespace IdentityWebApi.ApplicationLogic.Services;
 
@@ -22,7 +22,7 @@ public class AuthService : IAuthService
     }
 
     public async Task<ServiceResult<(UserResultDto userDto, string token)>> SignUpUserAsync(
-        UserRegistrationActionModel userModel)
+        UserRegistrationDto userModel)
     {
         var userEntity = _mapper.Map<AppUser>(userModel);
 
@@ -40,7 +40,7 @@ public class AuthService : IAuthService
         );
     }
 
-    public async Task<ServiceResult<UserResultDto>> SignInUserAsync(UserSignInActionModel userModel)
+    public async Task<ServiceResult<UserResultDto>> SignInUserAsync(UserSignInDto userModel)
     {
         var signInResult = await _unitOfWork.UserRepository.SignInUserAsync(userModel.Email, userModel.Password);
 

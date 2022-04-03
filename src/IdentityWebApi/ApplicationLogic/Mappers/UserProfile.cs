@@ -1,8 +1,7 @@
 using AutoMapper;
 
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Entities;
-using IdentityWebApi.Presentation.Models.Action;
-using IdentityWebApi.Presentation.Models.DTO;
 
 using System.Linq;
 
@@ -18,7 +17,7 @@ public class UserProfile : Profile
                 ex => ex.MapFrom(en => en.UserRoles.Select(x => x.Role.Name))
             );
 
-        CreateMap<UserActionModel, AppUser>();
-        CreateMap<UserRegistrationActionModel, AppUser>();
+        CreateMap<UserDto, AppUser>();
+        CreateMap<UserRegistrationDto, AppUser>();
     }
 }

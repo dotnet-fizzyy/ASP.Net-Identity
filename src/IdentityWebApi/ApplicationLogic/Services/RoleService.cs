@@ -1,12 +1,11 @@
 using AutoMapper;
 
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Results;
-using IdentityWebApi.Presentation.Models.Action;
-using IdentityWebApi.Presentation.Models.DTO;
 
 using System;
 using System.Threading.Tasks;
@@ -35,15 +34,15 @@ public class RoleService : IRoleService
         return new ServiceResult<RoleDto>(roleEntityResult.Result, roleModel);
     }
 
-    public async Task<ServiceResult> GrantRoleToUserAsync(UserRoleActionModel roleActionModel) =>
-        await HandleAppRole(_unitOfWork.RoleRepository.GrantRoleToUserAsync, roleActionModel.UserId,
-            roleActionModel.RoleId);
+    public async Task<ServiceResult> GrantRoleToUserAsync(UserRoleDto roleDto) =>
+        await HandleAppRole(_unitOfWork.RoleRepository.GrantRoleToUserAsync, roleDto.UserId,
+            roleDto.RoleId);
 
-    public async Task<ServiceResult> RevokeRoleFromUser(UserRoleActionModel roleActionModel) =>
-        await HandleAppRole(_unitOfWork.RoleRepository.RevokeRoleFromUserAsync, roleActionModel.UserId,
-            roleActionModel.RoleId);
+    public async Task<ServiceResult> RevokeRoleFromUser(UserRoleDto roleDto) =>
+        await HandleAppRole(_unitOfWork.RoleRepository.RevokeRoleFromUserAsync, roleDto.UserId,
+            roleDto.RoleId);
 
-    public async Task<ServiceResult<RoleDto>> CreateRoleAsync(RoleCreationActionModel roleDto)
+    public async Task<ServiceResult<RoleDto>> CreateRoleAsync(RoleCreationDto roleDto)
     {
         var roleEntity = _mapper.Map<AppRole>(roleDto);
 

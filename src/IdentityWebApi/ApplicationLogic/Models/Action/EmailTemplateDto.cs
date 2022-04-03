@@ -1,6 +1,6 @@
 using System;
 
-namespace IdentityWebApi.Presentation.Models.DTO;
+namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
 public class EmailTemplateDto
 {

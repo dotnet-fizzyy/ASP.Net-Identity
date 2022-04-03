@@ -27,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="ApplicationLogic\Models" />
       <Folder Include="Infrastructure\Migrations" />
     </ItemGroup>
 

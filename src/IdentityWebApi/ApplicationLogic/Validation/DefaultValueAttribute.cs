@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.Presentation.Validation;
+namespace IdentityWebApi.ApplicationLogic.Validation;
 
 public class DefaultValueAttribute : ValidationAttribute
 {

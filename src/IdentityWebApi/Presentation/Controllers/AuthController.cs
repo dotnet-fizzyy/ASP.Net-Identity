@@ -1,7 +1,7 @@
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Presentation;
-using IdentityWebApi.Presentation.Models.Action;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("sign-up")]
-    public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationActionModel userModel)
+    public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationDto userModel)
     {
         var creationResult = await _authService.SignUpUserAsync(userModel);
         
@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("sign-in")]
-    public async Task<IActionResult> SignIn([FromBody, BindRequired] UserSignInActionModel userModel)
+    public async Task<IActionResult> SignIn([FromBody, BindRequired] UserSignInDto userModel)
     {
         var signInResult = await _authService.SignInUserAsync(userModel);
         

@@ -1,8 +1,8 @@
-using IdentityWebApi.Presentation.Validation;
+using IdentityWebApi.ApplicationLogic.Validation;
 
 using System;
 
-namespace IdentityWebApi.Presentation.Models.DTO;
+namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
 public abstract class BaseUserDto
 {

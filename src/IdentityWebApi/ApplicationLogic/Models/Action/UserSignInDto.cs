@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.Presentation.Models.Action;
+namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
-public class UserSignInActionModel
+public class UserSignInDto
 {
     [Required] 
     [EmailAddress] 

@@ -1,10 +1,10 @@
-using IdentityWebApi.Presentation.Validation;
+using IdentityWebApi.ApplicationLogic.Validation;
 
 using System;
 
-namespace IdentityWebApi.Presentation.Models.Action;
+namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
-public class UserRoleActionModel
+public class UserRoleDto
 {
     [DefaultValue] 
     public Guid RoleId { get; set; }

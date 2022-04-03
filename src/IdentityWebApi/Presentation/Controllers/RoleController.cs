@@ -1,6 +1,5 @@
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
-using IdentityWebApi.Presentation.Models.Action;
-using IdentityWebApi.Presentation.Models.DTO;
 using IdentityWebApi.Core.Constants;
 
 using Microsoft.AspNetCore.Authorization;
@@ -39,9 +38,9 @@ public class RoleController : ControllerBase
     }
 
     [HttpPost("grant")]
-    public async Task<IActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleActionModel userRoleActionModel)
+    public async Task<IActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleDto userRoleDto)
     {
-        var roleGrantResult = await _roleService.GrantRoleToUserAsync(userRoleActionModel);
+        var roleGrantResult = await _roleService.GrantRoleToUserAsync(userRoleDto);
         
         if (roleGrantResult.IsResultFailed)
         {
@@ -52,9 +51,9 @@ public class RoleController : ControllerBase
     }
 
     [HttpPost("revoke")]
-    public async Task<IActionResult> RevokeRoleFromUser([FromBody, BindRequired] UserRoleActionModel userRoleActionModel)
+    public async Task<IActionResult> RevokeRoleFromUser([FromBody, BindRequired] UserRoleDto userRoleDto)
     {
-        var roleGrantResult = await _roleService.RevokeRoleFromUser(userRoleActionModel);
+        var roleGrantResult = await _roleService.RevokeRoleFromUser(userRoleDto);
 
         if (roleGrantResult.IsResultFailed)
         {
@@ -65,7 +64,7 @@ public class RoleController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<RoleDto>> CreateRole([FromBody, BindRequired] RoleCreationActionModel roleDto)
+    public async Task<ActionResult<RoleDto>> CreateRole([FromBody, BindRequired] RoleCreationDto roleDto)
     {
         var roleCreationResult = await _roleService.CreateRoleAsync(roleDto);
 
