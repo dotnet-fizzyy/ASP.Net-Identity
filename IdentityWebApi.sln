@@ -4,6 +4,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-co
 	ProjectSection(SolutionItems) = preProject
 		Dockerfile = Dockerfile
 		docker-compose.yml = docker-compose.yml
+		.dockerignore = .dockerignore
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityWebApi.UnitTests", "tests\IdentityWebApi.UnitTests\IdentityWebApi.UnitTests.csproj", "{3504A9E3-C8CC-4C62-B8BF-11F30D7CDE3B}"

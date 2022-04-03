@@ -1,5 +1,4 @@
-using IdentityWebApi.BL.Enums;
-using IdentityWebApi.BL.Services;
+using IdentityWebApi.Core.Enums;
 using IdentityWebApi.UnitTests.Shared.Constants;
 using IdentityWebApi.UnitTests.Shared.Controllers;
 
@@ -7,6 +6,7 @@ using NUnit.Framework;
 
 using System;
 using System.Linq;
+using IdentityWebApi.ApplicationLogic.Services;
 
 namespace IdentityWebApi.UnitTests.Tests.Services;
 

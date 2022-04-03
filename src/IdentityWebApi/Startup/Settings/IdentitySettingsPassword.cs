@@ -1,6 +1,6 @@
-using NetEscapades.Configuration.Validation;
+using IdentityWebApi.Presentation.Validation;
 
-using IdentityWebApi.PL.Validation;
+using NetEscapades.Configuration.Validation;
 
 using System.ComponentModel.DataAnnotations;
 

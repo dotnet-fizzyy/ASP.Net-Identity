@@ -1,5 +1,5 @@
-using IdentityWebApi.DAL;
-using IdentityWebApi.DAL.Entities;
+using IdentityWebApi.Core.Entities;
+using IdentityWebApi.Infrastructure;
 using IdentityWebApi.Startup.Settings;
 
 using Microsoft.AspNetCore.Identity;

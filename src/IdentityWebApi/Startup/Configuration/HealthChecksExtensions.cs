@@ -1,6 +1,6 @@
 using HealthChecks.UI.Client;
 
-using IdentityWebApi.DAL;
+using IdentityWebApi.Infrastructure;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
