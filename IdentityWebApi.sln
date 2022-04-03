@@ -2,13 +2,18 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityWebApi", "IdentityWebApi\IdentityWebApi.csproj", "{04040511-EE86-4A54-99F3-32C08E1F5D70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityWebApi.UnitTests", "IdentityWebApi.UnitTests\IdentityWebApi.UnitTests.csproj", "{E6F267D5-8A07-446E-BF3A-72079F649DE9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-compose", "{4411595A-5A93-47F8-8164-AD21F794353E}"
 	ProjectSection(SolutionItems) = preProject
 		Dockerfile = Dockerfile
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityWebApi.UnitTests", "tests\IdentityWebApi.UnitTests\IdentityWebApi.UnitTests.csproj", "{3504A9E3-C8CC-4C62-B8BF-11F30D7CDE3B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04040511-EE86-4A54-99F3-32C08E1F5D70} = {04040511-EE86-4A54-99F3-32C08E1F5D70}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{234FB9EC-F9A4-43E6-A3B8-65E0E4404132}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,9 +25,12 @@ Global
 		{04040511-EE86-4A54-99F3-32C08E1F5D70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04040511-EE86-4A54-99F3-32C08E1F5D70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04040511-EE86-4A54-99F3-32C08E1F5D70}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E6F267D5-8A07-446E-BF3A-72079F649DE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6F267D5-8A07-446E-BF3A-72079F649DE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E6F267D5-8A07-446E-BF3A-72079F649DE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E6F267D5-8A07-446E-BF3A-72079F649DE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3504A9E3-C8CC-4C62-B8BF-11F30D7CDE3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3504A9E3-C8CC-4C62-B8BF-11F30D7CDE3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3504A9E3-C8CC-4C62-B8BF-11F30D7CDE3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3504A9E3-C8CC-4C62-B8BF-11F30D7CDE3B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3504A9E3-C8CC-4C62-B8BF-11F30D7CDE3B} = {234FB9EC-F9A4-43E6-A3B8-65E0E4404132}
 	EndGlobalSection
 EndGlobal
