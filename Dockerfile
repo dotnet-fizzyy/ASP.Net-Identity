@@ -1,11 +1,11 @@
 ﻿# build
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY "IdentityWebApi/IdentityWebApi.csproj" ./
+COPY "./src/IdentityWebApi/IdentityWebApi.csproj" ./
 RUN dotnet restore "IdentityWebApi.csproj"
 COPY . .
 
-WORKDIR ./IdentityWebApi
+WORKDIR ./src/IdentityWebApi
 RUN dotnet build "IdentityWebApi.csproj" -c Release -o /app/build
 
 # publish
