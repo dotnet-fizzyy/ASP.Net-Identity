@@ -5,8 +5,6 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading;
 
 namespace IdentityWebApi.Startup.Configuration;
 
@@ -33,33 +31,5 @@ public static class SwaggerExtensions
     {
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IdentityWebApi v1"));
-    }
-
-    private static string CreateXmlFile()
-    {
-        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-        var xmlFileContent = "<?xml version=\"1.0\"?><doc></doc>";
-        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-        var startedFileCreation = false;
-        
-        while (!File.Exists(xmlPath))
-        {
-            if (!startedFileCreation)
-            {
-                using (FileStream fs = File.Create(xmlPath))
-                {
-                    var info = new UTF8Encoding(true).GetBytes(xmlFileContent);
-                    
-                    fs.Write(info, 0, info.Length);
-                }
-            }
-            
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-            
-            startedFileCreation = true;
-        }
-        
-        return xmlPath;
     }
 }
