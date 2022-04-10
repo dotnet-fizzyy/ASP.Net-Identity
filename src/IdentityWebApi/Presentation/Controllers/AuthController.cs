@@ -32,6 +32,11 @@ public class AuthController : ControllerBase
         _httpContextService = httpContextService;
     }
 
+    /// <summary>
+    /// User account creation
+    /// </summary>
+    /// <response code="201">Created user</response>
+    /// <response code="404">Unable to create user</response>
     [HttpPost("sign-up")]
     public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationDto userModel)
     {
@@ -55,6 +60,11 @@ public class AuthController : ControllerBase
         return Created(getUserLink, creationResult.Data.userDto);
     }
 
+    /// <summary>
+    /// User account authentication
+    /// </summary>
+    /// <response code="200">User has authenticated</response>
+    /// <response code="400">Unable to authenticate with provided credentials</response>
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignIn([FromBody, BindRequired] UserSignInDto userModel)
     {
@@ -72,6 +82,11 @@ public class AuthController : ControllerBase
         return Ok(signInResult.Data);
     }
 
+    /// <summary>
+    /// User account email confirmation
+    /// </summary>
+    /// <response code="200">Email has been confirmed</response>
+    /// <response code="400">Unable to create user</response>
     [HttpGet("confirm-email")]
     public async Task<IActionResult> ConfirmEmail([FromQuery, BindRequired] string email, [FromQuery, BindRequired] string token)
     {

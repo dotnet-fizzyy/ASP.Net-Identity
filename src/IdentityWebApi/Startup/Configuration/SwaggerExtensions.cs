@@ -2,6 +2,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+
 namespace IdentityWebApi.Startup.Configuration;
 
 public static class SwaggerExtensions
@@ -15,6 +21,11 @@ public static class SwaggerExtensions
                 Title = "IdentityWebApi",
                 Version = "v1"
             });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            
+            c.IncludeXmlComments(xmlPath);
         });
     }
 

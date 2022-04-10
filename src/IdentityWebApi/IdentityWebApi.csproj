@@ -6,6 +6,16 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\net6.0\IdentityWebApi.xml</DocumentationFile>
+      <NoWarn>1591;1701;1702</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\net6.0\IdentityWebApi.xml</DocumentationFile>
+      <NoWarn>1591;1701;1702</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.UI" Version="6.0.4" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.4" />
