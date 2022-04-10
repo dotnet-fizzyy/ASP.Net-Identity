@@ -1,6 +1,6 @@
 using NetEscapades.Configuration.Validation;
 
-namespace IdentityWebApi.Startup.Settings;
+namespace IdentityWebApi.Core.ApplicationSettings;
 
 public class AppSettings : IValidatable
 {

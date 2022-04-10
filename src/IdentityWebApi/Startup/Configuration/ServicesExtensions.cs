@@ -1,11 +1,11 @@
 using IdentityWebApi.ApplicationLogic.Services;
+using IdentityWebApi.Core.ApplicationSettings;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;
 using IdentityWebApi.Infrastructure;
 using IdentityWebApi.Infrastructure.Repository;
 using IdentityWebApi.Presentation.Services;
-using IdentityWebApi.Startup.Settings;
 
 using Microsoft.Extensions.DependencyInjection;
 

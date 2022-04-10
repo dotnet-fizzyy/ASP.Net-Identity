@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.Startup.Settings;
+namespace IdentityWebApi.Core.ApplicationSettings;
 
 public class DefaultUserSettings
 {

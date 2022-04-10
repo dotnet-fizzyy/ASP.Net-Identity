@@ -1,5 +1,5 @@
+using IdentityWebApi.Core.ApplicationSettings;
 using IdentityWebApi.Startup.Configuration;
-using IdentityWebApi.Startup.Settings;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

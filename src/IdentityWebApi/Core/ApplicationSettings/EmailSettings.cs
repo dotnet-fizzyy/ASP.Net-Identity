@@ -1,4 +1,4 @@
-namespace IdentityWebApi.Startup.Settings;
+namespace IdentityWebApi.Core.ApplicationSettings;
 
 public class EmailSettings
 {

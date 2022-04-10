@@ -1,9 +1,9 @@
+using IdentityWebApi.Core.ApplicationSettings;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Results;
-using IdentityWebApi.Startup.Settings;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

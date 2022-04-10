@@ -1,4 +1,4 @@
-using IdentityWebApi.Startup.Settings;
+using IdentityWebApi.Core.ApplicationSettings;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;

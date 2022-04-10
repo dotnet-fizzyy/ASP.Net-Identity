@@ -4,7 +4,7 @@ using NetEscapades.Configuration.Validation;
 
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.Startup.Settings;
+namespace IdentityWebApi.Core.ApplicationSettings;
 
 public class SmtpClientSettings : IValidatable
 {
