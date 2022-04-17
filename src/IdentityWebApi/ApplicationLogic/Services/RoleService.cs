@@ -35,12 +35,18 @@ public class RoleService : IRoleService
     }
 
     public async Task<ServiceResult> GrantRoleToUserAsync(UserRoleDto roleDto) =>
-        await HandleAppRole(_unitOfWork.RoleRepository.GrantRoleToUserAsync, roleDto.UserId,
-            roleDto.RoleId);
+        await HandleAppRole(
+            _unitOfWork.RoleRepository.GrantRoleToUserAsync, 
+            roleDto.UserId,
+            roleDto.RoleId
+        );
 
     public async Task<ServiceResult> RevokeRoleFromUser(UserRoleDto roleDto) =>
-        await HandleAppRole(_unitOfWork.RoleRepository.RevokeRoleFromUserAsync, roleDto.UserId,
-            roleDto.RoleId);
+        await HandleAppRole(
+            _unitOfWork.RoleRepository.RevokeRoleFromUserAsync, 
+            roleDto.UserId,
+            roleDto.RoleId
+        );
 
     public async Task<ServiceResult<RoleDto>> CreateRoleAsync(RoleCreationDto roleDto)
     {
@@ -69,8 +75,10 @@ public class RoleService : IRoleService
     }
 
 
-    private async Task<ServiceResult<RoleDto>> HandleAppRole(Func<AppRole, Task<ServiceResult<AppRole>>> repositoryCall,
-        AppRole roleEntity)
+    private async Task<ServiceResult<RoleDto>> HandleAppRole(
+        Func<AppRole, Task<ServiceResult<AppRole>>> repositoryCall,
+        AppRole roleEntity
+    )
     {
         var roleCreationResult = await repositoryCall(roleEntity);
 
@@ -83,8 +91,11 @@ public class RoleService : IRoleService
         return new ServiceResult<RoleDto>(roleCreationResult.Result, roleModel);
     }
 
-    private async Task<ServiceResult> HandleAppRole(Func<Guid, Guid, Task<ServiceResult>> repositoryCall, Guid userId,
-        Guid roleId)
+    private async Task<ServiceResult> HandleAppRole(
+        Func<Guid, Guid, Task<ServiceResult>> repositoryCall, 
+        Guid userId,
+        Guid roleId
+    )
     {
         var serviceResult = await repositoryCall(userId, roleId);
 
