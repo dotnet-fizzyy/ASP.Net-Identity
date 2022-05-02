@@ -3,7 +3,7 @@ using IdentityWebApi.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace IdentityWebApi.Infrastructure.Configuration;
+namespace IdentityWebApi.Infrastructure.Database.Configuration;
 
 public class AppUserRoleConfiguration : IEntityTypeConfiguration<AppUserRole>
 {

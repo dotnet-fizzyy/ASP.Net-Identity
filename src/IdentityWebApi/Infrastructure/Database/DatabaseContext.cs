@@ -1,4 +1,5 @@
 using IdentityWebApi.Core.Entities;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Reflection;
 
-namespace IdentityWebApi.Infrastructure;
+namespace IdentityWebApi.Infrastructure.Database;
 
 public sealed class DatabaseContext : IdentityDbContext<
     AppUser,

@@ -1,6 +1,6 @@
 using IdentityWebApi.Core.ApplicationSettings;
 using IdentityWebApi.Core.Entities;
-using IdentityWebApi.Infrastructure;
+using IdentityWebApi.Infrastructure.Database;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

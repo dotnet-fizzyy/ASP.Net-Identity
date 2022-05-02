@@ -1,7 +1,7 @@
 using IdentityWebApi.Core.ApplicationSettings;
-using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Entities;
+using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Results;
 
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.Infrastructure.Repository;
+namespace IdentityWebApi.Infrastructure.Database.Repository;
 
 public class UserRepository : BaseRepository<AppUser>, IUserRepository
 {

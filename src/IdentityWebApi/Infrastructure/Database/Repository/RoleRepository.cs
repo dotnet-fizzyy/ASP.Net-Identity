@@ -1,15 +1,14 @@
+using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
-using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Results;
-
 using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.Infrastructure.Repository;
+namespace IdentityWebApi.Infrastructure.Database.Repository;
 
 public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
 {

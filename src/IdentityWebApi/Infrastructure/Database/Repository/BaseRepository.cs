@@ -6,7 +6,7 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.Infrastructure.Repository;
+namespace IdentityWebApi.Infrastructure.Database.Repository;
 
 public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
 {
@@ -19,10 +19,6 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
         _entity = databaseContext.Set<T>();
     }
 
-    public async Task<T> SearchForSingleItemAsync(Expression<Func<T, bool>> expression)
-    {
-        var item = await _entity.AsNoTracking().SingleOrDefaultAsync(expression);
-
-        return item;
-    }
+    public async Task<T> SearchForSingleItemAsync(Expression<Func<T, bool>> expression) => 
+        await _entity.AsNoTracking().SingleOrDefaultAsync(expression);
 }

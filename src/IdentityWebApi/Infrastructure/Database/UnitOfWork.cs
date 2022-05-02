@@ -3,7 +3,7 @@ using IdentityWebApi.Core.Interfaces.Infrastructure;
 using System;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.Infrastructure;
+namespace IdentityWebApi.Infrastructure.Database;
 
 public class UnitOfWork : IUnitOfWork, IDisposable
 {

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using System;
 
-namespace IdentityWebApi.Infrastructure.Configuration;
+namespace IdentityWebApi.Infrastructure.Database.Configuration;
 
 public class EmailTemplateConfiguration : IEntityTypeConfiguration<EmailTemplate>
 {

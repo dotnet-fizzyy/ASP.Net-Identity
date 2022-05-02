@@ -2,6 +2,7 @@
 using System;
 using IdentityWebApi.DAL;
 using IdentityWebApi.Infrastructure;
+using IdentityWebApi.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;

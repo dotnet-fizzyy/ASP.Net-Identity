@@ -1,7 +1,7 @@
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 
-namespace IdentityWebApi.Infrastructure.Repository;
+namespace IdentityWebApi.Infrastructure.Database.Repository;
 
 public class EmailTemplateRepository : BaseRepository<EmailTemplate>, IEmailTemplateRepository
 {
