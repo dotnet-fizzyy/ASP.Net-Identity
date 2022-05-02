@@ -15,20 +15,24 @@ namespace IdentityWebApi.Startup.Configuration;
 
 public static class IdentityServerExtensions
 {
-    public static void RegisterIdentityServer(this IServiceCollection services, AppSettings appSettings)
+    public static void RegisterIdentityServer(
+        this IServiceCollection services, 
+        IdentitySettings identitySettings, 
+        string dbConnectionString
+    )
     {
         services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer(appSettings.DbSettings.ConnectionString));
+            options.UseSqlServer(dbConnectionString));
 
         services.AddIdentity<AppUser, AppRole>(options =>
             {
-                options.User.RequireUniqueEmail = appSettings.IdentitySettings.Email.RequiredUniqueEmail;
-                options.Password.RequireDigit = appSettings.IdentitySettings.Password.RequireDigit;
-                options.Password.RequireLowercase = appSettings.IdentitySettings.Password.RequireLowercase;
-                options.Password.RequireUppercase = appSettings.IdentitySettings.Password.RequireUppercase;
-                options.Password.RequireNonAlphanumeric = appSettings.IdentitySettings.Password.RequireNonAlphanumeric;
-                options.Password.RequiredLength = appSettings.IdentitySettings.Password.RequiredLength;
-                options.Password.RequiredUniqueChars = appSettings.IdentitySettings.Password.RequiredUniqueChars;
+                options.User.RequireUniqueEmail = identitySettings.Email.RequiredUniqueEmail;
+                options.Password.RequireDigit = identitySettings.Password.RequireDigit;
+                options.Password.RequireLowercase = identitySettings.Password.RequireLowercase;
+                options.Password.RequireUppercase = identitySettings.Password.RequireUppercase;
+                options.Password.RequireNonAlphanumeric = identitySettings.Password.RequireNonAlphanumeric;
+                options.Password.RequiredLength = identitySettings.Password.RequiredLength;
+                options.Password.RequiredUniqueChars = identitySettings.Password.RequiredUniqueChars;
             })
             .AddRoles<AppRole>()
             .AddEntityFrameworkStores<DatabaseContext>()
@@ -37,7 +41,7 @@ public static class IdentityServerExtensions
 
     public static async Task InitializeUserRoles(IServiceProvider serviceProvider, ICollection<string> roles)
     {
-        if (IsCollectionEmpty(roles))
+        if (IsCollectionNullOrEmpty(roles))
         {
             return;
         }
@@ -59,7 +63,7 @@ public static class IdentityServerExtensions
         bool requireConfirmation
     )
     {
-        if (IsCollectionEmpty(defaultUsers))
+        if (IsCollectionNullOrEmpty(defaultUsers))
         {
             return;
         }
@@ -98,7 +102,7 @@ public static class IdentityServerExtensions
     }
 
 
-    private static bool IsCollectionEmpty<T>(ICollection<T> collection) => collection is null || !collection.Any(); 
+    private static bool IsCollectionNullOrEmpty<T>(ICollection<T> collection) => collection is null || !collection.Any(); 
     
     private static async Task ConfirmDefaultAdminEmail(
         UserManager<AppUser> userManager, 

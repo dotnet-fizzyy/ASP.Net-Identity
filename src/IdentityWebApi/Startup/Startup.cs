@@ -1,6 +1,5 @@
 using IdentityWebApi.Core.ApplicationSettings;
 using IdentityWebApi.Startup.Configuration;
-using IdentityWebApi.Presentation.Filters;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using System;
-using System.Text.Json.Serialization;
 
 namespace IdentityWebApi.Startup;
 
@@ -31,7 +29,8 @@ public class Startup
 
         services.RegisterServices(appSettings);
 
-        services.RegisterIdentityServer(appSettings); // Identity server setup should go before Auth setup
+        // Identity server setup should go before Auth setup
+        services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString); 
         services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
 
         services.RegisterAutomapper();
@@ -45,15 +44,7 @@ public class Startup
             opts.LowercaseUrls = true;
         });
         
-        // todo: move to separate config
-        services.AddControllers(options =>
-        {
-            options.Filters.Add(typeof(RegionVerificationFilter));
-        }).AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-        });
+        services.RegisterControllers();
 
         services.RegisterSwagger();
     }
