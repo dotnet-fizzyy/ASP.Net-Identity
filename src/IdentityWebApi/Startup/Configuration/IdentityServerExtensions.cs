@@ -22,7 +22,8 @@ public static class IdentityServerExtensions
     )
     {
         services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer(dbConnectionString));
+            options.UseSqlServer(dbConnectionString)
+        );
 
         services.AddIdentity<AppUser, AppRole>(options =>
             {
@@ -72,16 +73,18 @@ public static class IdentityServerExtensions
 
         foreach (var defaultUser in defaultUsers)
         {
-            if (string.IsNullOrEmpty(defaultUser.Name) ||
-                string.IsNullOrEmpty(defaultUser.Password) ||
-                string.IsNullOrEmpty(defaultUser.Role) ||
-                string.IsNullOrEmpty(defaultUser.Email))
+            var isRequiredUserInformationMissing = string.IsNullOrEmpty(defaultUser.Name) ||
+                                                   string.IsNullOrEmpty(defaultUser.Password) ||
+                                                   string.IsNullOrEmpty(defaultUser.Role) ||
+                                                   string.IsNullOrEmpty(defaultUser.Email);
+            
+            if (isRequiredUserInformationMissing)
             {
                 return;
             }
 
             var existingAdmin = await userManager.FindByEmailAsync(defaultUser.Email);
-            if (existingAdmin is not null)
+            if (existingAdmin != null)
             {
                 await ConfirmDefaultAdminEmail(userManager, existingAdmin, requireConfirmation);
 
@@ -102,7 +105,8 @@ public static class IdentityServerExtensions
     }
 
 
-    private static bool IsCollectionNullOrEmpty<T>(ICollection<T> collection) => collection is null || !collection.Any(); 
+    private static bool IsCollectionNullOrEmpty<T>(ICollection<T> collection) => 
+        collection == null || !collection.Any(); 
     
     private static async Task ConfirmDefaultAdminEmail(
         UserManager<AppUser> userManager, 
