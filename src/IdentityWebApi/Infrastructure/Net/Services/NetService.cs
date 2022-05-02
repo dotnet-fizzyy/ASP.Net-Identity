@@ -3,14 +3,14 @@ using AutoMapper;
 using IdentityWebApi.Core.ApplicationSettings;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Models;
-using IdentityWebApi.Infrastructure.IpStack.Models;
+using IdentityWebApi.Infrastructure.Net.Models;
 
 using Newtonsoft.Json;
 
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.Infrastructure.IpStack.Services;
+namespace IdentityWebApi.Infrastructure.Net.Services;
 
 public class NetService : INetService
 {

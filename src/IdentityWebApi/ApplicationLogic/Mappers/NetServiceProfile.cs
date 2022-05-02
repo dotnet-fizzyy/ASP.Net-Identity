@@ -1,7 +1,7 @@
 using AutoMapper;
 
 using IdentityWebApi.Core.Models;
-using IdentityWebApi.Infrastructure.IpStack.Models;
+using IdentityWebApi.Infrastructure.Net.Models;
 
 namespace IdentityWebApi.ApplicationLogic.Mappers;
 

@@ -4,7 +4,7 @@ using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;
 using IdentityWebApi.Infrastructure;
-using IdentityWebApi.Infrastructure.IpStack.Services;
+using IdentityWebApi.Infrastructure.Net.Services;
 using IdentityWebApi.Infrastructure.Repository;
 using IdentityWebApi.Presentation.Services;
 
