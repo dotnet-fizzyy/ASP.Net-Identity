@@ -4,6 +4,7 @@ using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;
 using IdentityWebApi.Infrastructure;
+using IdentityWebApi.Infrastructure.IpStack.Services;
 using IdentityWebApi.Infrastructure.Repository;
 using IdentityWebApi.Presentation.Services;
 
@@ -15,20 +16,21 @@ public static class ServicesExtensions
 {
     public static void RegisterServices(this IServiceCollection services, AppSettings appSettings)
     {
-        //AppSettings
+        // AppSettings
         services.AddSingleton(appSettings);
 
-        //Services
+        // Services
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IClaimsService, ClaimsService>();
         services.AddTransient<IRoleService, RoleService>();
         services.AddTransient<IEmailTemplateService, EmailTemplateService>();
+        services.AddSingleton<INetService, NetService>();
 
         services.AddScoped<IHttpContextService, HttpContextService>();
 
-        //Repository
+        // Repository
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();

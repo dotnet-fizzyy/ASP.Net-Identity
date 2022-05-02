@@ -1,5 +1,6 @@
 using IdentityWebApi.Core.ApplicationSettings;
 using IdentityWebApi.Startup.Configuration;
+using IdentityWebApi.Presentation.Filters;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,7 +45,11 @@ public class Startup
             opts.LowercaseUrls = true;
         });
         
-        services.AddControllers().AddJsonOptions(options =>
+        // todo: move to separate config
+        services.AddControllers(options =>
+        {
+            options.Filters.Add(typeof(RegionVerificationFilter));
+        }).AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
@@ -101,12 +106,16 @@ public class Startup
     {
         var dbSettings = configuration.GetSection(nameof(AppSettings.DbSettings)).Get<DbSettings>();
         var smtpClientSettings = configuration.GetSection(nameof(AppSettings.SmtpClientSettings)).Get<SmtpClientSettings>();
+        var ipStackSettings = configuration.GetSection(nameof(AppSettings.IpStackSettings)).Get<IpStackSettings>();
+        var regionVerification = configuration.GetSection(nameof(AppSettings.RegionsVerificationSettings)).Get<RegionsVerificationSettings>();
         var identitySettings = configuration.GetSection(nameof(AppSettings.IdentitySettings)).Get<IdentitySettings>();
 
         return new AppSettings
         {
             DbSettings = dbSettings,
             SmtpClientSettings = smtpClientSettings,
+            IpStackSettings = ipStackSettings,
+            RegionsVerificationSettings = regionVerification,
             IdentitySettings = identitySettings
         };
     }
