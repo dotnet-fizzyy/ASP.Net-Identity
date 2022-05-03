@@ -19,11 +19,11 @@ public class AuthController : ControllerBase
     private readonly IEmailService _emailService;
     private readonly IClaimsService _claimsService;
     private readonly IHttpContextService _httpContextService;
-    
+
     public AuthController(
-        IAuthService authService, 
-        IEmailService emailService, 
-        IClaimsService claimsService, 
+        IAuthService authService,
+        IEmailService emailService,
+        IClaimsService claimsService,
         IHttpContextService httpContextService
     )
     {
@@ -45,7 +45,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationDto userModel)
     {
         var creationResult = await _authService.SignUpUserAsync(userModel);
-        
+
         if (creationResult.IsResultNotFound)
         {
             // todo: replace 404 with 400
@@ -53,12 +53,12 @@ public class AuthController : ControllerBase
         }
 
         var confirmationLink = _httpContextService.GenerateConfirmEmailLink(
-            creationResult.Data.userDto.Email, 
+            creationResult.Data.userDto.Email,
             creationResult.Data.token
         );
 
         await _emailService.SendEmailAsync(
-            creationResult.Data.userDto.Email, 
+            creationResult.Data.userDto.Email,
             EmailSubjects.AccountConfirmation,
             $"<a href='{confirmationLink}'>confirm</a>"
         );
@@ -80,7 +80,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<UserResultDto>> SignIn([FromBody, BindRequired] UserSignInDto userModel)
     {
         var signInResult = await _authService.SignInUserAsync(userModel);
-        
+
         if (signInResult.IsResultFailed)
         {
             return GetFailedResponseByServiceResult(signInResult);

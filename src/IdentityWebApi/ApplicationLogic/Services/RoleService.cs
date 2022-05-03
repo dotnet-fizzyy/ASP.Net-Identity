@@ -36,14 +36,14 @@ public class RoleService : IRoleService
 
     public async Task<ServiceResult> GrantRoleToUserAsync(UserRoleDto roleDto) =>
         await HandleAppRole(
-            _unitOfWork.RoleRepository.GrantRoleToUserAsync, 
+            _unitOfWork.RoleRepository.GrantRoleToUserAsync,
             roleDto.UserId,
             roleDto.RoleId
         );
 
     public async Task<ServiceResult> RevokeRoleFromUser(UserRoleDto roleDto) =>
         await HandleAppRole(
-            _unitOfWork.RoleRepository.RevokeRoleFromUserAsync, 
+            _unitOfWork.RoleRepository.RevokeRoleFromUserAsync,
             roleDto.UserId,
             roleDto.RoleId
         );
@@ -92,7 +92,7 @@ public class RoleService : IRoleService
     }
 
     private async Task<ServiceResult> HandleAppRole(
-        Func<Guid, Guid, Task<ServiceResult>> repositoryCall, 
+        Func<Guid, Guid, Task<ServiceResult>> repositoryCall,
         Guid userId,
         Guid roleId
     )

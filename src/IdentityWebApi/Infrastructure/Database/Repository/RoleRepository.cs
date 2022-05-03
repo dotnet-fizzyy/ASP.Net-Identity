@@ -13,12 +13,12 @@ namespace IdentityWebApi.Infrastructure.Database.Repository;
 public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
 {
     private const string ExistingRoleEntityExceptionMessage = "This role already exists";
-    
+
     public const string MissingRoleExceptionMessage = "No such role exists";
 
     public RoleRepository(DatabaseContext databaseContext) : base(databaseContext)
     {
-        
+
     }
 
     public async Task<ServiceResult<AppRole>> GetRoleByIdAsync(Guid id)

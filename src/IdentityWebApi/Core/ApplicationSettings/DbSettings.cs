@@ -8,19 +8,19 @@ namespace IdentityWebApi.Core.ApplicationSettings;
 
 public class DbSettings : IValidatable
 {
-    [Required] 
+    [Required]
     public string Host { get; set; }
 
-    [DefaultValue] 
+    [DefaultValue]
     public int Port { get; set; }
 
-    [Required] 
+    [Required]
     public string Instance { get; set; }
 
-    [Required] 
+    [Required]
     public string User { get; set; }
 
-    [Required] 
+    [Required]
     public string Password { get; set; }
 
     public string ConnectionString =>

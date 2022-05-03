@@ -4,9 +4,9 @@ namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
 public class UserDto : BaseUserDto
 {
-    [DefaultValue] 
+    [DefaultValue]
     public string Password { get; set; }
 
-    [DefaultValue] 
+    [DefaultValue]
     public string UserRole { get; set; }
 }

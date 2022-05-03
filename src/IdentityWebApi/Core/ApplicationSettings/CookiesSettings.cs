@@ -10,7 +10,7 @@ public class CookiesSettings : IValidatable
 {
     public bool SlidingExpiration { get; set; }
 
-    [DefaultValue] 
+    [DefaultValue]
     public int ExpirationMinutes { get; set; }
 
     public void Validate()

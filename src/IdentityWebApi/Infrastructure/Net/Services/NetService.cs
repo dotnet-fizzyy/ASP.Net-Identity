@@ -17,7 +17,7 @@ public class NetService : INetService
     private static readonly HttpClient HttpClient = new ();
 
     private const string IpStackUrl = "http://api.ipstack.com";
-    
+
     private readonly IMapper _mapper;
     private readonly AppSettings _appSettings;
 
@@ -26,7 +26,7 @@ public class NetService : INetService
         _mapper = mapper;
         _appSettings = appSettings;
     }
-    
+
     public async Task<IpAddressDetails> GetIpAddressDetails(string ipv4)
     {
         var httpResponse = await HttpClient.GetAsync($"{IpStackUrl}/{ipv4}?access_key={_appSettings.IpStackSettings.AccessKey}");
@@ -36,7 +36,7 @@ public class NetService : INetService
         var ipStackResponse = JsonConvert.DeserializeObject<IpStackResponseModel>(jsonResponseMessage);
 
         var ipAddressDetails = _mapper.Map<IpAddressDetails>(ipStackResponse);
-        
+
         return ipAddressDetails;
     }
 }

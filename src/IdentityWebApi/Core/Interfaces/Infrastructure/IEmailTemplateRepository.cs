@@ -4,5 +4,5 @@ namespace IdentityWebApi.Core.Interfaces.Infrastructure;
 
 public interface IEmailTemplateRepository : IBaseRepository<EmailTemplate>
 {
-    
+
 }

@@ -30,7 +30,7 @@ public class Startup
         services.RegisterServices(appSettings);
 
         // Identity server setup should go before Auth setup
-        services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString); 
+        services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString);
         services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
 
         services.RegisterAutomapper();
@@ -38,12 +38,12 @@ public class Startup
         services.RegisterHealthChecks(appSettings.DbSettings.ConnectionString);
 
         services.AddHttpContextAccessor();
-        
+
         services.AddRouting(opts =>
         {
             opts.LowercaseUrls = true;
         });
-        
+
         services.RegisterControllers();
 
         services.RegisterSwagger();
@@ -87,7 +87,7 @@ public class Startup
 
         IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
         IdentityServerExtensions.InitializeDefaultUsers(
-            serviceProvider, 
+            serviceProvider,
             appSettings.IdentitySettings.DefaultUsers,
             appSettings.IdentitySettings.Email.RequireConfirmation
         ).Wait();
@@ -107,7 +107,7 @@ public class Startup
             SmtpClientSettings = smtpClientSettings,
             IpStackSettings = ipStackSettings,
             RegionsVerificationSettings = regionVerification,
-            IdentitySettings = identitySettings
+            IdentitySettings = identitySettings,
         };
     }
 }

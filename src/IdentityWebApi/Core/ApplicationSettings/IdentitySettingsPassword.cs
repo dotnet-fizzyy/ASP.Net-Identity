@@ -16,10 +16,10 @@ public class IdentitySettingsPassword : IValidatable
 
     public bool RequireNonAlphanumeric { get; set; }
 
-    [DefaultValue] 
+    [DefaultValue]
     public int RequiredLength { get; set; }
 
-    [DefaultValue] 
+    [DefaultValue]
     public int RequiredUniqueChars { get; set; }
 
     public void Validate()

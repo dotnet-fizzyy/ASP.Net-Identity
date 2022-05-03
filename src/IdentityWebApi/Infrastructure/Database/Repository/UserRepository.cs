@@ -73,7 +73,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         if (!userCreationResult.Succeeded)
         {
             return new ServiceResult<(AppUser appUser, string token)>(
-                ServiceResultType.InternalError, 
+                ServiceResultType.InternalError,
                 CreateErrorMessage(userCreationResult.Errors)
             );
         }
@@ -90,7 +90,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
             if (!roleAssignmentResult.Succeeded)
             {
                 return new ServiceResult<(AppUser appUser, string token)>(
-                    ServiceResultType.InternalError, 
+                    ServiceResultType.InternalError,
                     CreateErrorMessage(roleAssignmentResult.Errors)
                 );
             }
@@ -125,7 +125,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         if (!confirmationResult.Succeeded)
         {
             return new ServiceResult<AppUser>(
-                ServiceResultType.InternalError, 
+                ServiceResultType.InternalError,
                 CreateErrorMessage(confirmationResult.Errors)
             );
         }
@@ -174,10 +174,10 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.Role)
             .FirstOrDefaultAsync(expression);
-    
+
     private static bool RoleExists(IEnumerable<string> roles, string role) =>
         roles.Any(x => string.Equals(x, role, StringComparison.CurrentCultureIgnoreCase));
-    
+
     private static string CreateErrorMessage(IEnumerable<IdentityError> errors) =>
         string.Join(",", errors.Select(x => x.Description));
 }

@@ -6,9 +6,9 @@ namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
 public class UserRoleDto
 {
-    [DefaultValue] 
+    [DefaultValue]
     public Guid RoleId { get; set; }
 
-    [DefaultValue] 
+    [DefaultValue]
     public Guid UserId { get; set; }
 }

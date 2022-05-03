@@ -8,7 +8,7 @@ public class IpStackSettings : IValidatable
 {
     [Required]
     public string AccessKey { get; set; }
-    
+
     public void Validate()
     {
         Validator.ValidateObject(this, new ValidationContext(this), true);

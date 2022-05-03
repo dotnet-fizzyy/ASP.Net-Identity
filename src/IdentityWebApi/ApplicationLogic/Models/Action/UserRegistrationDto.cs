@@ -4,9 +4,9 @@ namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
 public class UserRegistrationDto : UserSignInDto
 {
-    [DefaultValue] 
+    [DefaultValue]
     public string UserName { get; set; }
 
-    [DefaultValue] 
+    [DefaultValue]
     public string Role { get; set; }
 }

@@ -19,6 +19,6 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
         _entity = databaseContext.Set<T>();
     }
 
-    public async Task<T> SearchForSingleItemAsync(Expression<Func<T, bool>> expression) => 
+    public async Task<T> SearchForSingleItemAsync(Expression<Func<T, bool>> expression) =>
         await _entity.AsNoTracking().SingleOrDefaultAsync(expression);
 }

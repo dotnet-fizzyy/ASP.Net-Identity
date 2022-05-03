@@ -4,17 +4,17 @@ namespace IdentityWebApi.Core.ApplicationSettings;
 
 public class DefaultUserSettings
 {
-    [Required] 
+    [Required]
     public string Name { get; set; }
 
-    [Required] 
+    [Required]
     public string Password { get; set; }
 
-    [Required] 
+    [Required]
     public string Role { get; set; }
 
-    [Required] 
-    [EmailAddress] 
+    [Required]
+    [EmailAddress]
     public string Email { get; set; }
 
     public void Validate()

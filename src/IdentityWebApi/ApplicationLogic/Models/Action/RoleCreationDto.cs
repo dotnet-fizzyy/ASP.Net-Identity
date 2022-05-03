@@ -4,6 +4,6 @@ namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
 public class RoleCreationDto
 {
-    [DefaultValue] 
+    [DefaultValue]
     public string Name { get; set; }
 }

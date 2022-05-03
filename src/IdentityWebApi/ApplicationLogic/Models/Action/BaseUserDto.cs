@@ -6,10 +6,10 @@ namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
 public abstract class BaseUserDto
 {
-    [DefaultValue] 
+    [DefaultValue]
     public Guid Id { get; set; }
 
-    [DefaultValue] 
+    [DefaultValue]
     public string UserName { get; set; }
 
     [DefaultValue]

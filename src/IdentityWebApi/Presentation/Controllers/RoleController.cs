@@ -1,6 +1,6 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Constants;
+using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -55,7 +55,7 @@ public class RoleController : ControllerBase
     public async Task<IActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleDto userRoleDto)
     {
         var roleGrantResult = await _roleService.GrantRoleToUserAsync(userRoleDto);
-        
+
         if (roleGrantResult.IsResultFailed)
         {
             return GetFailedResponseByServiceResult(roleGrantResult);
@@ -126,7 +126,7 @@ public class RoleController : ControllerBase
 
         return roleUpdateResult.Data;
     }
-    
+
     /// <summary>
     /// Remove role by id
     /// </summary>

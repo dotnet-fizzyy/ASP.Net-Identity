@@ -16,8 +16,8 @@ namespace IdentityWebApi.Startup.Configuration;
 public static class IdentityServerExtensions
 {
     public static void RegisterIdentityServer(
-        this IServiceCollection services, 
-        IdentitySettings identitySettings, 
+        this IServiceCollection services,
+        IdentitySettings identitySettings,
         string dbConnectionString
     )
     {
@@ -60,7 +60,7 @@ public static class IdentityServerExtensions
 
     public static async Task InitializeDefaultUsers(
         IServiceProvider serviceProvider,
-        ICollection<DefaultUserSettings> defaultUsers, 
+        ICollection<DefaultUserSettings> defaultUsers,
         bool requireConfirmation
     )
     {
@@ -77,7 +77,7 @@ public static class IdentityServerExtensions
                                                    string.IsNullOrEmpty(defaultUser.Password) ||
                                                    string.IsNullOrEmpty(defaultUser.Role) ||
                                                    string.IsNullOrEmpty(defaultUser.Email);
-            
+
             if (isRequiredUserInformationMissing)
             {
                 return;
@@ -105,11 +105,11 @@ public static class IdentityServerExtensions
     }
 
 
-    private static bool IsCollectionNullOrEmpty<T>(ICollection<T> collection) => 
-        collection == null || !collection.Any(); 
-    
+    private static bool IsCollectionNullOrEmpty<T>(ICollection<T> collection) =>
+        collection == null || !collection.Any();
+
     private static async Task ConfirmDefaultAdminEmail(
-        UserManager<AppUser> userManager, 
+        UserManager<AppUser> userManager,
         AppUser appUserAdmin,
         bool requireConfirmation
     )

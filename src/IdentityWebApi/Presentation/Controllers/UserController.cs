@@ -1,13 +1,12 @@
+using System;
+using System.Threading.Tasks;
 using IdentityWebApi.ApplicationLogic.Models.Action;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Constants;
+using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-using System;
-using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Controllers;
 
@@ -54,7 +53,7 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserDto user) => 
+    public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserDto user) =>
         (await _userService.CreateUserAsync(user)).Data;
 
     [Authorize(Roles = UserRoleConstants.Admin)]

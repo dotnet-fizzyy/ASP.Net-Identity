@@ -7,7 +7,7 @@ namespace IdentityWebApi.Core.ApplicationSettings;
 
 public class IdentitySettings : IValidatable
 {
-    [Required] 
+    [Required]
     public ICollection<string> Roles { get; set; } = new List<string>();
 
     public IdentitySettingsPassword Password { get; set; }

@@ -5,8 +5,9 @@ namespace IdentityWebApi.Infrastructure.Database.Repository;
 
 public class EmailTemplateRepository : BaseRepository<EmailTemplate>, IEmailTemplateRepository
 {
-    public EmailTemplateRepository(DatabaseContext databaseContext) : base(databaseContext)
+    public EmailTemplateRepository(DatabaseContext databaseContext)
+        : base(databaseContext)
     {
-        
+
     }
 }

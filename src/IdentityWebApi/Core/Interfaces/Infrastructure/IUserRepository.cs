@@ -17,8 +17,8 @@ public interface IUserRepository : IBaseRepository<AppUser>
     Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser);
 
     Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(
-        AppUser appUser, 
-        string password, 
+        AppUser appUser,
+        string password,
         string role,
         bool shouldConfirmImmediately
     );

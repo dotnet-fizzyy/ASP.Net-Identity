@@ -8,19 +8,19 @@ namespace IdentityWebApi.Core.ApplicationSettings;
 
 public class SmtpClientSettings : IValidatable
 {
-    [Required] 
+    [Required]
     public string Host { get; set; }
 
-    [DefaultValue] 
+    [DefaultValue]
     public int Port { get; set; }
 
-    [Required] 
+    [Required]
     public string EmailName { get; set; }
 
-    [Required] 
+    [Required]
     public string EmailAddress { get; set; }
 
-    [Required] 
+    [Required]
     public string Password { get; set; }
 
     public bool UseSsl { get; set; }
