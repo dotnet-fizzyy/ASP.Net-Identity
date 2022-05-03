@@ -2,12 +2,16 @@
 <RuleSet Name="Rules for ConsoleApp" Description="Code analysis rules" ToolsVersion="16.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="SA1009" Action="None" />
     <Rule Id="CA1021" Action="None" />
+    <Rule Id="SA1111" Action="None" />
     <Rule Id="SA1200" Action="None" />
+    <Rule Id="SA1201" Action="None" />
     <Rule Id="SA1208" Action="None" />
     <Rule Id="SA1505" Action="None" />
     <Rule Id="SA1508" Action="None" />
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1028" Action="Error" />
+    <Rule Id="SA1309" Action="Error" />
   </Rules>
 </RuleSet>

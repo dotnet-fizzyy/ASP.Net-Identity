@@ -20,25 +20,25 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
 {
     public const string MissingUserEntityExceptionMessage = "No such user exists";
 
-    private readonly UserManager<AppUser> _userManager;
-    private readonly SignInManager<AppUser> _signInManager;
-    private readonly AppSettings _appSettings;
+    private readonly UserManager<AppUser> userManager;
+    private readonly SignInManager<AppUser> signInManager;
+    private readonly AppSettings appSettings;
 
     public UserRepository(
         DatabaseContext databaseContext,
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
-        AppSettings appSettings
-    ) : base(databaseContext)
+        AppSettings appSettings)
+        : base(databaseContext)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _appSettings = appSettings;
+        this.userManager = userManager;
+        this.signInManager = signInManager;
+        this.appSettings = appSettings;
     }
 
     public async Task<ServiceResult<AppUser>> GetUserWithRoles(Guid id)
     {
-        var appUser = await GetUserWithChildren(x => x.Id == id);
+        var appUser = await this.GetUserWithChildren(x => x.Id == id);
         if (appUser is null)
         {
             return new ServiceResult<AppUser>(ServiceResultType.NotFound, ExceptionMessageConstants.InvalidAuthData);
@@ -49,13 +49,13 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
 
     public async Task<ServiceResult<AppUser>> SignInUserAsync(string email, string password)
     {
-        var appUser = await GetUserWithChildren(x => x.Email.ToLower() == email.ToLower());
+        var appUser = await this.GetUserWithChildren(x => x.Email.ToLower() == email.ToLower());
         if (appUser is null)
         {
             return new ServiceResult<AppUser>(ServiceResultType.InvalidData, ExceptionMessageConstants.InvalidAuthData);
         }
 
-        var authResult = await _signInManager.CheckPasswordSignInAsync(appUser, password, false);
+        var authResult = await this.signInManager.CheckPasswordSignInAsync(appUser, password, false);
         if (!authResult.Succeeded)
         {
             return new ServiceResult<AppUser>(ServiceResultType.InvalidData, ExceptionMessageConstants.InvalidAuthData);
@@ -64,11 +64,15 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         return new ServiceResult<AppUser>(ServiceResultType.Success, appUser);
     }
 
-    public async Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(AppUser appUser, string password,
-        string role, bool shouldConfirmImmediately)
+    public async Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(
+        AppUser appUser,
+        string password,
+        string role,
+        bool shouldConfirmImmediately
+    )
     {
         var token = string.Empty;
-        var userCreationResult = await _userManager.CreateAsync(appUser, password);
+        var userCreationResult = await this.userManager.CreateAsync(appUser, password);
 
         if (!userCreationResult.Succeeded)
         {
@@ -80,13 +84,15 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
 
         if (!string.IsNullOrWhiteSpace(role))
         {
-            if (!RoleExists(_appSettings.IdentitySettings.Roles, role))
+            if (!RoleExists(this.appSettings.IdentitySettings.Roles, role))
             {
-                return new ServiceResult<(AppUser appUser, string token)>(ServiceResultType.NotFound,
-                    RoleRepository.MissingRoleExceptionMessage);
+                return new ServiceResult<(AppUser appUser, string token)>(
+                    ServiceResultType.NotFound,
+                    RoleRepository.MissingRoleExceptionMessage
+                );
             }
 
-            var roleAssignmentResult = await _userManager.AddToRoleAsync(appUser, role);
+            var roleAssignmentResult = await this.userManager.AddToRoleAsync(appUser, role);
             if (!roleAssignmentResult.Succeeded)
             {
                 return new ServiceResult<(AppUser appUser, string token)>(
@@ -96,32 +102,32 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
             }
         }
 
-        if (_appSettings.IdentitySettings.Email.RequireConfirmation)
+        if (this.appSettings.IdentitySettings.Email.RequireConfirmation)
         {
-            token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
+            token = await this.userManager.GenerateEmailConfirmationTokenAsync(appUser);
 
             if (shouldConfirmImmediately)
             {
-                await _userManager.ConfirmEmailAsync(appUser, token);
+                await userManager.ConfirmEmailAsync(appUser, token);
             }
         }
 
         return new ServiceResult<(AppUser appUser, string token)>
         {
             Result = ServiceResultType.Success,
-            Data = (appUser, token)
+            Data = (appUser, token),
         };
     }
 
     public async Task<ServiceResult<AppUser>> ConfirmUserEmailAsync(string email, string token)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await this.userManager.FindByEmailAsync(email);
         if (user is null)
         {
             return new ServiceResult<AppUser>(ServiceResultType.NotFound);
         }
 
-        var confirmationResult = await _userManager.ConfirmEmailAsync(user, token);
+        var confirmationResult = await this.userManager.ConfirmEmailAsync(user, token);
         if (!confirmationResult.Succeeded)
         {
             return new ServiceResult<AppUser>(
@@ -135,7 +141,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
 
     public async Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser)
     {
-        var existingUser = await GetUserWithChildren(x => x.Id == appUser.Id);
+        var existingUser = await this.GetUserWithChildren(x => x.Id == appUser.Id);
         if (existingUser is null)
         {
             return new ServiceResult<AppUser>(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
@@ -149,35 +155,35 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         return new ServiceResult<AppUser>
         {
             Result = ServiceResultType.Success,
-            Data = existingUser
+            Data = existingUser,
         };
     }
 
     public async Task<ServiceResult> RemoveUserAsync(Guid id)
     {
-        var existingUser = await GetUserWithChildren(x => x.Id == id);
+        var existingUser = await this.GetUserWithChildren(x => x.Id == id);
         if (existingUser is null)
         {
             return new ServiceResult(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
         }
 
-        DatabaseContext.UserRoles.RemoveRange(existingUser.UserRoles);
-        DatabaseContext.Users.Remove(existingUser);
+        this.DatabaseContext.UserRoles.RemoveRange(existingUser.UserRoles);
+        this.DatabaseContext.Users.Remove(existingUser);
 
         return new ServiceResult(ServiceResultType.Success);
     }
 
-
-    private async Task<AppUser> GetUserWithChildren(Expression<Func<AppUser, bool>> expression)
-        => await DatabaseContext.Users
-            .AsNoTracking()
-            .Include(x => x.UserRoles)
-            .ThenInclude(x => x.Role)
-            .FirstOrDefaultAsync(expression);
 
     private static bool RoleExists(IEnumerable<string> roles, string role) =>
         roles.Any(x => string.Equals(x, role, StringComparison.CurrentCultureIgnoreCase));
 
     private static string CreateErrorMessage(IEnumerable<IdentityError> errors) =>
         string.Join(",", errors.Select(x => x.Description));
+
+    private async Task<AppUser> GetUserWithChildren(Expression<Func<AppUser, bool>> expression)
+        => await this.DatabaseContext.Users
+            .AsNoTracking()
+            .Include(x => x.UserRoles)
+            .ThenInclude(x => x.Role)
+            .FirstOrDefaultAsync(expression);
 }

@@ -13,18 +13,18 @@ namespace IdentityWebApi.Presentation.Filters;
 
 public class RegionVerificationFilter : IAsyncActionFilter
 {
-    private readonly INetService _netService;
-    private readonly AppSettings _appSettings;
+    private readonly INetService netService;
+    private readonly AppSettings appSettings;
 
     public RegionVerificationFilter(INetService netService, AppSettings appSettings)
     {
-        _appSettings = appSettings;
-        _netService = netService;
+        this.appSettings = appSettings;
+        this.netService = netService;
     }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        if (_appSettings.RegionsVerificationSettings.AllowVerification)
+        if (this.appSettings.RegionsVerificationSettings.AllowVerification)
         {
             var userIpV4 = GetIpV4AddressFromExecutingContext(context);
 
@@ -35,10 +35,10 @@ public class RegionVerificationFilter : IAsyncActionFilter
                 return;
             }
 
-            var ipAddressDetails = await _netService.GetIpAddressDetails(userIpV4);
+            var ipAddressDetails = await this.netService.GetIpAddressDetails(userIpV4);
 
             var isCountryCodeMissing = string.IsNullOrEmpty(ipAddressDetails.CountryCode);
-            var isRequestRegionProhibited = _appSettings.RegionsVerificationSettings.ProhibitedRegions
+            var isRequestRegionProhibited = this.appSettings.RegionsVerificationSettings.ProhibitedRegions
                 .Any(reg =>
                     string.Equals(reg, ipAddressDetails.CountryCode, StringComparison.OrdinalIgnoreCase)
                 );

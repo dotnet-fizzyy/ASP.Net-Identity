@@ -14,21 +14,21 @@ namespace IdentityWebApi.ApplicationLogic.Services;
 
 public class RoleService : IRoleService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
+    private readonly IUnitOfWork unitOfWork;
+    private readonly IMapper mapper;
 
     public RoleService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
+        this.unitOfWork = unitOfWork;
+        this.mapper = mapper;
     }
 
     public async Task<ServiceResult<RoleDto>> GetRoleByIdAsync(Guid id)
     {
-        var roleEntityResult = await _unitOfWork.RoleRepository.GetRoleByIdAsync(id);
+        var roleEntityResult = await this.unitOfWork.RoleRepository.GetRoleByIdAsync(id);
 
         var roleModel = roleEntityResult.Data is not null
-            ? _mapper.Map<RoleDto>(roleEntityResult.Data)
+            ? this.mapper.Map<RoleDto>(roleEntityResult.Data)
             : default;
 
         return new ServiceResult<RoleDto>(roleEntityResult.Result, roleModel);
@@ -36,39 +36,39 @@ public class RoleService : IRoleService
 
     public async Task<ServiceResult> GrantRoleToUserAsync(UserRoleDto roleDto) =>
         await HandleAppRole(
-            _unitOfWork.RoleRepository.GrantRoleToUserAsync,
+            this.unitOfWork.RoleRepository.GrantRoleToUserAsync,
             roleDto.UserId,
             roleDto.RoleId
         );
 
     public async Task<ServiceResult> RevokeRoleFromUser(UserRoleDto roleDto) =>
         await HandleAppRole(
-            _unitOfWork.RoleRepository.RevokeRoleFromUserAsync,
+            this.unitOfWork.RoleRepository.RevokeRoleFromUserAsync,
             roleDto.UserId,
             roleDto.RoleId
         );
 
     public async Task<ServiceResult<RoleDto>> CreateRoleAsync(RoleCreationDto roleDto)
     {
-        var roleEntity = _mapper.Map<AppRole>(roleDto);
+        var roleEntity = this.mapper.Map<AppRole>(roleDto);
 
-        return await HandleAppRole(_unitOfWork.RoleRepository.CreateRoleAsync, roleEntity);
+        return await HandleAppRole(this.unitOfWork.RoleRepository.CreateRoleAsync, roleEntity);
     }
 
     public async Task<ServiceResult<RoleDto>> UpdateRoleAsync(RoleDto roleDto)
     {
-        var roleEntity = _mapper.Map<AppRole>(roleDto);
+        var roleEntity = this.mapper.Map<AppRole>(roleDto);
 
-        return await HandleAppRole(_unitOfWork.RoleRepository.UpdateRoleAsync, roleEntity);
+        return await HandleAppRole(this.unitOfWork.RoleRepository.UpdateRoleAsync, roleEntity);
     }
 
     public async Task<ServiceResult> RemoveRoleAsync(Guid id)
     {
-        var serviceResult = await _unitOfWork.RoleRepository.RemoveRoleAsync(id);
+        var serviceResult = await this.unitOfWork.RoleRepository.RemoveRoleAsync(id);
 
         if (serviceResult.Result == ServiceResultType.Success)
         {
-            await _unitOfWork.CommitAsync();
+            await this.unitOfWork.CommitAsync();
         }
 
         return serviceResult;
@@ -83,10 +83,10 @@ public class RoleService : IRoleService
         var roleCreationResult = await repositoryCall(roleEntity);
 
         var roleModel = roleCreationResult.Data is not null
-            ? _mapper.Map<RoleDto>(roleCreationResult.Data)
+            ? this.mapper.Map<RoleDto>(roleCreationResult.Data)
             : default;
 
-        await _unitOfWork.CommitAsync();
+        await this.unitOfWork.CommitAsync();
 
         return new ServiceResult<RoleDto>(roleCreationResult.Result, roleModel);
     }
@@ -101,7 +101,7 @@ public class RoleService : IRoleService
 
         if (serviceResult.Result == ServiceResultType.Success)
         {
-            await _unitOfWork.CommitAsync();
+            await this.unitOfWork.CommitAsync();
         }
 
         return serviceResult;

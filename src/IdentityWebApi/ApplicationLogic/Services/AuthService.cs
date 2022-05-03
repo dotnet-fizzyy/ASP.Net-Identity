@@ -12,25 +12,25 @@ namespace IdentityWebApi.ApplicationLogic.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
+    private readonly IUnitOfWork unitOfWork;
+    private readonly IMapper mapper;
 
     public AuthService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
+        this.unitOfWork = unitOfWork;
+        this.mapper = mapper;
     }
 
     public async Task<ServiceResult<(UserResultDto userDto, string token)>> SignUpUserAsync(
         UserRegistrationDto userModel)
     {
-        var userEntity = _mapper.Map<AppUser>(userModel);
+        var userEntity = this.mapper.Map<AppUser>(userModel);
 
         var createdResult =
-            await _unitOfWork.UserRepository.CreateUserAsync(userEntity, userModel.Password, userModel.Role, false);
+            await this.unitOfWork.UserRepository.CreateUserAsync(userEntity, userModel.Password, userModel.Role, false);
 
         var userDtoModel = createdResult.Data.appUser is not null
-            ? _mapper.Map<UserResultDto>(createdResult.Data.appUser)
+            ? this.mapper.Map<UserResultDto>(createdResult.Data.appUser)
             : default;
 
         return new ServiceResult<(UserResultDto userDto, string token)>(
@@ -42,10 +42,10 @@ public class AuthService : IAuthService
 
     public async Task<ServiceResult<UserResultDto>> SignInUserAsync(UserSignInDto userModel)
     {
-        var signInResult = await _unitOfWork.UserRepository.SignInUserAsync(userModel.Email, userModel.Password);
+        var signInResult = await this.unitOfWork.UserRepository.SignInUserAsync(userModel.Email, userModel.Password);
 
         var userDtoModel = signInResult.Data is not null
-            ? _mapper.Map<UserResultDto>(signInResult.Data)
+            ? this.mapper.Map<UserResultDto>(signInResult.Data)
             : default;
 
         return new ServiceResult<UserResultDto>(
@@ -57,7 +57,7 @@ public class AuthService : IAuthService
 
     public async Task<ServiceResult> ConfirmUserEmailAsync(string email, string token)
     {
-        var emailConfirmationResult = await _unitOfWork.UserRepository.ConfirmUserEmailAsync(email, token);
+        var emailConfirmationResult = await this.unitOfWork.UserRepository.ConfirmUserEmailAsync(email, token);
 
         return emailConfirmationResult;
     }

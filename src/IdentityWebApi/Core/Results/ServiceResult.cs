@@ -4,15 +4,9 @@ namespace IdentityWebApi.Core.Results
 {
     public class ServiceResult
     {
-        #region Properties
-
         public ServiceResultType Result { get; set; }
 
         public string Message { get; set; }
-
-        #endregion
-
-        #region Lambdas
 
         public bool IsResultFailed => Result is not ServiceResultType.Success;
 
@@ -22,9 +16,6 @@ namespace IdentityWebApi.Core.Results
 
         public bool IsResultInternalError => Result is ServiceResultType.InternalError;
 
-        #endregion
-
-        #region Constuctors
         protected ServiceResult() {}
 
         public ServiceResult(ServiceResultType result)
@@ -37,18 +28,11 @@ namespace IdentityWebApi.Core.Results
             Result = result;
             Message = message;
         }
-        #endregion
     }
 
     public class ServiceResult<T> : ServiceResult
     {
-        #region Properties
-
         public T Data { get; set; }
-
-        #endregion
-
-        #region Constructors
 
         public ServiceResult() {}
 
@@ -75,7 +59,5 @@ namespace IdentityWebApi.Core.Results
             Message = message;
             Data = data;
         }
-
-        #endregion
     }
 }

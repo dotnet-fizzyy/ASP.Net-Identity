@@ -13,19 +13,19 @@ namespace IdentityWebApi.Startup;
 
 public class Startup
 {
+    public IConfiguration Configuration { get; }
+
     public Startup(IConfiguration configuration)
     {
-        Configuration = configuration;
+        this.Configuration = configuration;
     }
-
-    public IConfiguration Configuration { get; }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        var appSettings = ReadAppSettings(Configuration);
+        var appSettings = ReadAppSettings(this.Configuration);
 
-        services.ValidateSettingParameters(Configuration);
+        services.ValidateSettingParameters(this.Configuration);
 
         services.RegisterServices(appSettings);
 
@@ -52,7 +52,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
     {
-        var appSettings = ReadAppSettings(Configuration);
+        var appSettings = ReadAppSettings(this.Configuration);
 
         if (env.IsDevelopment())
         {

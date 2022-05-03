@@ -15,10 +15,10 @@ namespace IdentityWebApi.Presentation.Controllers;
 
 public class AuthController : ControllerBase
 {
-    private readonly IAuthService _authService;
-    private readonly IEmailService _emailService;
-    private readonly IClaimsService _claimsService;
-    private readonly IHttpContextService _httpContextService;
+    private readonly IAuthService authService;
+    private readonly IEmailService emailService;
+    private readonly IClaimsService claimsService;
+    private readonly IHttpContextService httpContextService;
 
     public AuthController(
         IAuthService authService,
@@ -27,45 +27,45 @@ public class AuthController : ControllerBase
         IHttpContextService httpContextService
     )
     {
-        _authService = authService;
-        _emailService = emailService;
-        _claimsService = claimsService;
-        _httpContextService = httpContextService;
+        this.authService = authService;
+        this.emailService = emailService;
+        this.claimsService = claimsService;
+        this.httpContextService = httpContextService;
     }
 
     /// <summary>
     /// User account creation
     /// </summary>
     /// <param name="userModel"></param>
-    /// <response code="201">Created user</response>
-    /// <response code="404">Unable to create user due to missing role</response>
+    /// <response code="201">Created user.</response>
+    /// <response code="404">Unable to create user due to missing role.</response>
     [HttpPost("sign-up")]
     [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationDto userModel)
     {
-        var creationResult = await _authService.SignUpUserAsync(userModel);
+        var creationResult = await this.authService.SignUpUserAsync(userModel);
 
         if (creationResult.IsResultNotFound)
         {
             // todo: replace 404 with 400
-            return GetFailedResponseByServiceResult(creationResult);
+            return this.GetFailedResponseByServiceResult(creationResult);
         }
 
-        var confirmationLink = _httpContextService.GenerateConfirmEmailLink(
+        var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(
             creationResult.Data.userDto.Email,
             creationResult.Data.token
         );
 
-        await _emailService.SendEmailAsync(
+        await this.emailService.SendEmailAsync(
             creationResult.Data.userDto.Email,
             EmailSubjects.AccountConfirmation,
             $"<a href='{confirmationLink}'>confirm</a>"
         );
 
-        var getUserLink = _httpContextService.GenerateGetUserLink(creationResult.Data.userDto.Id);
+        var getUserLink = this.httpContextService.GenerateGetUserLink(creationResult.Data.userDto.Id);
 
-        return Created(getUserLink, creationResult.Data.userDto);
+        return this.Created(getUserLink, creationResult.Data.userDto);
     }
 
     /// <summary>
@@ -79,16 +79,16 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UserResultDto>> SignIn([FromBody, BindRequired] UserSignInDto userModel)
     {
-        var signInResult = await _authService.SignInUserAsync(userModel);
+        var signInResult = await this.authService.SignInUserAsync(userModel);
 
         if (signInResult.IsResultFailed)
         {
-            return GetFailedResponseByServiceResult(signInResult);
+            return this.GetFailedResponseByServiceResult(signInResult);
         }
 
-        var claims = _claimsService.AssignClaims(signInResult.Data);
+        var claims = this.claimsService.AssignClaims(signInResult.Data);
 
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims);
+        await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims);
 
         return signInResult.Data;
     }
@@ -103,15 +103,18 @@ public class AuthController : ControllerBase
     [HttpGet("confirm-email")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ConfirmEmail([FromQuery, BindRequired] string email, [FromQuery, BindRequired] string token)
+    public async Task<IActionResult> ConfirmEmail(
+        [FromQuery, BindRequired] string email,
+        [FromQuery, BindRequired] string token
+    )
     {
-        var confirmationResult = await _authService.ConfirmUserEmailAsync(email, token);
+        var confirmationResult = await this.authService.ConfirmUserEmailAsync(email, token);
 
         if (confirmationResult.IsResultFailed)
         {
-            return GetFailedResponseByServiceResult(confirmationResult);
+            return this.GetFailedResponseByServiceResult(confirmationResult);
         }
 
-        return NoContent();
+        return this.NoContent();
     }
 }

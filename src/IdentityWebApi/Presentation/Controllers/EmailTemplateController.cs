@@ -1,5 +1,5 @@
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Constants;
+using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,23 +13,23 @@ namespace IdentityWebApi.Presentation.Controllers;
 [Route("api/email-template")]
 public class EmailTemplateController : ControllerBase
 {
-    private readonly IEmailTemplateService _emailTemplateService;
+    private readonly IEmailTemplateService emailTemplateService;
 
     public EmailTemplateController(IEmailTemplateService emailTemplateService)
     {
-        _emailTemplateService = emailTemplateService;
+        this.emailTemplateService = emailTemplateService;
     }
 
     [HttpGet("id/{id:guid}")]
     public async Task<IActionResult> GetEmailTemplate(Guid id)
     {
-        var emailTemplateResult = await _emailTemplateService.GetEmailTemplateDtoAsync(id);
+        var emailTemplateResult = await this.emailTemplateService.GetEmailTemplateDtoAsync(id);
 
         if (emailTemplateResult.IsResultNotFound)
         {
-            return NotFound();
+            return this.NotFound();
         }
 
-        return Ok(emailTemplateResult.Data);
+        return this.Ok(emailTemplateResult.Data);
     }
 }
