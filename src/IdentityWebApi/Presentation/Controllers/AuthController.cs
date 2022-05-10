@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Controllers;
 
+/// <summary>
+/// Authentication controller.
+/// </summary>
 public class AuthController : ControllerBase
 {
     private readonly IAuthService authService;
@@ -20,6 +23,13 @@ public class AuthController : ControllerBase
     private readonly IClaimsService claimsService;
     private readonly IHttpContextService httpContextService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthController"/> class.
+    /// </summary>
+    /// <param name="authService"><see cref="IAuthService"/>.</param>
+    /// <param name="emailService"><see cref="IEmailService"/>.</param>
+    /// <param name="claimsService"><see cref="IClaimsService"/>.</param>
+    /// <param name="httpContextService"><see cref="IHttpContextService"/>.</param>
     public AuthController(
         IAuthService authService,
         IEmailService emailService,
@@ -34,11 +44,12 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// User account creation
+    /// User account registration.
     /// </summary>
-    /// <param name="userModel"></param>
+    /// <param name="userModel"><see cref="UserRegistrationDto"/>.</param>
     /// <response code="201">Created user.</response>
     /// <response code="404">Unable to create user due to missing role.</response>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("sign-up")]
     [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -69,11 +80,12 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// User account authentication
+    /// User account authentication.
     /// </summary>
-    /// <param name="userModel"></param>
-    /// <response code="200">User has authenticated</response>
-    /// <response code="400">Unable to authenticate with provided credentials</response>
+    /// <param name="userModel"><see cref="UserSignInDto"/>.</param>
+    /// <response code="200">User has authenticated.</response>
+    /// <response code="400">Unable to authenticate with provided credentials.</response>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("sign-in")]
     [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -94,12 +106,13 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// User account email confirmation
+    /// User account email confirmation.
     /// </summary>
-    /// <param name="email"></param>
-    /// <param name="token"></param>
-    /// <response code="204">Email has been confirmed</response>
-    /// <response code="404">User with provided email is not found</response>
+    /// <param name="email">User email.</param>
+    /// <param name="token">Confirmation token.</param>
+    /// <response code="204">Email has been confirmed.</response>
+    /// <response code="404">User with provided email is not found.</response>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpGet("confirm-email")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

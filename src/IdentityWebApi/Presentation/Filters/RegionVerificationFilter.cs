@@ -11,17 +11,26 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Filters;
 
+/// <summary>
+/// Filter of allowed regions from HTTP requests.
+/// </summary>
 public class RegionVerificationFilter : IAsyncActionFilter
 {
     private readonly INetService netService;
     private readonly AppSettings appSettings;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RegionVerificationFilter"/> class.
+    /// </summary>
+    /// <param name="netService">INetService.</param>
+    /// <param name="appSettings">AppSettings.</param>
     public RegionVerificationFilter(INetService netService, AppSettings appSettings)
     {
         this.appSettings = appSettings;
         this.netService = netService;
     }
 
+    /// <inheritdoc/>
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         if (this.appSettings.RegionsVerificationSettings.AllowVerification)

@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
@@ -8,19 +6,34 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
+using System;
+using System.Threading.Tasks;
+
 namespace IdentityWebApi.Presentation.Controllers;
 
+/// <summary>
+/// User controller.
+/// </summary>
 public class UserController : ControllerBase
 {
     private readonly IUserService userService;
     private readonly IClaimsService claimsService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserController"/> class.
+    /// </summary>
+    /// <param name="userService"><see cref="IUserService"/>.</param>
+    /// <param name="claimsService"><see cref="IClaimsService"/>.</param>
     public UserController(IUserService userService, IClaimsService claimsService)
     {
         this.userService = userService;
         this.claimsService = claimsService;
     }
 
+    /// <summary>
+    /// Returns information about user by User HTTP context.
+    /// </summary>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize]
     [HttpGet]
     public async Task<ActionResult<UserResultDto>> GetUserByToken()
@@ -37,6 +50,11 @@ public class UserController : ControllerBase
         return userResult.Data;
     }
 
+    /// <summary>
+    /// Returns information about user.
+    /// </summary>
+    /// <param name="id">User identifier.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize]
     [HttpGet("id/{id:guid}")]
     public async Task<ActionResult<UserResultDto>> GetUser(Guid id)
@@ -51,11 +69,21 @@ public class UserController : ControllerBase
         return userResult.Data;
     }
 
+    /// <summary>
+    /// Creates user entity.
+    /// </summary>
+    /// <param name="user"><see cref="UserDto"/>.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserDto user) =>
         (await this.userService.CreateUserAsync(user)).Data;
 
+    /// <summary>
+    /// Updates user entity.
+    /// </summary>
+    /// <param name="user"><see cref="UserDto"/>.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpPut]
     public async Task<ActionResult<UserResultDto>> UpdateUser([FromBody, BindRequired] UserDto user)
@@ -70,6 +98,11 @@ public class UserController : ControllerBase
         return userUpdateResult.Data;
     }
 
+    /// <summary>
+    /// Removes user entity.
+    /// </summary>
+    /// <param name="id">User identifier.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}")]
     public async Task<IActionResult> RemoveUser(Guid id)
