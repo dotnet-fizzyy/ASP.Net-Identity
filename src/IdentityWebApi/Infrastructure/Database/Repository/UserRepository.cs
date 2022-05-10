@@ -16,14 +16,25 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.Infrastructure.Database.Repository;
 
+/// <inheritdoc cref="IUserRepository"/>
 public class UserRepository : BaseRepository<AppUser>, IUserRepository
 {
+    /// <summary>
+    /// Gets missing user exception message.
+    /// </summary>
     public const string MissingUserEntityExceptionMessage = "No such user exists";
 
     private readonly UserManager<AppUser> userManager;
     private readonly SignInManager<AppUser> signInManager;
     private readonly AppSettings appSettings;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserRepository"/> class.
+    /// </summary>
+    /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
+    /// <param name="userManager"><see cref="UserManager{T}"/>.</param>
+    /// <param name="signInManager"><see cref="SignInManager{T}"/>.</param>
+    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
     public UserRepository(
         DatabaseContext databaseContext,
         UserManager<AppUser> userManager,
@@ -36,6 +47,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         this.appSettings = appSettings;
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<AppUser>> GetUserWithRoles(Guid id)
     {
         var appUser = await this.GetUserWithChildren(x => x.Id == id);
@@ -47,6 +59,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         return new ServiceResult<AppUser>(ServiceResultType.Success, appUser);
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<AppUser>> SignInUserAsync(string email, string password)
     {
         var appUser = await this.GetUserWithChildren(x => x.Email.ToLower() == email.ToLower());
@@ -64,6 +77,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         return new ServiceResult<AppUser>(ServiceResultType.Success, appUser);
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<(AppUser appUser, string token)>> CreateUserAsync(
         AppUser appUser,
         string password,
@@ -108,7 +122,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
 
             if (shouldConfirmImmediately)
             {
-                await userManager.ConfirmEmailAsync(appUser, token);
+                await this.userManager.ConfirmEmailAsync(appUser, token);
             }
         }
 
@@ -119,6 +133,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         };
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<AppUser>> ConfirmUserEmailAsync(string email, string token)
     {
         var user = await this.userManager.FindByEmailAsync(email);
@@ -139,6 +154,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         return new ServiceResult<AppUser>(ServiceResultType.Success);
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<AppUser>> UpdateUserAsync(AppUser appUser)
     {
         var existingUser = await this.GetUserWithChildren(x => x.Id == appUser.Id);
@@ -159,6 +175,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         };
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult> RemoveUserAsync(Guid id)
     {
         var existingUser = await this.GetUserWithChildren(x => x.Id == id);
@@ -172,7 +189,6 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
 
         return new ServiceResult(ServiceResultType.Success);
     }
-
 
     private static bool RoleExists(IEnumerable<string> roles, string role) =>
         roles.Any(x => string.Equals(x, role, StringComparison.CurrentCultureIgnoreCase));

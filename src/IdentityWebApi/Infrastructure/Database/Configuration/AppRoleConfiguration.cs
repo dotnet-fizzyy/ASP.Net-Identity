@@ -5,8 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace IdentityWebApi.Infrastructure.Database.Configuration;
 
+/// <summary>
+/// Configuration of AppRole entity.
+/// </summary>
 public class AppRoleConfiguration : IEntityTypeConfiguration<AppRole>
 {
+    /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<AppRole> builder)
     {
         builder.Property(x => x.CreationDate)

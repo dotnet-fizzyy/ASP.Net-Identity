@@ -9,8 +9,12 @@ using System;
 
 namespace IdentityWebApi.Infrastructure.Database.Configuration;
 
+/// <summary>
+/// Configuration of EmailTemplate entity.
+/// </summary>
 public class EmailTemplateConfiguration : IEntityTypeConfiguration<EmailTemplate>
 {
+    /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<EmailTemplate> builder)
     {
         builder.HasKey(x => x.Id);
@@ -32,7 +36,7 @@ public class EmailTemplateConfiguration : IEntityTypeConfiguration<EmailTemplate
             Name = Templates.EmailConfirmationTemplate,
             Layout = TemplateReader.ReadTemplateFromFolder(Templates.EmailConfirmationTemplate),
             CreationDate = new DateTime(2021, 7, 4),
-            IsDeleted = false
+            IsDeleted = false,
         });
     }
 }

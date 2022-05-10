@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace IdentityWebApi.Infrastructure.Database;
 
 /// <summary>
-/// Unit of Work pattern implementation.
+/// <inheritdoc cref="IUnitOfWork"/>
 /// </summary>
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
@@ -24,10 +24,10 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
     /// </summary>
-    /// <param name="databaseContext">Database EF context.</param>
-    /// <param name="userRepository">User repository.</param>
-    /// <param name="roleRepository">Role repository.</param>
-    /// <param name="emailTemplateRepository">EmailTemplateRepository.</param>
+    /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
+    /// <param name="userRepository"><see cref="IUserRepository"/>.</param>
+    /// <param name="roleRepository"><see cref="IRoleRepository"/>.</param>
+    /// <param name="emailTemplateRepository"><see cref="IEmailTemplateRepository"/>.</param>
     public UnitOfWork(
         DatabaseContext databaseContext,
         IUserRepository userRepository,

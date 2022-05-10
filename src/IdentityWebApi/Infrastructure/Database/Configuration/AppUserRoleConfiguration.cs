@@ -5,8 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace IdentityWebApi.Infrastructure.Database.Configuration;
 
+/// <summary>
+/// Configuration of AppUserRole entity.
+/// </summary>
 public class AppUserRoleConfiguration : IEntityTypeConfiguration<AppUserRole>
 {
+    /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<AppUserRole> builder)
     {
         builder

@@ -2,6 +2,7 @@ using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Results;
+
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -10,20 +11,30 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.Infrastructure.Database.Repository;
 
+/// <inheritdoc cref="IRoleRepository" />
 public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
 {
-    private const string ExistingRoleEntityExceptionMessage = "This role already exists";
-
+    /// <summary>
+    /// Co.
+    /// </summary>
     public const string MissingRoleExceptionMessage = "No such role exists";
 
-    public RoleRepository(DatabaseContext databaseContext) : base(databaseContext)
+    private const string ExistingRoleEntityExceptionMessage = "This role already exists";
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RoleRepository"/> class.
+    /// </summary>
+    /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
+    public RoleRepository(DatabaseContext databaseContext)
+        : base(databaseContext)
     {
 
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<AppRole>> GetRoleByIdAsync(Guid id)
     {
-        var appRole = await GetAppRole(id);
+        var appRole = await this.GetAppRole(id);
         if (appRole is null)
         {
             return new ServiceResult<AppRole>(ServiceResultType.NotFound);
@@ -32,43 +43,49 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
         return new ServiceResult<AppRole>(ServiceResultType.Success, appRole);
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult> GrantRoleToUserAsync(Guid userId, Guid roleId)
     {
-        var appRole = await GetAppRole(roleId);
+        var appRole = await this.GetAppRole(roleId);
         if (appRole is null)
         {
             return new ServiceResult<AppRole>(ServiceResultType.NotFound, MissingRoleExceptionMessage);
         }
 
-        var appUser = await GetAppUser(userId);
+        var appUser = await this.GetAppUser(userId);
         if (appUser is null)
         {
-            return new ServiceResult<AppRole>(ServiceResultType.NotFound,
-                UserRepository.MissingUserEntityExceptionMessage);
+            return new ServiceResult<AppRole>(
+                ServiceResultType.NotFound,
+                UserRepository.MissingUserEntityExceptionMessage
+            );
         }
 
         appUser.UserRoles.Add(new AppUserRole
         {
             Role = appRole,
-            AppUser = appUser
+            AppUser = appUser,
         });
 
         return new ServiceResult(ServiceResultType.Success);
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult> RevokeRoleFromUserAsync(Guid userId, Guid roleId)
     {
-        var appRole = await GetAppRole(roleId);
+        var appRole = await this.GetAppRole(roleId);
         if (appRole is null)
         {
             return new ServiceResult<AppRole>(ServiceResultType.NotFound, MissingRoleExceptionMessage);
         }
 
-        var appUser = await GetAppUser(userId);
+        var appUser = await this.GetAppUser(userId);
         if (appUser is null)
         {
-            return new ServiceResult<AppRole>(ServiceResultType.NotFound,
-                UserRepository.MissingUserEntityExceptionMessage);
+            return new ServiceResult<AppRole>(
+                ServiceResultType.NotFound,
+                UserRepository.MissingUserEntityExceptionMessage
+            );
         }
 
         appUser.UserRoles.Remove(appUser.UserRoles.First(x => x.Role.Id == roleId && x.AppUser.Id == userId));
@@ -76,9 +93,10 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
         return new ServiceResult(ServiceResultType.Success);
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<AppRole>> CreateRoleAsync(AppRole entity)
     {
-        var appRole = await DatabaseContext.Roles.FirstOrDefaultAsync(x => x.Name == entity.Name);
+        var appRole = await this.DatabaseContext.Roles.FirstOrDefaultAsync(x => x.Name == entity.Name);
         if (appRole is not null)
         {
             return new ServiceResult<AppRole>(ServiceResultType.InvalidData, ExistingRoleEntityExceptionMessage);
@@ -87,14 +105,15 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
         entity.ConcurrencyStamp = Guid.NewGuid().ToString();
         entity.CreationDate = DateTime.UtcNow;
 
-        var roleCreationResult = await DatabaseContext.Roles.AddAsync(entity);
+        var roleCreationResult = await this.DatabaseContext.Roles.AddAsync(entity);
 
         return new ServiceResult<AppRole>(ServiceResultType.Success, roleCreationResult.Entity);
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<AppRole>> UpdateRoleAsync(AppRole entity)
     {
-        var appRole = await GetAppRole(entity.Id);
+        var appRole = await this.GetAppRole(entity.Id);
         if (appRole is null)
         {
             return new ServiceResult<AppRole>(ServiceResultType.NotFound, MissingRoleExceptionMessage);
@@ -106,25 +125,26 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
         return new ServiceResult<AppRole>(ServiceResultType.Success, appRole);
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult> RemoveRoleAsync(Guid id)
     {
-        var appRole = await GetAppRole(id);
+        var appRole = await this.GetAppRole(id);
         if (appRole is null)
         {
             return new ServiceResult(ServiceResultType.NotFound, MissingRoleExceptionMessage);
         }
 
-        DatabaseContext.Roles.Remove(appRole);
+        this.DatabaseContext.Roles.Remove(appRole);
 
         return new ServiceResult(ServiceResultType.Success);
     }
 
     private async Task<AppUser> GetAppUser(Guid id) =>
-        await DatabaseContext.Users
+        await this.DatabaseContext.Users
             .Include(x => x.UserRoles)
             .SingleOrDefaultAsync(x => x.Id == id);
 
     private async Task<AppRole> GetAppRole(Guid id) =>
-        await DatabaseContext.Roles
+        await this.DatabaseContext.Roles
             .SingleOrDefaultAsync(x => x.Id == id);
 }

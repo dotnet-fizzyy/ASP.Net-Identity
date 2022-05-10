@@ -9,6 +9,9 @@ using System.Reflection;
 
 namespace IdentityWebApi.Infrastructure.Database;
 
+/// <summary>
+/// Database EF context.
+/// </summary>
 public sealed class DatabaseContext : IdentityDbContext<
     AppUser,
     AppRole,
@@ -20,11 +23,17 @@ public sealed class DatabaseContext : IdentityDbContext<
     IdentityUserToken<Guid>
 >
 {
-    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DatabaseContext"/> class.
+    /// </summary>
+    /// <param name="options"><see cref="DbContextOptions{T}"/>.</param>
+    public DatabaseContext(DbContextOptions<DatabaseContext> options)
+        : base(options)
     {
-        Database.Migrate();
+        this.Database.Migrate();
     }
 
+    /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

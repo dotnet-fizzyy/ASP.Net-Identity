@@ -12,21 +12,28 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.Infrastructure.Net.Services;
 
+/// <inheritdoc />
 public class NetService : INetService
 {
-    private static readonly HttpClient HttpClient = new ();
-
     private const string IpStackUrl = "http://api.ipstack.com";
+
+    private static readonly HttpClient HttpClient = new ();
 
     private readonly IMapper mapper;
     private readonly AppSettings appSettings;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NetService"/> class.
+    /// </summary>
+    /// <param name="mapper"><see cref="IMapper"/>.</param>
+    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
     public NetService(IMapper mapper, AppSettings appSettings)
     {
         this.mapper = mapper;
         this.appSettings = appSettings;
     }
 
+    /// <inheritdoc />
     public async Task<IpAddressDetails> GetIpAddressDetails(string ipv4)
     {
         var httpResponse = await HttpClient.GetAsync($"{IpStackUrl}/{ipv4}?access_key={this.appSettings.IpStackSettings.AccessKey}");
