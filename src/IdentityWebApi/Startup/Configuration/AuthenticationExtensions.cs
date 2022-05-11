@@ -1,16 +1,24 @@
 using IdentityWebApi.Core.ApplicationSettings;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 using System;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Startup.Configuration;
 
-public static class AuthenticationExtensions
+/// <summary>
+/// Authentication and authorization configuration.
+/// </summary>
+internal static class AuthenticationExtensions
 {
+    /// <summary>
+    /// Registers authentication and authorization settings and services.
+    /// </summary>
+    /// <param name="services"><see cref="IServiceCollection"/>.</param>
+    /// <param name="cookiesSettings">Cookies settings configuration.</param>
     public static void RegisterAuthSettings(this IServiceCollection services, CookiesSettings cookiesSettings)
     {
         services

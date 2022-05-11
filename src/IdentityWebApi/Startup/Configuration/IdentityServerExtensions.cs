@@ -13,8 +13,17 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.Startup.Configuration;
 
-public static class IdentityServerExtensions
+/// <summary>
+/// Identity Server configuration.
+/// </summary>
+internal static class IdentityServerExtensions
 {
+    /// <summary>
+    /// Configures Identity Server service.
+    /// </summary>
+    /// <param name="services"><see cref="IServiceCollection"/>.</param>
+    /// <param name="identitySettings"><see cref="IdentitySettings"/>.</param>
+    /// <param name="dbConnectionString">Database connection link.</param>
     public static void RegisterIdentityServer(
         this IServiceCollection services,
         IdentitySettings identitySettings,
@@ -40,7 +49,13 @@ public static class IdentityServerExtensions
             .AddDefaultTokenProviders();
     }
 
-    public static async Task InitializeUserRoles(IServiceProvider serviceProvider, ICollection<string> roles)
+    /// <summary>
+    /// Creates default user roles on application start.
+    /// </summary>
+    /// <param name="serviceProvider"><see cref="IServiceProvider"/>.</param>
+    /// <param name="roles">Collection of role names to create.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public static async Task InitializeUserRoles(this IServiceProvider serviceProvider, ICollection<string> roles)
     {
         if (IsCollectionNullOrEmpty(roles))
         {
@@ -58,8 +73,15 @@ public static class IdentityServerExtensions
         }
     }
 
+    /// <summary>
+    /// Creates default users on application start.
+    /// </summary>
+    /// <param name="serviceProvider"><see cref="IServiceProvider"/>.</param>
+    /// <param name="defaultUsers">Collection of users to create.</param>
+    /// <param name="requireConfirmation">Whether confirm immediately user emails.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task InitializeDefaultUsers(
-        IServiceProvider serviceProvider,
+        this IServiceProvider serviceProvider,
         ICollection<DefaultUserSettings> defaultUsers,
         bool requireConfirmation
     )
@@ -94,7 +116,7 @@ public static class IdentityServerExtensions
             var appUserAdmin = new AppUser
             {
                 UserName = defaultUser.Name,
-                Email = defaultUser.Email
+                Email = defaultUser.Email,
             };
 
             await userManager.CreateAsync(appUserAdmin, defaultUser.Password);
@@ -103,7 +125,6 @@ public static class IdentityServerExtensions
             await ConfirmDefaultAdminEmail(userManager, appUserAdmin, requireConfirmation);
         }
     }
-
 
     private static bool IsCollectionNullOrEmpty<T>(ICollection<T> collection) =>
         collection == null || !collection.Any();

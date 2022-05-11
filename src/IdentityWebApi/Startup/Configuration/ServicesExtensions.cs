@@ -12,8 +12,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityWebApi.Startup.Configuration;
 
-public static class ServicesExtensions
+/// <summary>
+/// Services DI configuration.
+/// </summary>
+internal static class ServicesExtensions
 {
+    /// <summary>
+    /// Configures application services for DI.
+    /// </summary>
+    /// <param name="services"><see cref="IServiceCollection"/>.</param>
+    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
     public static void RegisterServices(this IServiceCollection services, AppSettings appSettings)
     {
         // AppSettings

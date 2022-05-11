@@ -11,15 +11,27 @@ using System;
 
 namespace IdentityWebApi.Startup;
 
+/// <summary>
+/// Configuration of middleware and services.
+/// </summary>
 public class Startup
 {
+    /// <inheritdoc cref="IConfiguration"/>
     public IConfiguration Configuration { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Startup"/> class.
+    /// </summary>
+    /// <param name="configuration"><see cref="IConfiguration"/>.</param>
     public Startup(IConfiguration configuration)
     {
         this.Configuration = configuration;
     }
 
+    /// <summary>
+    /// Configures used services in whole application.
+    /// </summary>
+    /// <param name="services"><see cref="IServiceCollection"/>.</param>
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
@@ -49,6 +61,12 @@ public class Startup
         services.RegisterSwagger();
     }
 
+    /// <summary>
+    /// Configures application HTTP middleware.
+    /// </summary>
+    /// <param name="app"><see cref="IApplicationBuilder"/>.</param>
+    /// <param name="env"><see cref="IWebHostEnvironment"/>.</param>
+    /// <param name="serviceProvider"><see cref="IServiceProvider"/>.</param>
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
     {
@@ -85,9 +103,8 @@ public class Startup
             endpoints.RegisterHealthCheckEndpoint();
         });
 
-        IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
-        IdentityServerExtensions.InitializeDefaultUsers(
-            serviceProvider,
+        serviceProvider.InitializeUserRoles(appSettings.IdentitySettings.Roles).Wait();
+        serviceProvider.InitializeDefaultUsers(
             appSettings.IdentitySettings.DefaultUsers,
             appSettings.IdentitySettings.Email.RequireConfirmation
         ).Wait();

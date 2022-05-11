@@ -4,8 +4,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace IdentityWebApi;
 
-public class Program
+/// <summary>
+/// Entrypoint application class.
+/// </summary>
+public static class Program
 {
+    /// <summary>
+    /// Entrypoint application method.
+    /// </summary>
+    /// <param name="args">Console arguments.</param>
     public static void Main(string[] args)
     {
         CreateHostBuilder(args).Build().Run();
