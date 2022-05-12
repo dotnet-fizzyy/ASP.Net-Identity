@@ -10,15 +10,21 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.ApplicationLogic.Services;
 
+/// <inheritdoc cref="IEmailService" />
 public class EmailService : IEmailService
 {
     private readonly AppSettings appSettings;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EmailService"/> class.
+    /// </summary>
+    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
     public EmailService(AppSettings appSettings)
     {
         this.appSettings = appSettings;
     }
 
+    /// <inheritdoc/>
     public async Task SendEmailAsync(string emailToSend, string subject, string message)
     {
         var email = new MimeMessage();

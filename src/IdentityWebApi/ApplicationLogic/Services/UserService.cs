@@ -11,17 +11,24 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.ApplicationLogic.Services;
 
+/// <inheritdoc cref="IUserService" />
 public class UserService : IUserService
 {
     private readonly IUnitOfWork unitOfWork;
     private readonly IMapper mapper;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserService"/> class.
+    /// </summary>
+    /// <param name="unitOfWork"><see cref="IUnitOfWork"/>.</param>
+    /// <param name="mapper"><see cref="IMapper"/>.</param>
     public UserService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         this.unitOfWork = unitOfWork;
         this.mapper = mapper;
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<UserResultDto>> GetUserAsync(Guid id)
     {
         var searchUserResult = await this.unitOfWork.UserRepository.GetUserWithRoles(id);
@@ -37,6 +44,7 @@ public class UserService : IUserService
         );
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<UserResultDto>> CreateUserAsync(UserDto user)
     {
         var userEntity = this.mapper.Map<AppUser>(user);
@@ -54,6 +62,7 @@ public class UserService : IUserService
         );
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<UserResultDto>> UpdateUserAsync(UserDto user)
     {
         var userEntity = this.mapper.Map<AppUser>(user);
@@ -71,6 +80,7 @@ public class UserService : IUserService
         );
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult> RemoveUserAsync(Guid id) =>
         await this.unitOfWork.UserRepository.RemoveUserAsync(id);
 }
