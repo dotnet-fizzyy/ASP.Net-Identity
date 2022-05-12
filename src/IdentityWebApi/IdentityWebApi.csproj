@@ -5,7 +5,7 @@
         <LangVersion>10</LangVersion>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         
-        <CodeAnalysisRuleSet>../IdentityWebApi.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet>../../IdentityWebApi.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
