@@ -5,11 +5,19 @@ using System.Collections.Generic;
 
 namespace IdentityWebApi.Core.Entities;
 
-public class AppUser : IdentityUser<Guid>, IBaseUser
+/// <summary>
+/// AppUser entity.
+/// </summary>
+public class AppUser : IdentityUser<Guid>, IBaseEntity
 {
+    /// <summary>
+    /// Gets or sets user app roles.
+    /// </summary>
     public IList<AppUserRole> UserRoles { get; set; }
 
+    /// <inheritdoc/>
     public DateTime CreationDate { get; set; }
 
+    /// <inheritdoc/>
     public bool IsDeleted { get; set; }
 }
