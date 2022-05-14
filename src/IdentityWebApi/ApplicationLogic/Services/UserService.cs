@@ -11,23 +11,30 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.ApplicationLogic.Services;
 
+/// <inheritdoc cref="IUserService" />
 public class UserService : IUserService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
+    private readonly IUnitOfWork unitOfWork;
+    private readonly IMapper mapper;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserService"/> class.
+    /// </summary>
+    /// <param name="unitOfWork"><see cref="IUnitOfWork"/>.</param>
+    /// <param name="mapper"><see cref="IMapper"/>.</param>
     public UserService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
+        this.unitOfWork = unitOfWork;
+        this.mapper = mapper;
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<UserResultDto>> GetUserAsync(Guid id)
     {
-        var searchUserResult = await _unitOfWork.UserRepository.GetUserWithRoles(id);
+        var searchUserResult = await this.unitOfWork.UserRepository.GetUserWithRoles(id);
 
         var userDtoModel = searchUserResult.Data is not null
-            ? _mapper.Map<UserResultDto>(searchUserResult.Data)
+            ? this.mapper.Map<UserResultDto>(searchUserResult.Data)
             : default;
 
         return new ServiceResult<UserResultDto>(
@@ -37,14 +44,15 @@ public class UserService : IUserService
         );
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<UserResultDto>> CreateUserAsync(UserDto user)
     {
-        var userEntity = _mapper.Map<AppUser>(user);
+        var userEntity = this.mapper.Map<AppUser>(user);
 
-        var createdUserResult = await _unitOfWork.UserRepository.CreateUserAsync(userEntity, user.Password, user.UserRole, true);
+        var createdUserResult = await this.unitOfWork.UserRepository.CreateUserAsync(userEntity, user.Password, user.UserRole, true);
 
         var userDtoModel = createdUserResult.Data.appUser is not null
-            ? _mapper.Map<UserResultDto>(createdUserResult.Data.appUser)
+            ? this.mapper.Map<UserResultDto>(createdUserResult.Data.appUser)
             : default;
 
         return new ServiceResult<UserResultDto>(
@@ -54,14 +62,15 @@ public class UserService : IUserService
         );
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<UserResultDto>> UpdateUserAsync(UserDto user)
     {
-        var userEntity = _mapper.Map<AppUser>(user);
+        var userEntity = this.mapper.Map<AppUser>(user);
 
-        var updatedUserResult = await _unitOfWork.UserRepository.UpdateUserAsync(userEntity);
+        var updatedUserResult = await this.unitOfWork.UserRepository.UpdateUserAsync(userEntity);
 
         var userDtoModel = updatedUserResult.Data is not null
-            ? _mapper.Map<UserResultDto>(updatedUserResult.Data)
+            ? this.mapper.Map<UserResultDto>(updatedUserResult.Data)
             : default;
 
         return new ServiceResult<UserResultDto>(
@@ -71,6 +80,7 @@ public class UserService : IUserService
         );
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult> RemoveUserAsync(Guid id) =>
-        await _unitOfWork.UserRepository.RemoveUserAsync(id);
+        await this.unitOfWork.UserRepository.RemoveUserAsync(id);
 }

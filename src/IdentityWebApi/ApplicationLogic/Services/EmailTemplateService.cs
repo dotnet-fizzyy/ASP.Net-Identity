@@ -11,20 +11,27 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.ApplicationLogic.Services;
 
+/// <inheritdoc cref="IEmailTemplateService" />
 public class EmailTemplateService : IEmailTemplateService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
+    private readonly IUnitOfWork unitOfWork;
+    private readonly IMapper mapper;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EmailTemplateService"/> class.
+    /// </summary>
+    /// <param name="unitOfWork"><see cref="IUnitOfWork"/>.</param>
+    /// <param name="mapper"><see cref="IMapper"/>.</param>
     public EmailTemplateService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
+        this.unitOfWork = unitOfWork;
+        this.mapper = mapper;
     }
 
+    /// <inheritdoc/>
     public async Task<ServiceResult<EmailTemplateDto>> GetEmailTemplateDtoAsync(Guid id)
     {
-        var emailTemplateEntity = await _unitOfWork.EmailTemplateRepository.SearchForSingleItemAsync(x => x.Id == id);
+        var emailTemplateEntity = await this.unitOfWork.EmailTemplateRepository.SearchForSingleItemAsync(x => x.Id == id);
 
         if (emailTemplateEntity is null)
         {
@@ -33,7 +40,7 @@ public class EmailTemplateService : IEmailTemplateService
 
         return new ServiceResult<EmailTemplateDto>(
             ServiceResultType.Success,
-            _mapper.Map<EmailTemplateDto>(emailTemplateEntity)
+            this.mapper.Map<EmailTemplateDto>(emailTemplateEntity)
         );
     }
 }

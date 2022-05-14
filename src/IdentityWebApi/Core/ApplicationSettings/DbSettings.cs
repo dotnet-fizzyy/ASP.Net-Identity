@@ -6,26 +6,55 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IdentityWebApi.Core.ApplicationSettings;
 
+/// <summary>
+/// Database settings.
+/// </summary>
 public class DbSettings : IValidatable
 {
-    [Required] 
+    /// <summary>
+    /// Gets or sets DB host.
+    /// </summary>
+    [Required]
     public string Host { get; set; }
 
-    [DefaultValue] 
+    /// <summary>
+    /// Gets or sets DB Port.
+    /// </summary>
+    [DefaultValue]
     public int Port { get; set; }
 
-    [Required] 
+    /// <summary>
+    /// Gets or sets DB Instance.
+    /// </summary>
+    [Required]
     public string Instance { get; set; }
 
-    [Required] 
+    /// <summary>
+    /// Gets or sets DB User.
+    /// </summary>
+    [Required]
     public string User { get; set; }
 
-    [Required] 
+    /// <summary>
+    /// Gets or sets DB Password.
+    /// </summary>
+    [Required]
     public string Password { get; set; }
 
+    /// <summary>
+    /// Gets computed DB connection string.
+    /// </summary>
     public string ConnectionString =>
-        $"Server={Host},{Port};Database={Instance};User={User};Password={Password};MultipleActiveResultSets=True;TrustServerCertificate=True;";
+        $"Server={this.Host},{this.Port};" +
+        $"Database={this.Instance};" +
+        $"User={this.User};" +
+        $"Password={this.Password};" +
+        "MultipleActiveResultSets=True;" +
+        "TrustServerCertificate=True;";
 
+    /// <summary>
+    /// Validates settings properties.
+    /// </summary>
     public void Validate()
     {
         Validator.ValidateObject(this, new ValidationContext(this), true);

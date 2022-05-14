@@ -6,8 +6,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace IdentityWebApi.Startup.Configuration;
 
-public static class ExceptionHandlerExtensions
+/// <summary>
+/// Exception handling configuration.
+/// </summary>
+internal static class ExceptionHandlerExtensions
 {
+    /// <summary>
+    /// Registers exception handler as part of middleware.
+    /// </summary>
+    /// <param name="app"><see cref="IApplicationBuilder"/>.</param>
     public static void RegisterExceptionHandler(this IApplicationBuilder app)
     {
         app.UseExceptionHandler(appError =>

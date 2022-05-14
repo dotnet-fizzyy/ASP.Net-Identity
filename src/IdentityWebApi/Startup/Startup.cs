@@ -11,26 +11,38 @@ using System;
 
 namespace IdentityWebApi.Startup;
 
+/// <summary>
+/// Configuration of middleware and services.
+/// </summary>
 public class Startup
 {
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-
+    /// <inheritdoc cref="IConfiguration"/>
     public IConfiguration Configuration { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Startup"/> class.
+    /// </summary>
+    /// <param name="configuration"><see cref="IConfiguration"/>.</param>
+    public Startup(IConfiguration configuration)
+    {
+        this.Configuration = configuration;
+    }
+
+    /// <summary>
+    /// Configures used services in whole application.
+    /// </summary>
+    /// <param name="services"><see cref="IServiceCollection"/>.</param>
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        var appSettings = ReadAppSettings(Configuration);
+        var appSettings = ReadAppSettings(this.Configuration);
 
-        services.ValidateSettingParameters(Configuration);
+        services.ValidateSettingParameters(this.Configuration);
 
         services.RegisterServices(appSettings);
 
         // Identity server setup should go before Auth setup
-        services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString); 
+        services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString);
         services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
 
         services.RegisterAutomapper();
@@ -38,21 +50,27 @@ public class Startup
         services.RegisterHealthChecks(appSettings.DbSettings.ConnectionString);
 
         services.AddHttpContextAccessor();
-        
+
         services.AddRouting(opts =>
         {
             opts.LowercaseUrls = true;
         });
-        
+
         services.RegisterControllers();
 
         services.RegisterSwagger();
     }
 
+    /// <summary>
+    /// Configures application HTTP middleware.
+    /// </summary>
+    /// <param name="app"><see cref="IApplicationBuilder"/>.</param>
+    /// <param name="env"><see cref="IWebHostEnvironment"/>.</param>
+    /// <param name="serviceProvider"><see cref="IServiceProvider"/>.</param>
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
     {
-        var appSettings = ReadAppSettings(Configuration);
+        var appSettings = ReadAppSettings(this.Configuration);
 
         if (env.IsDevelopment())
         {
@@ -85,9 +103,8 @@ public class Startup
             endpoints.RegisterHealthCheckEndpoint();
         });
 
-        IdentityServerExtensions.InitializeUserRoles(serviceProvider, appSettings.IdentitySettings.Roles).Wait();
-        IdentityServerExtensions.InitializeDefaultUsers(
-            serviceProvider, 
+        serviceProvider.InitializeUserRoles(appSettings.IdentitySettings.Roles).Wait();
+        serviceProvider.InitializeDefaultUsers(
             appSettings.IdentitySettings.DefaultUsers,
             appSettings.IdentitySettings.Email.RequireConfirmation
         ).Wait();
@@ -107,7 +124,7 @@ public class Startup
             SmtpClientSettings = smtpClientSettings,
             IpStackSettings = ipStackSettings,
             RegionsVerificationSettings = regionVerification,
-            IdentitySettings = identitySettings
+            IdentitySettings = identitySettings,
         };
     }
 }

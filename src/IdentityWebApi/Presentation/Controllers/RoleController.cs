@@ -1,6 +1,6 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Constants;
+using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,139 +12,154 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Controllers;
 
+/// <summary>
+/// Role controller (available only for Admin).
+/// </summary>
 [Authorize(Roles = UserRoleConstants.Admin)]
 public class RoleController : ControllerBase
 {
-    private readonly IRoleService _roleService;
+    private readonly IRoleService roleService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RoleController"/> class.
+    /// </summary>
+    /// <param name="roleService"><see cref="IRoleService"/>.</param>
     public RoleController(IRoleService roleService)
     {
-        _roleService = roleService;
+        this.roleService = roleService;
     }
 
     /// <summary>
-    /// Get role by id
+    /// Returns role.
     /// </summary>
-    /// <param name="id"></param>
-    /// <response code="200">Role has been found</response>
-    /// <response code="404">Unable to find role</response>
+    /// <param name="id">Role identifier.</param>
+    /// <response code="200">Role has been found.</response>
+    /// <response code="404">Unable to find role.</response>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="RoleDto"/> Role.
+    /// </returns>
     [HttpGet("id/{id:guid}")]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<RoleDto>> GetRoleById(Guid id)
     {
-        var roleResult = await _roleService.GetRoleByIdAsync(id);
+        var roleResult = await this.roleService.GetRoleByIdAsync(id);
 
         if (roleResult.IsResultFailed)
         {
-            return GetFailedResponseByServiceResult(roleResult);
+            return this.GetFailedResponseByServiceResult(roleResult);
         }
 
         return roleResult.Data;
     }
 
     /// <summary>
-    /// Grant role for user
+    /// Grants role to user.
     /// </summary>
-    /// <param name="userRoleDto"></param>
-    /// <response code="204">Role has been found</response>
-    /// <response code="404">Unable to find role</response>
+    /// <param name="userRoleDto"><see cref="UserRoleDto"/>.</param>
+    /// <response code="204">Role has been found.</response>
+    /// <response code="404">Unable to find role.</response>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("grant")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleDto userRoleDto)
     {
-        var roleGrantResult = await _roleService.GrantRoleToUserAsync(userRoleDto);
-        
+        var roleGrantResult = await this.roleService.GrantRoleToUserAsync(userRoleDto);
+
         if (roleGrantResult.IsResultFailed)
         {
-            return GetFailedResponseByServiceResult(roleGrantResult);
+            return this.GetFailedResponseByServiceResult(roleGrantResult);
         }
 
-        return NoContent();
+        return this.NoContent();
     }
 
     /// <summary>
-    /// Revoke role from user
+    /// Revokes role from user.
     /// </summary>
-    /// <param name="userRoleDto"></param>
-    /// <response code="204">Role has been found</response>
-    /// <response code="404">Unable to find role</response>
+    /// <param name="userRoleDto"><see cref="UserRoleDto"/>.</param>
+    /// <response code="204">Role has been found.</response>
+    /// <response code="404">Unable to find role.</response>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("revoke")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RevokeRoleFromUser([FromBody, BindRequired] UserRoleDto userRoleDto)
     {
-        var roleGrantResult = await _roleService.RevokeRoleFromUser(userRoleDto);
+        var roleRevocationResult = await this.roleService.RevokeRoleFromUser(userRoleDto);
 
-        if (roleGrantResult.IsResultFailed)
+        if (roleRevocationResult.IsResultFailed)
         {
-            return GetFailedResponseByServiceResult(roleGrantResult);
+            return this.GetFailedResponseByServiceResult(roleRevocationResult);
         }
 
-        return NoContent();
+        return this.NoContent();
     }
 
     /// <summary>
-    /// Create role
+    /// Creates role entity.
     /// </summary>
-    /// <param name="roleDto"></param>
-    /// <response code="201">Role has been created</response>
-    /// <response code="400">Role already exists</response>
+    /// <param name="roleDto"><see cref="RoleCreationDto"/>.</param>
+    /// <response code="201">Role has been created.</response>
+    /// <response code="400">Role already exists.</response>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<RoleDto>> CreateRole([FromBody, BindRequired] RoleCreationDto roleDto)
     {
-        var roleCreationResult = await _roleService.CreateRoleAsync(roleDto);
+        var roleCreationResult = await this.roleService.CreateRoleAsync(roleDto);
 
         if (roleCreationResult.IsResultFailed)
         {
-            return GetFailedResponseByServiceResult(roleCreationResult);
+            return this.GetFailedResponseByServiceResult(roleCreationResult);
         }
 
-        return CreatedAtAction(nameof(CreateRole), roleCreationResult.Data);
+        return this.CreatedAtAction(nameof(this.CreateRole), roleCreationResult.Data);
     }
 
     /// <summary>
-    /// Update role by id
+    /// Updates role entity.
     /// </summary>
-    /// <param name="roleDto"></param>
-    /// <response code="200">Role has been updated</response>
-    /// <response code="404">Unable to find role</response>
+    /// <param name="roleDto"><see cref="RoleDto"/>.</param>
+    /// <response code="200">Role has been updated.</response>
+    /// <response code="404">Unable to find role.</response>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPut]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<RoleDto>> UpdateRole([FromBody, BindRequired] RoleDto roleDto)
     {
-        var roleUpdateResult = await _roleService.UpdateRoleAsync(roleDto);
+        var roleUpdateResult = await this.roleService.UpdateRoleAsync(roleDto);
 
         if (roleUpdateResult.IsResultFailed)
         {
-            return GetFailedResponseByServiceResult(roleUpdateResult);
+            return this.GetFailedResponseByServiceResult(roleUpdateResult);
         }
 
         return roleUpdateResult.Data;
     }
-    
+
     /// <summary>
-    /// Remove role by id
+    /// Removes role entity.
     /// </summary>
-    /// <param name="id"></param>
-    /// <response code="204">Role has been removed</response>
-    /// <response code="404">Unable to find role</response>
+    /// <param name="id">Role identifier.</param>
+    /// <response code="204">Role has been removed.</response>
+    /// <response code="404">Unable to find role.</response>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpDelete("id/{id:guid}")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RemoveRole(Guid id)
     {
-        var roleRemoveResult = await _roleService.RemoveRoleAsync(id);
+        var roleRemoveResult = await this.roleService.RemoveRoleAsync(id);
 
         if (roleRemoveResult.IsResultFailed)
         {
-            return GetFailedResponseByServiceResult(roleRemoveResult);
+            return this.GetFailedResponseByServiceResult(roleRemoveResult);
         }
 
-        return NoContent();
+        return this.NoContent();
     }
 }

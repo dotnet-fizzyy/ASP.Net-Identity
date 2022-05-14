@@ -11,8 +11,10 @@ using System.Security.Claims;
 
 namespace IdentityWebApi.ApplicationLogic.Services;
 
+/// <inheritdoc cref="IClaimsService" />
 public class ClaimsService : IClaimsService
 {
+    /// <inheritdoc />
     public ServiceResult<Guid> GetUserIdFromIdentityUser(ClaimsPrincipal user)
     {
         var id = user.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -24,6 +26,7 @@ public class ClaimsService : IClaimsService
         return new ServiceResult<Guid>(ServiceResultType.Success, userId);
     }
 
+    /// <inheritdoc />
     public ServiceResult<string> GetUserEmailFromIdentityUser(ClaimsPrincipal user)
     {
         var email = user.FindFirstValue(ClaimTypes.Email);
@@ -35,6 +38,7 @@ public class ClaimsService : IClaimsService
             data: email);
     }
 
+    /// <inheritdoc />
     public ServiceResult<IEnumerable<string>> GetUserRolesFromIdentityUser(ClaimsPrincipal user)
     {
         var role = user.FindFirstValue(ClaimTypes.Role);
@@ -46,13 +50,14 @@ public class ClaimsService : IClaimsService
         return new ServiceResult<IEnumerable<string>>(ServiceResultType.Success, role.Split(','));
     }
 
+    /// <inheritdoc />
     public ClaimsPrincipal AssignClaims(UserResultDto userDto)
     {
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
             new Claim(ClaimTypes.Email, userDto.Email),
-            new Claim(ClaimTypes.Role, string.Join(",", userDto.Roles))
+            new Claim(ClaimTypes.Role, string.Join(",", userDto.Roles)),
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

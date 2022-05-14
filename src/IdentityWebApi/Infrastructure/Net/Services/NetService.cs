@@ -12,31 +12,38 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.Infrastructure.Net.Services;
 
+/// <inheritdoc />
 public class NetService : INetService
 {
+    private const string IpStackUrl = "http://api.ipstack.com";
+
     private static readonly HttpClient HttpClient = new ();
 
-    private const string IpStackUrl = "http://api.ipstack.com";
-    
-    private readonly IMapper _mapper;
-    private readonly AppSettings _appSettings;
+    private readonly IMapper mapper;
+    private readonly AppSettings appSettings;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NetService"/> class.
+    /// </summary>
+    /// <param name="mapper"><see cref="IMapper"/>.</param>
+    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
     public NetService(IMapper mapper, AppSettings appSettings)
     {
-        _mapper = mapper;
-        _appSettings = appSettings;
+        this.mapper = mapper;
+        this.appSettings = appSettings;
     }
-    
+
+    /// <inheritdoc />
     public async Task<IpAddressDetails> GetIpAddressDetails(string ipv4)
     {
-        var httpResponse = await HttpClient.GetAsync($"{IpStackUrl}/{ipv4}?access_key={_appSettings.IpStackSettings.AccessKey}");
+        var httpResponse = await HttpClient.GetAsync($"{IpStackUrl}/{ipv4}?access_key={this.appSettings.IpStackSettings.AccessKey}");
         var responseMessage = httpResponse.EnsureSuccessStatusCode();
 
         var jsonResponseMessage = await responseMessage.Content.ReadAsStringAsync();
         var ipStackResponse = JsonConvert.DeserializeObject<IpStackResponseModel>(jsonResponseMessage);
 
-        var ipAddressDetails = _mapper.Map<IpAddressDetails>(ipStackResponse);
-        
+        var ipAddressDetails = this.mapper.Map<IpAddressDetails>(ipStackResponse);
+
         return ipAddressDetails;
     }
 }

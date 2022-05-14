@@ -2,11 +2,20 @@ using IdentityWebApi.ApplicationLogic.Validation;
 
 namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
+/// <summary>
+/// User registration DTO model.
+/// </summary>
 public class UserRegistrationDto : UserSignInDto
 {
-    [DefaultValue] 
+    /// <summary>
+    /// Gets or sets user name.
+    /// </summary>
+    [DefaultValue]
     public string UserName { get; set; }
 
-    [DefaultValue] 
+    /// <summary>
+    /// Gets or sets role.
+    /// </summary>
+    [DefaultValue]
     public string Role { get; set; }
 }

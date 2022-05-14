@@ -2,80 +2,121 @@ using IdentityWebApi.Core.Enums;
 
 namespace IdentityWebApi.Core.Results
 {
+    /// <summary>
+    /// Optional pattern implementation without arguments.
+    /// </summary>
     public class ServiceResult
     {
-        #region Properties
-        
+        /// <summary>
+        /// Gets or sets operation result.
+        /// </summary>
         public ServiceResultType Result { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets operation error message.
+        /// </summary>
         public string Message { get; set; }
-        
-        #endregion
 
-        #region Lambdas
+        /// <summary>
+        /// Gets a value indicating whether operation result is not successful.
+        /// </summary>
+        public bool IsResultFailed => this.Result != ServiceResultType.Success;
 
-        public bool IsResultFailed => Result is not ServiceResultType.Success;
-        
-        public bool IsResultInvalidData => Result is ServiceResultType.InvalidData;
-        
-        public bool IsResultNotFound => Result is ServiceResultType.NotFound;
+        /// <summary>
+        /// Gets a value indicating whether operation result is not found.
+        /// </summary>
+        public bool IsResultNotFound => this.Result == ServiceResultType.NotFound;
 
-        public bool IsResultInternalError => Result is ServiceResultType.InternalError;
-        
-        #endregion
-        
-        #region Constuctors
-        protected ServiceResult() {}
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceResult"/> class.
+        /// </summary>
+        /// <param name="result">Operation status indicator.</param>
         public ServiceResult(ServiceResultType result)
         {
-            Result = result;
+            this.Result = result;
         }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceResult"/> class.
+        /// </summary>
+        /// <param name="result">Operation status indicator.</param>
+        /// <param name="message">Error description message.</param>
         public ServiceResult(ServiceResultType result, string message)
+            : this(result)
         {
-            Result = result;
-            Message = message;
+            this.Message = message;
         }
-        #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceResult"/> class.
+        /// </summary>
+        protected ServiceResult()
+        {
+
+        }
     }
 
+    /// <summary>
+    /// Optional pattern implementation with arguments.
+    /// </summary>
+    /// <typeparam name="T">Represents operation result data.</typeparam>
     public class ServiceResult<T> : ServiceResult
     {
-        #region Properties
-        
+        /// <summary>
+        /// Gets or sets operation result data.
+        /// </summary>
         public T Data { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceResult{T}"/> class.
+        /// </summary>
+        public ServiceResult()
+        {
 
-        #region Constructors
-        
-        public ServiceResult() {}
-        
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceResult{T}"/> class.
+        /// </summary>
+        /// <param name="result">Operation status indicator.</param>
         public ServiceResult(ServiceResultType result)
         {
-            Result = result;
+            this.Result = result;
         }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceResult{T}"/> class.
+        /// </summary>
+        /// <param name="result">Operation status indicator.</param>
+        /// <param name="message">Error description message.</param>
         public ServiceResult(ServiceResultType result, string message)
+            : this(result)
         {
-            Result = result;
-            Message = message;
+            this.Message = message;
         }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceResult{T}"/> class.
+        /// </summary>
+        /// <param name="result">Operation status indicator.</param>
+        /// <param name="data">Result of performed operation.</param>
         public ServiceResult(ServiceResultType result, T data)
+            : this(result)
         {
-            Result = result;
-            Data = data;
+            this.Data = data;
         }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceResult{T}"/> class.
+        /// </summary>
+        /// <param name="result">Operation status indicator.</param>
+        /// <param name="message">Error description message.</param>
+        /// <param name="data">Result of performed operation.</param>
         public ServiceResult(ServiceResultType result, string message, T data)
+            : this(result)
         {
-            Result = result;
-            Message = message;
-            Data = data;
+            this.Message = message;
+            this.Data = data;
         }
-        
-        #endregion
     }
 }

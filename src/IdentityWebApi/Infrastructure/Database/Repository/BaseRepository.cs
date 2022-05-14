@@ -8,17 +8,30 @@ using System.Threading.Tasks;
 
 namespace IdentityWebApi.Infrastructure.Database.Repository;
 
-public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
+/// <summary>
+/// <inheritdoc cref="IBaseRepository{T}"/>
+/// </summary>
+/// <typeparam name="T">Entity.</typeparam>
+public abstract class BaseRepository<T> : IBaseRepository<T>
+    where T : class
 {
+    /// <summary>
+    /// Database EF context.
+    /// </summary>
     protected readonly DatabaseContext DatabaseContext;
-    private readonly DbSet<T> _entity;
+    private readonly DbSet<T> entity;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseRepository{T}"/> class.
+    /// </summary>
+    /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
     protected BaseRepository(DatabaseContext databaseContext)
     {
-        DatabaseContext = databaseContext;
-        _entity = databaseContext.Set<T>();
+        this.DatabaseContext = databaseContext;
+        this.entity = databaseContext.Set<T>();
     }
 
-    public async Task<T> SearchForSingleItemAsync(Expression<Func<T, bool>> expression) => 
-        await _entity.AsNoTracking().SingleOrDefaultAsync(expression);
+    /// <inheritdoc/>
+    public async Task<T> SearchForSingleItemAsync(Expression<Func<T, bool>> expression) =>
+        await this.entity.AsNoTracking().SingleOrDefaultAsync(expression);
 }

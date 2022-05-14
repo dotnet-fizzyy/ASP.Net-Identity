@@ -2,21 +2,39 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IdentityWebApi.Core.ApplicationSettings;
 
+/// <summary>
+/// Default user settings.
+/// </summary>
 public class DefaultUserSettings
 {
-    [Required] 
+    /// <summary>
+    /// Gets or sets name.
+    /// </summary>
+    [Required]
     public string Name { get; set; }
 
-    [Required] 
+    /// <summary>
+    /// Gets or sets password.
+    /// </summary>
+    [Required]
     public string Password { get; set; }
 
-    [Required] 
+    /// <summary>
+    /// Gets or sets role.
+    /// </summary>
+    [Required]
     public string Role { get; set; }
 
-    [Required] 
-    [EmailAddress] 
+    /// <summary>
+    /// Gets or sets email.
+    /// </summary>
+    [Required]
+    [EmailAddress]
     public string Email { get; set; }
 
+    /// <summary>
+    /// Validates settings properties.
+    /// </summary>
     public void Validate()
     {
         Validator.ValidateObject(this, new ValidationContext(this), true);

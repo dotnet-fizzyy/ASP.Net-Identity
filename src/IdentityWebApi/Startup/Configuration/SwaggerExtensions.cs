@@ -8,8 +8,15 @@ using System.Reflection;
 
 namespace IdentityWebApi.Startup.Configuration;
 
-public static class SwaggerExtensions
+/// <summary>
+/// Swagger configuration.
+/// </summary>
+internal static class SwaggerExtensions
 {
+    /// <summary>
+    /// Configures Swagger services.
+    /// </summary>
+    /// <param name="services"><see cref="IServiceCollection"/>.</param>
     public static void RegisterSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
@@ -17,16 +24,20 @@ public static class SwaggerExtensions
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "IdentityWebApi",
-                Version = "v1"
+                Version = "v1",
             });
 
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            
+
             c.IncludeXmlComments(xmlPath);
         });
     }
 
+    /// <summary>
+    /// Configures Swagger middleware.
+    /// </summary>
+    /// <param name="app"><see cref="IApplicationBuilder"/>.</param>
     public static void UseSwaggerApp(this IApplicationBuilder app)
     {
         app.UseSwagger();

@@ -4,11 +4,20 @@ using System;
 
 namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
+/// <summary>
+/// UserRole DTO model.
+/// </summary>
 public class UserRoleDto
 {
-    [DefaultValue] 
+    /// <summary>
+    /// Gets or sets role id.
+    /// </summary>
+    [DefaultValue]
     public Guid RoleId { get; set; }
 
-    [DefaultValue] 
+    /// <summary>
+    /// Gets or sets user id.
+    /// </summary>
+    [DefaultValue]
     public Guid UserId { get; set; }
 }

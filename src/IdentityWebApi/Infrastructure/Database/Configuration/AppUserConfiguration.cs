@@ -5,8 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace IdentityWebApi.Infrastructure.Database.Configuration;
 
+/// <summary>
+/// Configuration of AppUser entity.
+/// </summary>
 public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 {
+    /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<AppUser> builder)
     {
         builder.Property(x => x.CreationDate)

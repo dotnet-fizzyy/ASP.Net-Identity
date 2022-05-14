@@ -7,32 +7,40 @@ using System;
 
 namespace IdentityWebApi.Presentation.Services;
 
+/// <inheritdoc />
 public class HttpContextService : IHttpContextService
 {
-    private readonly HttpContext _httpContext;
-    private readonly LinkGenerator _linkGenerator;
-    
+    private readonly HttpContext httpContext;
+    private readonly LinkGenerator linkGenerator;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HttpContextService"/> class.
+    /// </summary>
+    /// <param name="httpContextAccessor"><see cref="HttpContextAccessor"/>.</param>
+    /// <param name="linkGenerator"><see cref="LinkGenerator"/>.</param>
     public HttpContextService(IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
     {
-        _httpContext = httpContextAccessor.HttpContext;
-        _linkGenerator = linkGenerator;
+        this.httpContext = httpContextAccessor.HttpContext;
+        this.linkGenerator = linkGenerator;
     }
 
-    public string GenerateConfirmEmailLink(string email, string token) => 
-        _linkGenerator.GetUriByAction(
-            _httpContext,  
-            "ConfirmEmail", 
+    /// <inheritdoc/>
+    public string GenerateConfirmEmailLink(string email, string token) =>
+        this.linkGenerator.GetUriByAction(
+            this.httpContext,
+            "ConfirmEmail",
             "Auth",
-            new { email, token }, 
-            _httpContext.Request.Scheme
+            new { email, token },
+            this.httpContext.Request.Scheme
         );
 
+    /// <inheritdoc/>
     public string GenerateGetUserLink(Guid id) =>
-        _linkGenerator.GetUriByAction(
-            _httpContext,
-            "GetUser", 
-            "User", 
-            new { id }, 
-            _httpContext.Request.Scheme
+        this.linkGenerator.GetUriByAction(
+            this.httpContext,
+            "GetUser",
+            "User",
+            new { id },
+            this.httpContext.Request.Scheme
         );
 }

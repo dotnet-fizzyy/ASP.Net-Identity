@@ -5,10 +5,16 @@ using IdentityWebApi.Infrastructure.Net.Models;
 
 namespace IdentityWebApi.ApplicationLogic.Mappers;
 
+/// <summary>
+/// Configuration of Net models and entities mapping.
+/// </summary>
 public class NetServiceProfile : Profile
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NetServiceProfile"/> class.
+    /// </summary>
     public NetServiceProfile()
     {
-        CreateMap<IpStackResponseModel, IpAddressDetails>();
+        this.CreateMap<IpStackResponseModel, IpAddressDetails>();
     }
 }
