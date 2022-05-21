@@ -33,7 +33,6 @@ internal static class ServicesExtensions
         services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IClaimsService, ClaimsService>();
         services.AddTransient<IRoleService, RoleService>();
-        services.AddTransient<IEmailTemplateService, EmailTemplateService>();
         services.AddSingleton<INetService, NetService>();
 
         services.AddScoped<IHttpContextService, HttpContextService>();
@@ -42,6 +41,5 @@ internal static class ServicesExtensions
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
-        services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
     }
 }

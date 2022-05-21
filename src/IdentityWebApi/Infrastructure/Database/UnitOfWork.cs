@@ -19,28 +19,22 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     /// <inheritdoc/>
     public IRoleRepository RoleRepository { get; }
 
-    /// <inheritdoc/>
-    public IEmailTemplateRepository EmailTemplateRepository { get; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
     /// </summary>
     /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
     /// <param name="userRepository"><see cref="IUserRepository"/>.</param>
     /// <param name="roleRepository"><see cref="IRoleRepository"/>.</param>
-    /// <param name="emailTemplateRepository"><see cref="IEmailTemplateRepository"/>.</param>
     public UnitOfWork(
         DatabaseContext databaseContext,
         IUserRepository userRepository,
-        IRoleRepository roleRepository,
-        IEmailTemplateRepository emailTemplateRepository
+        IRoleRepository roleRepository
     )
     {
         this.databaseContext = databaseContext;
 
         this.UserRepository = userRepository;
         this.RoleRepository = roleRepository;
-        this.EmailTemplateRepository = emailTemplateRepository;
     }
 
     /// <inheritdoc/>
