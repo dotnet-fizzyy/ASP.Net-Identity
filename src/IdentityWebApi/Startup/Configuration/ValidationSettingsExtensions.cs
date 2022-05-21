@@ -1,7 +1,14 @@
+using FluentValidation;
+
+using IdentityWebApi.ApplicationLogic.Behaviours;
 using IdentityWebApi.Core.ApplicationSettings;
+
+using MediatR;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+using System.Reflection;
 
 namespace IdentityWebApi.Startup.Configuration;
 
@@ -19,5 +26,16 @@ internal static class ValidationSettingsExtensions
     {
         services.UseConfigurationValidation();
         services.ConfigureValidatableSetting<AppSettings>(configuration);
+    }
+
+    /// <summary>
+    /// Registers validation behaviour pipeline.
+    /// </summary>
+    /// <param name="services"><see cref="IServiceCollection"/>.</param>
+    public static void RegisterValidationPipeline(this IServiceCollection services)
+    {
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

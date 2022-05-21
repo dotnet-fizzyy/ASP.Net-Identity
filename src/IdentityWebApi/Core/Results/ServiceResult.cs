@@ -87,6 +87,16 @@ namespace IdentityWebApi.Core.Results
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceResult{T}"/> class.
         /// </summary>
+        /// <param name="data">Result of performed operation.</param>
+        public ServiceResult(T data)
+        {
+            this.Result = ServiceResultType.Success;
+            this.Data = data;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceResult{T}"/> class.
+        /// </summary>
         /// <param name="result">Operation status indicator.</param>
         /// <param name="message">Error description message.</param>
         public ServiceResult(ServiceResultType result, string message)

@@ -1,6 +1,9 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.User.Queries.GetUserById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +27,9 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="userService"><see cref="IUserService"/>.</param>
     /// <param name="claimsService"><see cref="IClaimsService"/>.</param>
-    public UserController(IUserService userService, IClaimsService claimsService)
+    /// <param name="mediator"><see cref="IMediator"/>.</param>
+    public UserController(IUserService userService, IClaimsService claimsService, IMediator mediator)
+        : base(mediator)
     {
         this.userService = userService;
         this.claimsService = claimsService;
@@ -59,11 +64,12 @@ public class UserController : ControllerBase
     [HttpGet("id/{id:guid}")]
     public async Task<ActionResult<UserResultDto>> GetUser(Guid id)
     {
-        var userResult = await this.userService.GetUserAsync(id);
+        var query = new GetUserByIdQuery(id);
+        var userResult = await this.Mediator.Send(query);
 
-        if (userResult.IsResultNotFound)
+        if (userResult.IsResultFailed)
         {
-            return this.NotFound();
+            return this.GetFailedResponseByServiceResult(userResult);
         }
 
         return userResult.Data;

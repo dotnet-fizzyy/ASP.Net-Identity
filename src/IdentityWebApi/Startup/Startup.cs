@@ -45,6 +45,9 @@ public class Startup
         services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString);
         services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
 
+        services.RegisterMediatr();
+        services.RegisterValidationPipeline();
+
         services.RegisterAutomapper();
 
         services.RegisterHealthChecks(appSettings.DbSettings.ConnectionString);

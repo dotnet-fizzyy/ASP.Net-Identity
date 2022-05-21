@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace IdentityWebApi.Infrastructure.Database;
 
@@ -32,6 +33,16 @@ public sealed class DatabaseContext : IdentityDbContext<
     {
         this.Database.Migrate();
     }
+
+    /// <summary>
+    /// Searches for entity by id.
+    /// </summary>
+    /// <param name="id">Entity id.</param>
+    /// <typeparam name="T">Entity.</typeparam>
+    /// <returns>Entity by search criteria.</returns>
+    public async Task<T> SearchById<T>(Guid id)
+        where T : class, IBaseEntity =>
+            await this.Set<T>().SingleOrDefaultAsync(x => x.Id == id);
 
     /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder builder)

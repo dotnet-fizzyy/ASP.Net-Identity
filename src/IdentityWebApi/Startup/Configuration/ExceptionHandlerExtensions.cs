@@ -1,8 +1,11 @@
+using IdentityWebApi.Core.Exceptions;
 using IdentityWebApi.Presentation.Models.Response;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+
+using System.Linq;
 
 namespace IdentityWebApi.Startup.Configuration;
 
@@ -26,10 +29,25 @@ internal static class ExceptionHandlerExtensions
 
                 var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
 
-                if (contextFeature is not null)
+                if (contextFeature != null)
                 {
+                    string errorMessage;
+
+                    switch (contextFeature.Error)
+                    {
+                        case ModelValidationException modelValidationException:
+                            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                            errorMessage = modelValidationException.Errors.Aggregate((acc, x) => acc + $", {x}");
+
+                            break;
+                        default:
+                            errorMessage = contextFeature.Error.Message;
+
+                            break;
+                    }
+
                     await context.Response.WriteAsJsonAsync(
-                        new ErrorResponse(contextFeature.Error.Source, contextFeature.Error.Message)
+                        new ErrorResponse(contextFeature.Error.Source, errorMessage)
                     );
                 }
             });
