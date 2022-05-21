@@ -8,6 +8,7 @@ namespace IdentityWebApi.Core.Interfaces.Infrastructure;
 /// Repository with base methods for entity operations.
 /// </summary>
 /// <typeparam name="T">Entity.</typeparam>
+[Obsolete("Implement in DB context")]
 public interface IBaseRepository<T>
     where T : class
 {

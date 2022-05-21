@@ -12,6 +12,7 @@ namespace IdentityWebApi.Infrastructure.Database.Repository;
 /// <inheritdoc cref="IBaseRepository{T}"/>
 /// </summary>
 /// <typeparam name="T">Entity.</typeparam>
+[Obsolete("Remove after CQRS pattern full implementation")]
 public abstract class BaseRepository<T> : IBaseRepository<T>
     where T : class
 {

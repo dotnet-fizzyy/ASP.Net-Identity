@@ -9,6 +9,7 @@ namespace IdentityWebApi.Core.Interfaces.Infrastructure;
 /// <summary>
 /// Repository with functionality for AppRole entity.
 /// </summary>
+[Obsolete("Remove after CQRS pattern full implementation")]
 public interface IRoleRepository
 {
     /// <summary>

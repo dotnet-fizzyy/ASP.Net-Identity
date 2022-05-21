@@ -8,6 +8,7 @@ namespace IdentityWebApi.Infrastructure.Database;
 /// <summary>
 /// <inheritdoc cref="IUnitOfWork"/>
 /// </summary>
+[Obsolete("Replace with CQRS context")]
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
     private readonly DatabaseContext databaseContext;

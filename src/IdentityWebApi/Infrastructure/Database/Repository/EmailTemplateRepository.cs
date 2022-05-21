@@ -1,9 +1,12 @@
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 
+using System;
+
 namespace IdentityWebApi.Infrastructure.Database.Repository;
 
 /// <inheritdoc cref="IEmailTemplateRepository" />
+[Obsolete("Remove after CQRS pattern full implementation")]
 public class EmailTemplateRepository : BaseRepository<EmailTemplate>, IEmailTemplateRepository
 {
     /// <summary>

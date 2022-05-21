@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 namespace IdentityWebApi.Infrastructure.Database.Repository;
 
 /// <inheritdoc cref="IUserRepository"/>
+[Obsolete("Remove after CQRS pattern full implementation")]
 public class UserRepository : BaseRepository<AppUser>, IUserRepository
 {
     /// <summary>

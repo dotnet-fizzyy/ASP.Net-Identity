@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Core.Interfaces.Infrastructure;
@@ -5,6 +6,7 @@ namespace IdentityWebApi.Core.Interfaces.Infrastructure;
 /// <summary>
 /// Unit of work pattern.
 /// </summary>
+[Obsolete("Remove after CQRS pattern full implementation")]
 public interface IUnitOfWork
 {
     /// <summary>

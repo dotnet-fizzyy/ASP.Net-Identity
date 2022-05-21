@@ -9,6 +9,7 @@ namespace IdentityWebApi.Core.Interfaces.Infrastructure;
 /// <summary>
 /// User repository.
 /// </summary>
+[Obsolete("Remove after CQRS pattern full implementation")]
 public interface IUserRepository : IBaseRepository<AppUser>
 {
     /// <summary>

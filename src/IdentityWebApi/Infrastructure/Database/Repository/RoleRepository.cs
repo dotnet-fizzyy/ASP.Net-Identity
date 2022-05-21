@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace IdentityWebApi.Infrastructure.Database.Repository;
 
 /// <inheritdoc cref="IRoleRepository" />
+[Obsolete("Remove after CQRS pattern full implementation")]
 public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
 {
     /// <summary>
