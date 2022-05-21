@@ -1,7 +1,11 @@
+using IdentityWebApi.ApplicationLogic.EmailTemplate.GetEmailTemplateById;
+using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Constants;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
@@ -16,15 +20,13 @@ namespace IdentityWebApi.Presentation.Controllers;
 [Route("api/email-template")]
 public class EmailTemplateController : ControllerBase
 {
-    private readonly IEmailTemplateService emailTemplateService;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="EmailTemplateController"/> class.
     /// </summary>
-    /// <param name="emailTemplateService"><see cref="IEmailTemplateService"/>.</param>
-    public EmailTemplateController(IEmailTemplateService emailTemplateService)
+    /// <param name="mediator"><see cref="IMediator"/>.</param>
+    public EmailTemplateController(IMediator mediator)
+        : base(mediator)
     {
-        this.emailTemplateService = emailTemplateService;
     }
 
     /// <summary>
@@ -35,15 +37,18 @@ public class EmailTemplateController : ControllerBase
     /// <param name="id">Email template identifier.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpGet("id/{id:guid}")]
-    public async Task<IActionResult> GetEmailTemplate(Guid id)
+    [ProducesResponseType(typeof(EmailTemplateDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<EmailTemplateDto>> GetEmailTemplate(Guid id)
     {
-        var emailTemplateResult = await this.emailTemplateService.GetEmailTemplateDtoAsync(id);
+        var query = new GetEmailTemplateByIdQuery(id);
+        var emailTemplateResult = await this.Mediator.Send(query);
 
-        if (emailTemplateResult.IsResultNotFound)
+        if (emailTemplateResult.IsResultFailed)
         {
-            return this.NotFound();
+            return this.GetFailedResponseByServiceResult(emailTemplateResult);
         }
 
-        return this.Ok(emailTemplateResult.Data);
+        return emailTemplateResult.Data;
     }
 }

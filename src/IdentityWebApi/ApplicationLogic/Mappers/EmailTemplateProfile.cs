@@ -1,8 +1,5 @@
 using AutoMapper;
 
-using IdentityWebApi.ApplicationLogic.Models.Action;
-using IdentityWebApi.Core.Entities;
-
 namespace IdentityWebApi.ApplicationLogic.Mappers;
 
 /// <summary>
@@ -15,9 +12,9 @@ public class EmailTemplateProfile : Profile
     /// </summary>
     public EmailTemplateProfile()
     {
-        this.CreateMap<EmailTemplateDto, EmailTemplate>()
+        this.CreateMap<ApplicationLogic.Models.Action.EmailTemplateDto, Core.Entities.EmailTemplate>()
             .ForMember(dist => dist.Id, opt => opt.MapFrom(x => x.EmailTemplateId));
-        this.CreateMap<EmailTemplate, EmailTemplateDto>()
+        this.CreateMap<Core.Entities.EmailTemplate, ApplicationLogic.Models.Action.EmailTemplateDto>()
             .ForMember(dist => dist.EmailTemplateId, opt => opt.MapFrom(x => x.Id));
     }
 }
