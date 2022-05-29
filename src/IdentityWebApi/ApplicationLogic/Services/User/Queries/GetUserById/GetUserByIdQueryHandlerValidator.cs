@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace IdentityWebApi.ApplicationLogic.User.Queries.GetUserById;
+namespace IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 
 /// <summary>
 /// <see cref="GetUserByIdQuery"/> validator.

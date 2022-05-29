@@ -47,9 +47,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ApplicationLogic\Common" />
       <Folder Include="ApplicationLogic\Models" />
-      <Folder Include="ApplicationLogic\User\Commands" />
     </ItemGroup>
 
     <ItemGroup>

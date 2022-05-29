@@ -1,11 +1,11 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Results;
 
-using MediatR;
-
 using System;
 
-namespace IdentityWebApi.ApplicationLogic.EmailTemplate.GetEmailTemplateById;
+using MediatR;
+
+namespace IdentityWebApi.ApplicationLogic.Services.EmailTemplate.GetEmailTemplateById;
 
 public record GetEmailTemplateByIdQuery : IRequest<ServiceResult<EmailTemplateDto>>
 {

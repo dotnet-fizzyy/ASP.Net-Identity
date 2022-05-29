@@ -12,7 +12,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.ApplicationLogic.User.Queries.GetUserById;
+namespace IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 
 /// <summary>
 /// Gets user by id query CQRS handler.

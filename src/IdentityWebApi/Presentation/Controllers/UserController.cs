@@ -1,5 +1,5 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
-using IdentityWebApi.ApplicationLogic.User.Queries.GetUserById;
+using IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 

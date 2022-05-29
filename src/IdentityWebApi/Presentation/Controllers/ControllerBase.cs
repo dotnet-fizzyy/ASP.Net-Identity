@@ -2,6 +2,8 @@ using IdentityWebApi.Core.Results;
 
 using MediatR;
 
+using System;
+
 namespace IdentityWebApi.Presentation.Controllers;
 
 /// <summary>
@@ -31,7 +33,7 @@ public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     /// <param name="mediator"><see cref="IMediator"/>.</param>
     protected ControllerBase(IMediator mediator)
     {
-        this.Mediator = mediator;
+        this.Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
     /// <summary>

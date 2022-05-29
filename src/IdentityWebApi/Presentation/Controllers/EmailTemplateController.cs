@@ -1,5 +1,5 @@
-using IdentityWebApi.ApplicationLogic.EmailTemplate.GetEmailTemplateById;
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Services.EmailTemplate.GetEmailTemplateById;
 using IdentityWebApi.Core.Constants;
 
 using MediatR;
