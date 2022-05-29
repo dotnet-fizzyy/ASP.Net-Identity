@@ -47,9 +47,9 @@ public class UserController : ControllerBase
 
         var userResult = await this.userService.GetUserAsync(userId.Data);
 
-        if (userResult.IsResultNotFound)
+        if (userResult.IsResultFailed)
         {
-            return this.NotFound();
+            return this.CreateFailedResponseByServiceResult(userResult);
         }
 
         return userResult.Data;
@@ -69,7 +69,7 @@ public class UserController : ControllerBase
 
         if (userResult.IsResultFailed)
         {
-            return this.GetFailedResponseByServiceResult(userResult);
+            return this.CreateFailedResponseByServiceResult(userResult);
         }
 
         return userResult.Data;
@@ -96,9 +96,9 @@ public class UserController : ControllerBase
     {
         var userUpdateResult = await this.userService.UpdateUserAsync(user);
 
-        if (userUpdateResult.IsResultNotFound)
+        if (userUpdateResult.IsResultFailed)
         {
-            return this.NotFound(userUpdateResult.Message);
+            return this.CreateFailedResponseByServiceResult(userUpdateResult);
         }
 
         return userUpdateResult.Data;
@@ -113,11 +113,11 @@ public class UserController : ControllerBase
     [HttpDelete("id/{id:guid}")]
     public async Task<IActionResult> RemoveUser(Guid id)
     {
-        var result = await this.userService.RemoveUserAsync(id);
+        var userRemoveResult = await this.userService.RemoveUserAsync(id);
 
-        if (result.IsResultNotFound)
+        if (userRemoveResult.IsResultFailed)
         {
-            return this.NotFound();
+            return this.CreateFailedResponseByServiceResult(userRemoveResult);
         }
 
         return this.NoContent();

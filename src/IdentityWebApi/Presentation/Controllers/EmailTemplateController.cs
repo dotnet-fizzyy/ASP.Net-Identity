@@ -46,7 +46,7 @@ public class EmailTemplateController : ControllerBase
 
         if (emailTemplateResult.IsResultFailed)
         {
-            return this.GetFailedResponseByServiceResult(emailTemplateResult);
+            return this.CreateFailedResponseByServiceResult(emailTemplateResult);
         }
 
         return emailTemplateResult.Data;

@@ -57,10 +57,10 @@ public class AuthController : ControllerBase
     {
         var creationResult = await this.authService.SignUpUserAsync(userModel);
 
-        if (creationResult.IsResultNotFound)
+        if (creationResult.IsResultFailed)
         {
             // todo: replace 404 with 400
-            return this.GetFailedResponseByServiceResult(creationResult);
+            return this.CreateFailedResponseByServiceResult(creationResult);
         }
 
         var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(
@@ -95,7 +95,7 @@ public class AuthController : ControllerBase
 
         if (signInResult.IsResultFailed)
         {
-            return this.GetFailedResponseByServiceResult(signInResult);
+            return this.CreateFailedResponseByServiceResult(signInResult);
         }
 
         var claims = this.claimsService.AssignClaims(signInResult.Data);
@@ -125,7 +125,7 @@ public class AuthController : ControllerBase
 
         if (confirmationResult.IsResultFailed)
         {
-            return this.GetFailedResponseByServiceResult(confirmationResult);
+            return this.CreateFailedResponseByServiceResult(confirmationResult);
         }
 
         return this.NoContent();

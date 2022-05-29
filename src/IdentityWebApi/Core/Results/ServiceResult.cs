@@ -23,11 +23,6 @@ namespace IdentityWebApi.Core.Results
         public bool IsResultFailed => this.Result != ServiceResultType.Success;
 
         /// <summary>
-        /// Gets a value indicating whether operation result is not found.
-        /// </summary>
-        public bool IsResultNotFound => this.Result == ServiceResultType.NotFound;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ServiceResult"/> class.
         /// </summary>
         /// <param name="result">Operation status indicator.</param>
