@@ -35,9 +35,21 @@
     <!-- Negative signs must be spaced correctly -->
     <Rule Id="SA1028" Action="Error" />
     
-    <!-- prefix local calls with "this." -->
+    <!-- Prefix local calls with "this." -->
     <Rule Id="SA1101" Action="Error" />
- 
+    
+    <!-- Readonly elements must appear before non-readonly elements --> 
+    <Rule Id="SA1214" Action="Error"/>
+
+    <!-- Element must begin with UpperCase letter -->
+    <Rule Id="SA1300" Action="Error" />
+
+    <!-- Field names must begin with lowercase letter -->
+    <Rule Id="SA1306" Action="Error" />
+    
+    <!-- variable names must not be prefixed (m_, s_) -->
+    <Rule Id="SA1308" Action="Error" />
+
     <!-- Field names must not begin with underscore -->
     <Rule Id="SA1309" Action="Error" />
 
