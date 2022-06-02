@@ -23,6 +23,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{36E5
 		scripts\CreateMigration.sh = scripts\CreateMigration.sh
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{ACFB7263-6C4F-4091-83D1-B18CFE88B204}"
+	ProjectSection(SolutionItems) = preProject
+		IdentityWebApi.ruleset = IdentityWebApi.ruleset
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

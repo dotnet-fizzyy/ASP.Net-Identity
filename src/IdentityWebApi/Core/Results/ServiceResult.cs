@@ -47,7 +47,6 @@ namespace IdentityWebApi.Core.Results
         /// </summary>
         protected ServiceResult()
         {
-
         }
     }
 
@@ -67,7 +66,6 @@ namespace IdentityWebApi.Core.Results
         /// </summary>
         public ServiceResult()
         {
-
         }
 
         /// <summary>

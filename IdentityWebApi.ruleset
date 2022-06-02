@@ -2,19 +2,46 @@
 <RuleSet Name="Rules for ConsoleApp" Description="Code analysis rules" ToolsVersion="16.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <!-- Closing parenthesis must be spaced correctly -->
     <Rule Id="SA1009" Action="None" />
+
+    <!-- Avoid using out parameters -->
     <Rule Id="CA1021" Action="None" />
+
+    <!-- Avoid using out parameters -->
     <Rule Id="SA1111" Action="None" />
+    
+    <!-- Using directives must be placed correctly -->
     <Rule Id="SA1200" Action="None" />
+    
+    <!-- Elements must appear in the correct order -->
     <Rule Id="SA1201" Action="None" />
+    
+    <!-- System Using directives must be placed before other using directives -->
     <Rule Id="SA1208" Action="None" />
+
+    <!-- Fields must be private -->
     <Rule Id="SA1401" Action="None" />
+
+    <!-- Negative signs must be spaced correctly -->
     <Rule Id="SA1402" Action="None" />
+    
+    <!-- Opening braces must not be followed by blank line -->
     <Rule Id="SA1505" Action="None" />
-    <Rule Id="SA1508" Action="None" />
+
+    <!-- A C# code file is missing a standard file header -->
     <Rule Id="SA1633" Action="None" />
+    
+    <!-- Negative signs must be spaced correctly -->
     <Rule Id="SA1028" Action="Error" />
+    
+    <!-- prefix local calls with "this." -->
     <Rule Id="SA1101" Action="Error" />
+ 
+    <!-- Field names must not begin with underscore -->
     <Rule Id="SA1309" Action="Error" />
+
+    <!-- Closing braces must not be preceded by blank line -->
+    <Rule Id="SA1508" Action="Error" />
   </Rules>
 </RuleSet>

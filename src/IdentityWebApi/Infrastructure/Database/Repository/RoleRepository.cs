@@ -29,7 +29,6 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
     public RoleRepository(DatabaseContext databaseContext)
         : base(databaseContext)
     {
-
     }
 
     /// <inheritdoc/>

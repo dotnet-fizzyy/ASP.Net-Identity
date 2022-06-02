@@ -24,7 +24,6 @@ public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     // todo: remove later
     protected ControllerBase()
     {
-
     }
 
     /// <summary>
