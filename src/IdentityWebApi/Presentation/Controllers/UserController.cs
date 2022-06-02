@@ -1,4 +1,5 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Services.User.Commands.RemoveUserById;
 using IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
@@ -113,7 +114,8 @@ public class UserController : ControllerBase
     [HttpDelete("id/{id:guid}")]
     public async Task<IActionResult> RemoveUser(Guid id)
     {
-        var userRemoveResult = await this.userService.RemoveUserAsync(id);
+        var command = new RemoveUserByIdCommand(id);
+        var userRemoveResult = await this.Mediator.Send(command);
 
         if (userRemoveResult.IsResultFailed)
         {
