@@ -1,3 +1,4 @@
+using IdentityWebApi.ApplicationLogic.Services;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.UnitTests.Shared.Constants;
 using IdentityWebApi.UnitTests.Shared.Controllers;
@@ -5,8 +6,6 @@ using IdentityWebApi.UnitTests.Shared.Controllers;
 using NUnit.Framework;
 
 using System;
-using System.Linq;
-using IdentityWebApi.ApplicationLogic.Services;
 
 namespace IdentityWebApi.UnitTests.Tests.Services;
 
@@ -44,72 +43,5 @@ public class ClaimsServiceTests
 
         //Assert
         Assert.AreEqual(ServiceResultType.InvalidData, userIdResult.Result);
-    }
-
-    [Test]
-    public void ShouldReturnUserEmailFromIdentitySuccessfully()
-    {
-        //Arrange
-        var identityUser = UserControllerTestsDataFactory.GetUserIdentity(email: UserConstants.UserEmail);
-
-        var claimsService = new ClaimsService();
-
-        //Act
-        var userEmailResult = claimsService.GetUserEmailFromIdentityUser(identityUser);
-
-        //Assert
-        Assert.AreEqual(ServiceResultType.Success, userEmailResult.Result);
-        Assert.AreEqual(UserConstants.UserEmail, userEmailResult.Data);
-    }
-
-    [Test]
-    public void ShouldReturnInvalidDataFromIdentityOnAttemptToGetIncorrectEmail()
-    {
-        //Arrange
-        var identityUser = UserControllerTestsDataFactory.GetUserIdentity();
-
-        var claimsService = new ClaimsService();
-
-        //Act
-        var userEmailResult = claimsService.GetUserEmailFromIdentityUser(identityUser);
-
-        //Assert
-        Assert.AreEqual(ServiceResultType.InvalidData, userEmailResult.Result);
-        Assert.Null(userEmailResult.Data);
-    }
-
-    [Test]
-    public void ShouldReturnUserRolesFromIdentitySuccessfully()
-    {
-        //Arrange
-        var userRoles = new[] { UserConstants.UserRoleUser, UserConstants.UserRoleAdministrator };
-        var identityUser = UserControllerTestsDataFactory.GetUserIdentity(roles: userRoles);
-
-        var claimsService = new ClaimsService();
-
-        //Act
-        var userEmailResult = claimsService.GetUserRolesFromIdentityUser(identityUser);
-
-        //Assert
-        Assert.AreEqual(ServiceResultType.Success, userEmailResult.Result);
-        Assert.NotNull(userEmailResult.Data);
-        Assert.IsNotEmpty(userEmailResult.Data);
-        Assert.True(userEmailResult.Data.All(x => userRoles.Contains(x)));
-    }
-
-    [Test]
-    public void ShouldReturnInvalidDataFromIdentityOnAttemptToGetIncorrectRoles()
-    {
-        //Arrange
-        var identityUser = UserControllerTestsDataFactory.GetUserIdentity();
-
-        var claimsService = new ClaimsService();
-
-        //Act
-        var userEmailResult = claimsService.GetUserRolesFromIdentityUser(identityUser);
-
-        //Assert
-        Assert.AreEqual(ServiceResultType.InvalidData, userEmailResult.Result);
-        Assert.Null(userEmailResult.Data);
     }
 }

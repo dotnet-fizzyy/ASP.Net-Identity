@@ -1,6 +1,7 @@
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Utilities;
+using IdentityWebApi.Infrastructure.Database.Constants;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -32,7 +33,7 @@ public class EmailTemplateConfiguration : IEntityTypeConfiguration<EmailTemplate
 
         builder.HasData(new
         {
-            Id = new Guid("f8fd1c61-584c-4c37-8be9-54d39dd1c92c"),
+            Id = EntityConfigurationConstants.EmailConfirmationTemplateId,
             Name = Templates.EmailConfirmationTemplate,
             Layout = TemplateReader.ReadTemplateFromFolder(Templates.EmailConfirmationTemplate),
             CreationDate = new DateTime(2021, 7, 4),

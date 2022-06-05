@@ -27,6 +27,11 @@ public sealed class DatabaseContext : IdentityDbContext<
 >
 {
     /// <summary>
+    /// Gets or sets <see cref="EmailTemplate"/> table.
+    /// </summary>
+    public DbSet<EmailTemplate> EmailTemplates { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="DatabaseContext"/> class.
     /// </summary>
     /// <param name="options"><see cref="DbContextOptions{T}"/>.</param>

@@ -1,4 +1,5 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.RemoveUserById;
 using IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 using IdentityWebApi.Core.Constants;
@@ -44,16 +45,14 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<UserResultDto>> GetUserByToken()
     {
-        var userId = this.claimsService.GetUserIdFromIdentityUser(this.User);
+        var userIdResult = this.claimsService.GetUserIdFromIdentityUser(this.User);
 
-        var userResult = await this.userService.GetUserAsync(userId.Data);
-
-        if (userResult.IsResultFailed)
+        if (userIdResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(userResult);
+            return this.CreateFailedResponseByServiceResult(userIdResult);
         }
 
-        return userResult.Data;
+        return await this.GetUser(userIdResult.Data);
     }
 
     /// <summary>
@@ -83,8 +82,18 @@ public class UserController : ControllerBase
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserDto user) =>
-        (await this.userService.CreateUserAsync(user)).Data;
+    public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserDto user)
+    {
+        var command = new CreateUserCommand(user);
+        var userCreationResult = await this.Mediator.Send(command);
+
+        if (userCreationResult.IsResultFailed)
+        {
+            return this.CreateFailedResponseByServiceResult(userCreationResult);
+        }
+
+        return this.CreatedAtAction(nameof(this.CreateUser), userCreationResult.Data);
+    }
 
     /// <summary>
     /// Updates user entity.
