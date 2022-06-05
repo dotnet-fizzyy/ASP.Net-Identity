@@ -1,7 +1,10 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Services.User.Commands.ConfirmEmail;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Presentation;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -30,12 +33,15 @@ public class AuthController : ControllerBase
     /// <param name="emailService"><see cref="IEmailService"/>.</param>
     /// <param name="claimsService"><see cref="IClaimsService"/>.</param>
     /// <param name="httpContextService"><see cref="IHttpContextService"/>.</param>
+    /// <param name="mediator"><see cref="IMediator"/>.</param>
     public AuthController(
         IAuthService authService,
         IEmailService emailService,
         IClaimsService claimsService,
-        IHttpContextService httpContextService
+        IHttpContextService httpContextService,
+        IMediator mediator
     )
+        : base(mediator)
     {
         this.authService = authService;
         this.emailService = emailService;
@@ -121,7 +127,8 @@ public class AuthController : ControllerBase
         [FromQuery, BindRequired] string token
     )
     {
-        var confirmationResult = await this.authService.ConfirmUserEmailAsync(email, token);
+        var command = new ConfirmEmailCommand(email, token);
+        var confirmationResult = await this.Mediator.Send(command);
 
         if (confirmationResult.IsResultFailed)
         {
