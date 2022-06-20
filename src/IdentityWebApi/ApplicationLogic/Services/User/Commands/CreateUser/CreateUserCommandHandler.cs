@@ -85,7 +85,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
             return GenerateErrorResult(confirmationEmailResult);
         }
 
-        await this.SendUserEmailConfirmation(createdUser.Email, shouldConfirmImmediately);
+        this.SendUserEmailConfirmation(createdUser.Email, shouldConfirmImmediately);
 
         var userDto = this.mapper.Map<UserDto>(createdUser);
 
@@ -163,21 +163,26 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult<string>(ServiceResultType.Success, token);
     }
 
-    private async Task SendUserEmailConfirmation(string email, bool shouldConfirmImmediately)
+    private void SendUserEmailConfirmation(string email, bool shouldConfirmImmediately)
     {
-        if (!this.appSettings.IdentitySettings.Email.RequireConfirmation || shouldConfirmImmediately)
+        var shouldSendConfirmationEmail = this.appSettings.IdentitySettings.Email.RequireConfirmation &&
+                                              !shouldConfirmImmediately;
+
+        if (!shouldSendConfirmationEmail)
         {
             return;
         }
 
-        await Task.Run(() =>
-        {
-            var emailTemplate = this.databaseContext.EmailTemplates.Single(x =>
-                x.Id == EntityConfigurationConstants.EmailConfirmationTemplateId
-            );
+        Task.Run(() => this.SendConfirmationEmail(email)).ConfigureAwait(continueOnCapturedContext: false);
+    }
 
-            // todo: Extract email subject from email template entity
-            this.emailService.SendEmailAsync(email, "Confirm your email", emailTemplate.Layout);
-        });
+    private void SendConfirmationEmail(string email)
+    {
+        var emailTemplate = this.databaseContext.EmailTemplates.Single(x =>
+            x.Id == EntityConfigurationConstants.EmailConfirmationTemplateId
+        );
+
+        // todo: Extract email subject from email template entity
+        this.emailService.SendEmailAsync(email, "Confirm your email", emailTemplate.Layout);
     }
 }
