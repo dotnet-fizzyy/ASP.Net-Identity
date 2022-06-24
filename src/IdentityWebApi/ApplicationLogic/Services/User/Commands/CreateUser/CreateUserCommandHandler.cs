@@ -65,7 +65,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         var userCreationResult = await this.CreateUser(userEntity, command.User.Password);
         if (userCreationResult.IsResultFailed)
         {
-            return GenerateErrorResult(userCreationResult);
+            return userCreationResult.GenerateErrorResult<UserDto>();
         }
 
         var createdUser = userCreationResult.Data;
@@ -73,7 +73,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         var roleAssignmentResult = await this.AssignRoleToUser(createdUser, command.User.UserRole);
         if (roleAssignmentResult.IsResultFailed)
         {
-            return GenerateErrorResult(roleAssignmentResult);
+            return roleAssignmentResult.GenerateErrorResult<UserDto>();
         }
 
         // todo: Move immediate confirmation to appSettings
@@ -82,7 +82,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         var confirmationEmailResult = await this.ConfirmUserEmail(createdUser, shouldConfirmImmediately);
         if (confirmationEmailResult.IsResultFailed)
         {
-            return GenerateErrorResult(confirmationEmailResult);
+            return roleAssignmentResult.GenerateErrorResult<UserDto>();
         }
 
         this.SendUserEmailConfirmation(createdUser.Email, shouldConfirmImmediately);
@@ -91,9 +91,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
         return new ServiceResult<UserDto>(ServiceResultType.Success, userDto);
     }
-
-    private static ServiceResult<UserDto> GenerateErrorResult(ServiceResult result) =>
-        new (result.Result, result.Message);
 
     private async Task<ServiceResult<AppUser>> CreateUser(AppUser user, string password)
     {
