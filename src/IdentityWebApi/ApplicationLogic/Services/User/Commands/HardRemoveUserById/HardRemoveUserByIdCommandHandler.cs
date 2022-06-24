@@ -3,34 +3,32 @@ using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Results;
 using IdentityWebApi.Infrastructure.Database;
 
-using MediatR;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.RemoveUserById;
+using MediatR;
+
+namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.HardRemoveUserById;
 
 /// <summary>
 /// Remove user by id query CQRS handler.
 /// </summary>
-public class RemoveUserByIdCommandHandler : IRequestHandler<RemoveUserByIdCommand, ServiceResult>
+public class HardRemoveUserByIdCommandHandler : IRequestHandler<HardRemoveUserByIdCommand, ServiceResult>
 {
-    private const bool IncludeRelatedItems = true;
-
     private readonly DatabaseContext databaseContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RemoveUserByIdCommandHandler"/> class.
+    /// Initializes a new instance of the <see cref="HardRemoveUserByIdCommandHandler"/> class.
     /// </summary>
     /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-    public RemoveUserByIdCommandHandler(DatabaseContext databaseContext)
+    public HardRemoveUserByIdCommandHandler(DatabaseContext databaseContext)
     {
         this.databaseContext = databaseContext;
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult> Handle(RemoveUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<ServiceResult> Handle(HardRemoveUserByIdCommand request, CancellationToken cancellationToken)
     {
         var appUser = await this.GetAppUserAsync(request.Id);
 
@@ -47,7 +45,7 @@ public class RemoveUserByIdCommandHandler : IRequestHandler<RemoveUserByIdComman
     private async Task<AppUser> GetAppUserAsync(Guid id) =>
         await this.databaseContext.SearchById<AppUser>(
             id,
-            IncludeRelatedItems,
+            includeTracking: true,
             includedEntity => includedEntity.UserRoles);
 
     private async Task RemoveUserAsync(AppUser appUser)

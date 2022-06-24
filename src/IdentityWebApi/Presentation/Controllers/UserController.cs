@@ -1,6 +1,6 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
-using IdentityWebApi.ApplicationLogic.Services.User.Commands.RemoveUserById;
+using IdentityWebApi.ApplicationLogic.Services.User.Commands.HardRemoveUserById;
 using IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
@@ -115,15 +115,15 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
-    /// Removes user entity.
+    /// Removes user entity from DB.
     /// </summary>
     /// <param name="id">User identifier.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
-    [HttpDelete("id/{id:guid}")]
+    [HttpDelete("id/{id:guid}/hard-remove")]
     public async Task<IActionResult> RemoveUser(Guid id)
     {
-        var command = new RemoveUserByIdCommand(id);
+        var command = new HardRemoveUserByIdCommand(id);
         var userRemoveResult = await this.Mediator.Send(command);
 
         if (userRemoveResult.IsResultFailed)
