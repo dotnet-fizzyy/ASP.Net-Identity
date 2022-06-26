@@ -37,7 +37,10 @@
     
     <!-- Prefix local calls with "this." -->
     <Rule Id="SA1101" Action="Error" />
-    
+
+    <!-- All arguments should be aligned with new line -->
+    <Rule Id="SA1116" Action="Error" />
+
     <!-- Readonly elements must appear before non-readonly elements --> 
     <Rule Id="SA1214" Action="Error"/>
 
@@ -52,6 +55,9 @@
 
     <!-- Field names must not begin with underscore -->
     <Rule Id="SA1309" Action="Error" />
+
+    <!-- Remove blank lines at the start of file -->
+    <Rule Id="SA1517" Action="Error" />
 
     <!-- Closing braces must not be preceded by blank line -->
     <Rule Id="SA1508" Action="Error" />
