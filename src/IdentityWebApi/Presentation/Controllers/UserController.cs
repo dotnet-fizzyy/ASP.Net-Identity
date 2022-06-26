@@ -85,7 +85,8 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserDto user)
     {
-        var command = new CreateUserCommand(user);
+        // todo: extract from body
+        var command = new CreateUserCommand(user, false);
         var userCreationResult = await this.Mediator.Send(command);
 
         if (userCreationResult.IsResultFailed)

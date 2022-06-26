@@ -29,8 +29,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     private readonly RoleManager<AppRole> roleManager;
     private readonly DatabaseContext databaseContext;
     private readonly AppSettings appSettings;
-    private readonly IMapper mapper;
     private readonly IEmailService emailService;
+    private readonly IMapper mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateUserCommandHandler"/> class.
@@ -39,22 +39,22 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     /// <param name="roleManager"><see cref="RoleManager{T}"/>.</param>
     /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
     /// <param name="appSettings"><see cref="AppSettings"/>.</param>
-    /// <param name="mapper"><see cref="IMapper"/>.</param>
     /// <param name="emailService"><see cref="IEmailService"/>.</param>
+    /// <param name="mapper"><see cref="IMapper"/>.</param>
     public CreateUserCommandHandler(
         UserManager<AppUser> userManager,
         RoleManager<AppRole> roleManager,
         DatabaseContext databaseContext,
         AppSettings appSettings,
-        IMapper mapper,
-        IEmailService emailService)
+        IEmailService emailService,
+        IMapper mapper)
     {
         this.userManager = userManager;
         this.roleManager = roleManager;
         this.databaseContext = databaseContext;
         this.appSettings = appSettings;
-        this.mapper = mapper;
         this.emailService = emailService;
+        this.mapper = mapper;
     }
 
     /// <inheritdoc/>
@@ -70,22 +70,32 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
         var createdUser = userCreationResult.Data;
 
-        var roleAssignmentResult = await this.AssignRoleToUser(createdUser, command.User.UserRole);
-        if (roleAssignmentResult.IsResultFailed)
+        if (!string.IsNullOrEmpty(command.User.UserRole))
         {
-            return roleAssignmentResult.GenerateErrorResult<UserDto>();
+            var roleAssignmentResult = await this.AssignRoleToUser(createdUser, command.User.UserRole);
+            if (roleAssignmentResult.IsResultFailed)
+            {
+                return roleAssignmentResult.GenerateErrorResult<UserDto>();
+            }
         }
 
-        // todo: Move immediate confirmation to appSettings
-        const bool shouldConfirmImmediately = true;
-
-        var confirmationEmailResult = await this.ConfirmUserEmail(createdUser, shouldConfirmImmediately);
-        if (confirmationEmailResult.IsResultFailed)
+        if (this.appSettings.IdentitySettings.Email.RequireConfirmation)
         {
-            return roleAssignmentResult.GenerateErrorResult<UserDto>();
-        }
+            var confirmationToken = await this.GenerateConfirmationToken(createdUser);
 
-        this.SendUserEmailConfirmation(createdUser.Email, shouldConfirmImmediately);
+            if (command.ConfirmEmailImmediately)
+            {
+                var confirmationEmailResult = await this.ConfirmUserEmail(createdUser, confirmationToken);
+                if (confirmationEmailResult.IsResultFailed)
+                {
+                    return confirmationEmailResult.GenerateErrorResult<UserDto>();
+                }
+            }
+            else
+            {
+                this.SendUserEmailConfirmation(createdUser.Email, confirmationToken);
+            }
+        }
 
         var userDto = this.mapper.Map<UserDto>(createdUser);
 
@@ -108,11 +118,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
     private async Task<ServiceResult> AssignRoleToUser(AppUser user, string role)
     {
-        if (string.IsNullOrEmpty(role))
-        {
-            return new ServiceResult(ServiceResultType.Success);
-        }
-
         var existingRole = await this.roleManager.FindByNameAsync(role);
         if (existingRole == null)
         {
@@ -134,42 +139,26 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult(ServiceResultType.Success);
     }
 
-    private async Task<ServiceResult<string>> ConfirmUserEmail(AppUser user, bool shouldConfirmImmediately)
+    private async Task<ServiceResult<string>> ConfirmUserEmail(AppUser user, string confirmationToken)
     {
-        var token = string.Empty;
-
-        if (!this.appSettings.IdentitySettings.Email.RequireConfirmation)
+        var emailConfirmationResult = await this.userManager.ConfirmEmailAsync(user, confirmationToken);
+        if (!emailConfirmationResult.Succeeded)
         {
-            return new ServiceResult<string>(ServiceResultType.Success, token);
+            return new ServiceResult<string>(
+                ServiceResultType.InternalError,
+                IdentityUtilities.ConcatenateIdentityErrorMessages(emailConfirmationResult.Errors)
+            );
         }
 
-        token = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
-
-        if (shouldConfirmImmediately)
-        {
-            var emailConfirmationResult = await this.userManager.ConfirmEmailAsync(user, token);
-            if (!emailConfirmationResult.Succeeded)
-            {
-                return new ServiceResult<string>(
-                    ServiceResultType.InternalError,
-                    IdentityUtilities.ConcatenateIdentityErrorMessages(emailConfirmationResult.Errors)
-                );
-            }
-        }
-
-        return new ServiceResult<string>(ServiceResultType.Success, token);
+        return new ServiceResult<string>(ServiceResultType.Success, confirmationToken);
     }
 
-    private void SendUserEmailConfirmation(string email, bool shouldConfirmImmediately)
+    private async Task<string> GenerateConfirmationToken(AppUser user) =>
+        await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+
+    private void SendUserEmailConfirmation(string email, string confirmationToken)
     {
-        var shouldSendConfirmationEmail = this.appSettings.IdentitySettings.Email.RequireConfirmation &&
-                                              !shouldConfirmImmediately;
-
-        if (!shouldSendConfirmationEmail)
-        {
-            return;
-        }
-
+        // todo: process handlebars template cast
         Task.Run(() => this.SendConfirmationEmail(email)).ConfigureAwait(continueOnCapturedContext: false);
     }
 

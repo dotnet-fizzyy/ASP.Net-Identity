@@ -11,16 +11,23 @@ namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
 public record CreateUserCommand : IRequest<ServiceResult<UserDto>>
 {
     /// <summary>
-    /// Gets user name.
+    /// Gets user.
     /// </summary>
     public UserDto User { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether email confirmation should be processed immediately.
+    /// </summary>
+    public bool ConfirmEmailImmediately { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateUserCommand"/> class.
     /// </summary>
     /// <param name="user"><see cref="UserDto"/>.</param>
-    public CreateUserCommand(UserDto user)
+    /// <param name="confirmEmailImmediately">indicating whether email confirmation should be immediate.</param>
+    public CreateUserCommand(UserDto user, bool confirmEmailImmediately)
     {
         this.User = user;
+        this.ConfirmEmailImmediately = confirmEmailImmediately;
     }
 }
