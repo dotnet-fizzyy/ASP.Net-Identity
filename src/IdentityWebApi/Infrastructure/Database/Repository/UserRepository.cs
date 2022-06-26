@@ -1,4 +1,4 @@
-using IdentityWebApi.Core.ApplicationSettings;
+using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;

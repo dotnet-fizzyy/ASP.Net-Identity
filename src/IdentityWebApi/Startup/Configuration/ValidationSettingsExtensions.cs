@@ -1,16 +1,16 @@
 using FluentValidation;
 
 using IdentityWebApi.ApplicationLogic.Pipelines;
-using IdentityWebApi.Core.ApplicationSettings;
+using IdentityWebApi.ApplicationSettings;
 
 using MediatR;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using System.Reflection;
-
 namespace IdentityWebApi.Startup.Configuration;
+
+using System.Reflection;
 
 /// <summary>
 /// Validation of appsettings.json parameters.

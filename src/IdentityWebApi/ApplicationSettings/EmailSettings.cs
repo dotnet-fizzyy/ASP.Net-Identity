@@ -1,4 +1,4 @@
-namespace IdentityWebApi.Core.ApplicationSettings;
+namespace IdentityWebApi.ApplicationSettings;
 
 /// <summary>
 /// Email settings.

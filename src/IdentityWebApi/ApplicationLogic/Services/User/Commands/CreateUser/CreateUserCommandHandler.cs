@@ -1,7 +1,7 @@
 using AutoMapper;
 
 using IdentityWebApi.ApplicationLogic.Models.Action;
-using IdentityWebApi.Core.ApplicationSettings;
+using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;

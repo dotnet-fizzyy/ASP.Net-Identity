@@ -1,6 +1,6 @@
 using AutoMapper;
 
-using IdentityWebApi.Core.ApplicationSettings;
+using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Models;
 using IdentityWebApi.Infrastructure.Net.Models;

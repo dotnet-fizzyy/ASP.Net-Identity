@@ -2,7 +2,7 @@ using NetEscapades.Configuration.Validation;
 
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.Core.ApplicationSettings;
+namespace IdentityWebApi.ApplicationSettings;
 
 /// <summary>
 /// IpStack settings.

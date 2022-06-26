@@ -1,4 +1,4 @@
-using IdentityWebApi.Core.ApplicationSettings;
+using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Startup.Configuration;
 
 using Microsoft.AspNetCore.Builder;

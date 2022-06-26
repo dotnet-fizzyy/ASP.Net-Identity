@@ -3,7 +3,7 @@ using NetEscapades.Configuration.Validation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.Core.ApplicationSettings;
+namespace IdentityWebApi.ApplicationSettings;
 
 /// <summary>
 /// Identity settings.

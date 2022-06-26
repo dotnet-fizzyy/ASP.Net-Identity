@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace IdentityWebApi.Core.ApplicationSettings;
+namespace IdentityWebApi.ApplicationSettings;
 
 /// <summary>
 /// Regions verification settings.

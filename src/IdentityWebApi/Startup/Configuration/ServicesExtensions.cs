@@ -1,5 +1,5 @@
 using IdentityWebApi.ApplicationLogic.Services;
-using IdentityWebApi.Core.ApplicationSettings;
+using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;

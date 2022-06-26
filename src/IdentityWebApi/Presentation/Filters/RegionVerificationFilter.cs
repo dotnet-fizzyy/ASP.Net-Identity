@@ -1,4 +1,4 @@
-using IdentityWebApi.Core.ApplicationSettings;
+using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Presentation.Models.Response;
 
