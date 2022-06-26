@@ -13,9 +13,21 @@ public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
     /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<AppUser> builder)
     {
-        builder.Property(x => x.CreationDate)
+        builder.HasQueryFilter(prop => !prop.IsDeleted);
+
+        builder.Property(prop => prop.CreationDate)
             .HasDefaultValueSql("getdate()");
 
-        builder.HasQueryFilter(x => !x.IsDeleted);
+        builder.Property(prop => prop.PhoneNumber)
+            .HasMaxLength(50);
+
+        builder.Property(prop => prop.PasswordHash)
+            .HasMaxLength(2048);
+
+        builder.Property(prop => prop.SecurityStamp)
+            .HasMaxLength(2048);
+
+        builder.Property(prop => prop.ConcurrencyStamp)
+            .HasMaxLength(2048);
     }
 }

@@ -13,6 +13,8 @@ public class AppUserRoleConfiguration : IEntityTypeConfiguration<AppUserRole>
     /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<AppUserRole> builder)
     {
+        builder.HasQueryFilter(prop => !prop.IsDeleted);
+
         builder
             .HasOne(x => x.Role)
             .WithMany(x => x.UserRoles)

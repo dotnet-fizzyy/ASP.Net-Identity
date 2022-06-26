@@ -14,8 +14,7 @@ public static class TemplateReader
     /// <returns>Stringified content of template.</returns>
     public static string ReadTemplateFromFolder(string templateName)
     {
-        var assemblyLocation = typeof(TemplateReader).Assembly.Location;
-        var projectDirectory = Path.GetDirectoryName(assemblyLocation)!;
+        var projectDirectory = Directory.GetCurrentDirectory();
         var templateRootFolder = "wwwroot/Handlebars";
         var fullTemplateName = $"{templateName}.hbs";
 

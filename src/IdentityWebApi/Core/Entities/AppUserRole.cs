@@ -18,4 +18,9 @@ public class AppUserRole : IdentityUserRole<Guid>
     /// Gets or sets <see cref="AppRole"/>.
     /// </summary>
     public AppRole Role { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether entity is deleted.
+    /// </summary>
+    public bool IsDeleted { get; set; }
 }

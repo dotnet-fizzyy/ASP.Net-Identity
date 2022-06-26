@@ -18,18 +18,22 @@ public class EmailTemplateConfiguration : IEntityTypeConfiguration<EmailTemplate
     /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<EmailTemplate> builder)
     {
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Name)
+        builder.HasQueryFilter(prop => !prop.IsDeleted);
+
+        builder.HasKey(prop => prop.Id);
+
+        builder.Property(prop => prop.Name)
             .IsRequired();
-        builder.Property(x => x.Layout)
-            .IsRequired();
-        builder.Property(x => x.CreationDate)
+
+        builder.Property(prop => prop.Layout)
+            .IsRequired()
+            .HasColumnType("nvarchar(4096)");
+
+        builder.Property(prop => prop.CreationDate)
             .HasDefaultValueSql("getdate()");
 
-        builder.HasIndex(x => x.Name)
+        builder.HasIndex(prop => prop.Name)
             .IsUnique();
-
-        builder.HasQueryFilter(x => !x.IsDeleted);
 
         builder.HasData(new
         {

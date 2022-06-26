@@ -13,9 +13,12 @@ public class AppRoleConfiguration : IEntityTypeConfiguration<AppRole>
     /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<AppRole> builder)
     {
+        builder.HasQueryFilter(x => !x.IsDeleted);
+
         builder.Property(x => x.CreationDate)
             .HasDefaultValueSql("getdate()");
 
-        builder.HasQueryFilter(x => !x.IsDeleted);
+        builder.Property(x => x.ConcurrencyStamp)
+            .HasMaxLength(2048);
     }
 }
