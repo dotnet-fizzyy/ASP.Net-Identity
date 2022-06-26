@@ -21,7 +21,7 @@ public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="ControllerBase"/> class.
     /// </summary>
-    // todo: remove later
+    // todo: remove later after all endpoints will be replaced with CQRS
     protected ControllerBase()
     {
     }

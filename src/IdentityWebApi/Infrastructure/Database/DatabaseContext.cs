@@ -44,7 +44,7 @@ public sealed class DatabaseContext : IdentityDbContext<
     /// <summary>
     /// Searches for entity by id.
     /// </summary>
-    /// <typeparam name="T">Entity.</typeparam>
+    /// <typeparam name="T">Inheritor of <see cref="IBaseEntity"/>.</typeparam>
     /// <param name="id">Entity id.</param>
     /// <returns>Entity by search criteria.</returns>
     public async Task<T> SearchById<T>(Guid id)
@@ -54,7 +54,7 @@ public sealed class DatabaseContext : IdentityDbContext<
     /// <summary>
     /// Searches for entity by id with including properties.
     /// </summary>
-    /// <typeparam name="T">Entity.</typeparam>
+    /// <typeparam name="T">Inheritor of <see cref="IBaseEntity"/>.</typeparam>
     /// <param name="id">Entity id.</param>
     /// <param name="includeTracking">Flag indicating whether entities tracking should be enabled.</param>
     /// <param name="includes">Collection of related entities to include.</param>
@@ -76,6 +76,17 @@ public sealed class DatabaseContext : IdentityDbContext<
         }
 
         return await query.SingleOrDefaultAsync();
+    }
+
+    /// <summary>
+    /// Performs entity soft remove.
+    /// </summary>
+    /// <typeparam name="T">Inheritor of <see cref="IBaseEntity"/>.</typeparam>
+    /// <param name="entity">Entity.</param>
+    public void SoftRemove<T>(T entity)
+        where T : class, IBaseEntity
+    {
+        entity.IsDeleted = true;
     }
 
     /// <inheritdoc/>

@@ -12,7 +12,7 @@ using MediatR;
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.HardRemoveUserById;
 
 /// <summary>
-/// Remove user by id query CQRS handler.
+/// Hard remove user by id CQRS command handler.
 /// </summary>
 public class HardRemoveUserByIdCommandHandler : IRequestHandler<HardRemoveUserByIdCommand, ServiceResult>
 {

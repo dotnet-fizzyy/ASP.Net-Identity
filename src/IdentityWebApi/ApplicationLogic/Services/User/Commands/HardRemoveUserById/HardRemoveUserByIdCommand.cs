@@ -7,7 +7,7 @@ using MediatR;
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.HardRemoveUserById;
 
 /// <summary>
-/// Remove user by id from DB CQRS command.
+/// Hard remove user by id CQRS command.
 /// </summary>
 public record HardRemoveUserByIdCommand : IRequest<ServiceResult>
 {
