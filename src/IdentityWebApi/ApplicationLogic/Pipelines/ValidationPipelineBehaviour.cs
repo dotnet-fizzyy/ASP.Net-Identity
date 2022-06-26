@@ -9,23 +9,23 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.ApplicationLogic.Behaviours;
+namespace IdentityWebApi.ApplicationLogic.Pipelines;
 
 /// <summary>
 /// Base validation behaviour for commands/queries.
 /// </summary>
 /// <typeparam name="TRequest">Incoming command/query request.</typeparam>
 /// <typeparam name="TResponse">Out coming command/query response.</typeparam>
-public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class ValidationPipelineBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     private readonly IEnumerable<IValidator<TRequest>> validators;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ValidationBehaviour{TRequest, TResponse}"/> class.
+    /// Initializes a new instance of the <see cref="ValidationPipelineBehaviour{TRequest,TResponse}"/> class.
     /// </summary>
     /// <param name="validators">Collection of <see cref="IValidator{T}"/>.</param>
-    public ValidationBehaviour(
+    public ValidationPipelineBehaviour(
         IEnumerable<IValidator<TRequest>> validators
     )
     {

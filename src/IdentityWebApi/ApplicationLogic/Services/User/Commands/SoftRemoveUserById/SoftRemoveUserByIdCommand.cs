@@ -24,4 +24,4 @@ public record SoftRemoveUserByIdCommand : IRequest<ServiceResult>
     {
         this.Id = id;
     }
-};
+}

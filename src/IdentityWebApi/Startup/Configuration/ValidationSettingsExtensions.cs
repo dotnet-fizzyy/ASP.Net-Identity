@@ -1,6 +1,6 @@
 using FluentValidation;
 
-using IdentityWebApi.ApplicationLogic.Behaviours;
+using IdentityWebApi.ApplicationLogic.Pipelines;
 using IdentityWebApi.Core.ApplicationSettings;
 
 using MediatR;
@@ -34,7 +34,7 @@ internal static class ValidationSettingsExtensions
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
     public static void RegisterValidationPipeline(this IServiceCollection services)
     {
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehaviour<,>));
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     }
