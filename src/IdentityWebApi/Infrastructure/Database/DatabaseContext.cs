@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Infrastructure.Database;
@@ -94,6 +93,6 @@ public sealed class DatabaseContext : IdentityDbContext<
     {
         base.OnModelCreating(builder);
 
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
     }
 }
