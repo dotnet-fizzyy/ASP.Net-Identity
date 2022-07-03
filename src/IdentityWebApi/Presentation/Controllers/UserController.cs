@@ -5,7 +5,7 @@ using IdentityWebApi.ApplicationLogic.Services.User.Commands.SoftRemoveUserById;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.UpdateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 using IdentityWebApi.Core.Constants;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
+using IdentityWebApi.Presentation.Services;
 
 using MediatR;
 
@@ -23,17 +23,13 @@ namespace IdentityWebApi.Presentation.Controllers;
 /// </summary>
 public class UserController : ControllerBase
 {
-    private readonly IClaimsService claimsService;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="UserController"/> class.
     /// </summary>
-    /// <param name="claimsService"><see cref="IClaimsService"/>.</param>
     /// <param name="mediator"><see cref="IMediator"/>.</param>
-    public UserController(IClaimsService claimsService, IMediator mediator)
+    public UserController(IMediator mediator)
         : base(mediator)
     {
-        this.claimsService = claimsService;
     }
 
     /// <summary>
@@ -44,7 +40,7 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<UserResultDto>> GetUserByToken()
     {
-        var userIdResult = this.claimsService.GetUserIdFromIdentityUser(this.User);
+        var userIdResult = ClaimsService.GetUserIdFromIdentityUser(this.User);
 
         if (userIdResult.IsResultFailed)
         {

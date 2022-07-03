@@ -30,7 +30,6 @@ internal static class ServicesExtensions
         // Services
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IEmailService, EmailService>();
-        services.AddTransient<IClaimsService, ClaimsService>();
         services.AddTransient<IRoleService, RoleService>();
         services.AddSingleton<INetService, NetService>();
 

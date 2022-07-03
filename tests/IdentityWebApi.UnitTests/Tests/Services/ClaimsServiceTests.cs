@@ -6,6 +6,7 @@ using IdentityWebApi.UnitTests.Shared.Controllers;
 using NUnit.Framework;
 
 using System;
+using IdentityWebApi.Presentation.Services;
 
 namespace IdentityWebApi.UnitTests.Tests.Services;
 
@@ -18,10 +19,8 @@ public class ClaimsServiceTests
         //Arrange
         var identityUser = UserControllerTestsDataFactory.GetUserIdentity(UserConstants.UserId);
 
-        var claimsService = new ClaimsService();
-
         //Act
-        var userIdResult = claimsService.GetUserIdFromIdentityUser(identityUser);
+        var userIdResult = ClaimsService.GetUserIdFromIdentityUser(identityUser);
 
         //Assert
         Assert.AreEqual(ServiceResultType.Success, userIdResult.Result);
@@ -36,10 +35,8 @@ public class ClaimsServiceTests
         //Arrange
         var identityUser = UserControllerTestsDataFactory.GetUserIdentity(userId);
 
-        var claimsService = new ClaimsService();
-
         //Act
-        var userIdResult = claimsService.GetUserIdFromIdentityUser(identityUser);
+        var userIdResult = ClaimsService.GetUserIdFromIdentityUser(identityUser);
 
         //Assert
         Assert.AreEqual(ServiceResultType.InvalidData, userIdResult.Result);

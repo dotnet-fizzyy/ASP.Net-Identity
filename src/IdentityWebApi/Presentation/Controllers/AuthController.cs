@@ -3,6 +3,7 @@ using IdentityWebApi.ApplicationLogic.Services.User.Commands.ConfirmEmail;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Presentation;
+using IdentityWebApi.Presentation.Services;
 
 using MediatR;
 
@@ -23,7 +24,6 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService authService;
     private readonly IEmailService emailService;
-    private readonly IClaimsService claimsService;
     private readonly IHttpContextService httpContextService;
 
     /// <summary>
@@ -31,13 +31,11 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <param name="authService"><see cref="IAuthService"/>.</param>
     /// <param name="emailService"><see cref="IEmailService"/>.</param>
-    /// <param name="claimsService"><see cref="IClaimsService"/>.</param>
     /// <param name="httpContextService"><see cref="IHttpContextService"/>.</param>
     /// <param name="mediator"><see cref="IMediator"/>.</param>
     public AuthController(
         IAuthService authService,
         IEmailService emailService,
-        IClaimsService claimsService,
         IHttpContextService httpContextService,
         IMediator mediator
     )
@@ -45,7 +43,6 @@ public class AuthController : ControllerBase
     {
         this.authService = authService;
         this.emailService = emailService;
-        this.claimsService = claimsService;
         this.httpContextService = httpContextService;
     }
 
@@ -104,7 +101,7 @@ public class AuthController : ControllerBase
             return this.CreateFailedResponseByServiceResult(signInResult);
         }
 
-        var claims = this.claimsService.AssignClaims(signInResult.Data);
+        var claims = ClaimsService.AssignClaims(signInResult.Data);
 
         await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims);
 

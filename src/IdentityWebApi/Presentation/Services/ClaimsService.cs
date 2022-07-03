@@ -1,6 +1,5 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Enums;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Results;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -9,13 +8,19 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 
-namespace IdentityWebApi.ApplicationLogic.Services;
+namespace IdentityWebApi.Presentation.Services;
 
-/// <inheritdoc cref="IClaimsService" />
-public class ClaimsService : IClaimsService
+/// <summary>
+/// User claims service.
+/// </summary>
+public class ClaimsService
 {
-    /// <inheritdoc />
-    public ServiceResult<Guid> GetUserIdFromIdentityUser(ClaimsPrincipal user)
+    /// <summary>
+    /// Gets user id from <see cref="ClaimsPrincipal"/> user.
+    /// </summary>
+    /// <param name="user"><see cref="ClaimsPrincipal"/>.</param>
+    /// <returns><see cref="Guid"/> with user id.</returns>
+    public static ServiceResult<Guid> GetUserIdFromIdentityUser(ClaimsPrincipal user)
     {
         var userId = Guid.Empty;
         var idClaim = user.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -31,8 +36,12 @@ public class ClaimsService : IClaimsService
         return new ServiceResult<Guid>(ServiceResultType.Success, userId);
     }
 
-    /// <inheritdoc />
-    public ClaimsPrincipal AssignClaims(UserResultDto userDto)
+    /// <summary>
+    /// Creates <see cref="ClaimsPrincipal"/> to put in authorization user.
+    /// </summary>
+    /// <param name="userDto"><see cref="UserResultDto"/>.</param>
+    /// <returns><see cref="ClaimsPrincipal"/> to assign to authorization user.</returns>
+    public static ClaimsPrincipal AssignClaims(UserResultDto userDto)
     {
         var userClaims = userDto.Roles != null && userDto.Roles.Any()
                                 ? string.Join(",", userDto.Roles)
