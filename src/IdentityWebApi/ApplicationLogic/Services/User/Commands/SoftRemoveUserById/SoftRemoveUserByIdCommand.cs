@@ -1,3 +1,4 @@
+using IdentityWebApi.ApplicationLogic.Services.Common;
 using IdentityWebApi.Core.Results;
 
 using MediatR;
@@ -9,7 +10,7 @@ namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.SoftRemoveUserB
 /// <summary>
 /// Soft remove user by id CQRS command.
 /// </summary>
-public record SoftRemoveUserByIdCommand : IRequest<ServiceResult>
+public record SoftRemoveUserByIdCommand : IBaseId, IRequest<ServiceResult>
 {
     /// <summary>
     /// Gets user id.

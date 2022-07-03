@@ -1,5 +1,7 @@
 using FluentValidation;
 
+using IdentityWebApi.ApplicationLogic.Services.Common;
+
 namespace IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 
 /// <summary>
@@ -12,7 +14,6 @@ public class GetUserByIdQueryHandlerValidator : AbstractValidator<GetUserByIdQue
     /// </summary>
     public GetUserByIdQueryHandlerValidator()
     {
-        this.RuleFor(x => x.Id)
-            .NotEmpty();
+        this.Include(new BaseIdValidator());
     }
 }

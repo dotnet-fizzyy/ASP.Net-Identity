@@ -1,8 +1,8 @@
 using FluentValidation;
 
-namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.SoftRemoveUserById;
+using IdentityWebApi.ApplicationLogic.Services.Common;
 
-// todo: Create base validator
+namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.SoftRemoveUserById;
 
 /// <summary>
 /// <see cref="SoftRemoveUserByIdCommand"/> validator.
@@ -14,7 +14,6 @@ public class SoftRemoveUserByIdCommandHandlerValidator : AbstractValidator<SoftR
     /// </summary>
     public SoftRemoveUserByIdCommandHandlerValidator()
     {
-        this.RuleFor(x => x.Id)
-            .NotEmpty();
+        this.Include(new BaseIdValidator());
     }
 }

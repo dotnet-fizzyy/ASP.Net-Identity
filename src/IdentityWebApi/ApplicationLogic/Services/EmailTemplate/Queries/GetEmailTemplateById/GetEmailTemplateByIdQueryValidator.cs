@@ -1,5 +1,7 @@
 using FluentValidation;
 
+using IdentityWebApi.ApplicationLogic.Services.Common;
+
 namespace IdentityWebApi.ApplicationLogic.Services.EmailTemplate.Queries.GetEmailTemplateById;
 
 /// <summary>
@@ -12,7 +14,6 @@ public class GetEmailTemplateByIdQueryValidator : AbstractValidator<GetEmailTemp
     /// </summary>
     public GetEmailTemplateByIdQueryValidator()
      {
-          this.RuleFor(prop => prop.Id)
-               .NotEmpty();
+          this.Include(new BaseIdValidator());
      }
 }

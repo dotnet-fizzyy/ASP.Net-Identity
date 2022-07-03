@@ -1,3 +1,4 @@
+using IdentityWebApi.ApplicationLogic.Services.Common;
 using IdentityWebApi.Core.Results;
 
 using System;
@@ -9,7 +10,7 @@ namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.HardRemoveUserB
 /// <summary>
 /// Hard remove user by id CQRS command.
 /// </summary>
-public record HardRemoveUserByIdCommand : IRequest<ServiceResult>
+public record HardRemoveUserByIdCommand : IBaseId, IRequest<ServiceResult>
 {
     /// <summary>
     /// Gets user id.
