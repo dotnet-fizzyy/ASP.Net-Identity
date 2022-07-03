@@ -2,6 +2,7 @@ using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.HardRemoveUserById;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.SoftRemoveUserById;
+using IdentityWebApi.ApplicationLogic.Services.User.Commands.UpdateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
@@ -22,19 +23,16 @@ namespace IdentityWebApi.Presentation.Controllers;
 /// </summary>
 public class UserController : ControllerBase
 {
-    private readonly IUserService userService;
     private readonly IClaimsService claimsService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserController"/> class.
     /// </summary>
-    /// <param name="userService"><see cref="IUserService"/>.</param>
     /// <param name="claimsService"><see cref="IClaimsService"/>.</param>
     /// <param name="mediator"><see cref="IMediator"/>.</param>
-    public UserController(IUserService userService, IClaimsService claimsService, IMediator mediator)
+    public UserController(IClaimsService claimsService, IMediator mediator)
         : base(mediator)
     {
-        this.userService = userService;
         this.claimsService = claimsService;
     }
 
@@ -106,7 +104,8 @@ public class UserController : ControllerBase
     [HttpPut]
     public async Task<ActionResult<UserResultDto>> UpdateUser([FromBody, BindRequired] UserDto user)
     {
-        var userUpdateResult = await this.userService.UpdateUserAsync(user);
+        var command = new UpdateUserCommand(user);
+        var userUpdateResult = await this.Mediator.Send(command);
 
         if (userUpdateResult.IsResultFailed)
         {
@@ -123,7 +122,7 @@ public class UserController : ControllerBase
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/soft-remove")]
-    public async Task<IActionResult> SoftRemoveUser(Guid id)
+    public async Task<ActionResult> SoftRemoveUser(Guid id)
     {
         var command = new SoftRemoveUserByIdCommand(id);
         var userRemoveResult = await this.Mediator.Send(command);
@@ -143,7 +142,7 @@ public class UserController : ControllerBase
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/hard-remove")]
-    public async Task<IActionResult> HardRemoveUser(Guid id)
+    public async Task<ActionResult> HardRemoveUser(Guid id)
     {
         var command = new HardRemoveUserByIdCommand(id);
         var userRemoveResult = await this.Mediator.Send(command);

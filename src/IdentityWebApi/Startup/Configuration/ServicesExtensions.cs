@@ -28,7 +28,6 @@ internal static class ServicesExtensions
         services.AddSingleton(appSettings);
 
         // Services
-        services.AddTransient<IUserService, UserService>();
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IClaimsService, ClaimsService>();
