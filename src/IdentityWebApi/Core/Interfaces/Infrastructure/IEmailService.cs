@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.Core.Interfaces.ApplicationLogic;
+namespace IdentityWebApi.Core.Interfaces.Infrastructure;
 
 /// <summary>
 /// Email services.

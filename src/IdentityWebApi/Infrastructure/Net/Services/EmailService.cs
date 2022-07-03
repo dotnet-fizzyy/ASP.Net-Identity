@@ -1,5 +1,5 @@
 using IdentityWebApi.ApplicationSettings;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
+using IdentityWebApi.Core.Interfaces.Infrastructure;
 
 using MailKit.Net.Smtp;
 
@@ -8,7 +8,7 @@ using MimeKit.Text;
 
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.ApplicationLogic.Services;
+namespace IdentityWebApi.Infrastructure.Net.Services;
 
 /// <inheritdoc cref="IEmailService" />
 public class EmailService : IEmailService
