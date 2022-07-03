@@ -17,6 +17,9 @@
     <!-- Elements must appear in the correct order -->
     <Rule Id="SA1201" Action="None" />
     
+    <!-- Static members should go before non-static -->
+    <Rule Id="SA1204" Action="None"/>
+    
     <!-- System Using directives must be placed before other using directives -->
     <Rule Id="SA1208" Action="None" />
 
