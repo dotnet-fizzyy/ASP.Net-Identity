@@ -10,5 +10,5 @@ public class UserResultDto : BaseUserDto
     /// <summary>
     /// Gets or sets user roles names.
     /// </summary>
-    public IEnumerable<string> Roles { get; set; } = new List<string>();
+    public IEnumerable<string> Roles { get; set; }
 }

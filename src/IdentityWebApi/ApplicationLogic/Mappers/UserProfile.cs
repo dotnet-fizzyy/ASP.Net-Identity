@@ -20,8 +20,11 @@ public class UserProfile : Profile
         this.CreateMap<AppUser, UserResultDto>()
             .ForMember(
                 dist => dist.Roles,
-                ex => ex.MapFrom(en => en.UserRoles.Select(x => x.Role.Name))
-            );
+                opts =>
+                {
+                    opts.PreCondition(en => en.UserRoles != null && en.UserRoles.Any());
+                    opts.MapFrom(en => en.UserRoles.Select(x => x.Role.Name));
+                });
 
         this.CreateMap<UserDto, AppUser>();
         this.CreateMap<UserRegistrationDto, AppUser>();
