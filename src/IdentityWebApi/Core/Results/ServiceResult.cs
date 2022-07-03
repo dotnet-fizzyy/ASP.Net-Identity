@@ -52,6 +52,13 @@ public class ServiceResult
     /// <summary>
     /// Generates error result for current instance.
     /// </summary>
+    /// <returns><see cref="ServiceResult"/>.</returns>
+    public ServiceResult GenerateErrorResult() =>
+        new (this.Result, this.Message);
+
+    /// <summary>
+    /// Generates error result for current instance.
+    /// </summary>
     /// <typeparam name="TReturnType">Type for conversion.</typeparam>
     /// <returns><see cref="ServiceResult"/>.</returns>
     public ServiceResult<TReturnType> GenerateErrorResult<TReturnType>() =>

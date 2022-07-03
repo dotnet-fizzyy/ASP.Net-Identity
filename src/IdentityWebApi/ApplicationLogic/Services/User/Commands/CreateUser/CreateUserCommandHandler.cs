@@ -1,10 +1,13 @@
 using AutoMapper;
 
+using HandlebarsDotNet;
+
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
+using IdentityWebApi.Core.Interfaces.Presentation;
 using IdentityWebApi.Core.Results;
 using IdentityWebApi.Core.Utilities;
 using IdentityWebApi.Infrastructure.Database;
@@ -30,6 +33,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     private readonly DatabaseContext databaseContext;
     private readonly AppSettings appSettings;
     private readonly IEmailService emailService;
+    private readonly IHttpContextService httpContextService;
     private readonly IMapper mapper;
 
     /// <summary>
@@ -40,6 +44,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
     /// <param name="appSettings"><see cref="AppSettings"/>.</param>
     /// <param name="emailService"><see cref="IEmailService"/>.</param>
+    /// <param name="httpContextService"><see cref="IHttpContextService"/>.</param>
     /// <param name="mapper"><see cref="IMapper"/>.</param>
     public CreateUserCommandHandler(
         UserManager<AppUser> userManager,
@@ -47,6 +52,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         DatabaseContext databaseContext,
         AppSettings appSettings,
         IEmailService emailService,
+        IHttpContextService httpContextService,
         IMapper mapper)
     {
         this.userManager = userManager;
@@ -54,6 +60,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         this.databaseContext = databaseContext;
         this.appSettings = appSettings;
         this.emailService = emailService;
+        this.httpContextService = httpContextService;
         this.mapper = mapper;
     }
 
@@ -62,38 +69,32 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     {
         var userEntity = this.mapper.Map<AppUser>(command.User);
 
-        var userCreationResult = await this.CreateUser(userEntity, command.User.Password);
+        var userCreationResult = await this.ProcessUserCreation(userEntity, command.User.Password);
         if (userCreationResult.IsResultFailed)
         {
-            return userCreationResult.GenerateErrorResult<UserDto>();
+            return GenerateHandlerErrorResult(userCreationResult);
         }
 
         var createdUser = userCreationResult.Data;
 
         if (!string.IsNullOrEmpty(command.User.UserRole))
         {
-            var roleAssignmentResult = await this.AssignRoleToUser(createdUser, command.User.UserRole);
+            var roleAssignmentResult = await this.ProcessRoleAssignment(createdUser, command.User.UserRole);
             if (roleAssignmentResult.IsResultFailed)
             {
-                return roleAssignmentResult.GenerateErrorResult<UserDto>();
+                return GenerateHandlerErrorResult(roleAssignmentResult);
             }
         }
 
         if (this.appSettings.IdentitySettings.Email.RequireConfirmation)
         {
-            var confirmationToken = await this.GenerateConfirmationToken(createdUser);
-
-            if (command.ConfirmEmailImmediately)
+            var confirmationEmailResult = await this.ProcessUserEmailConfirmation(
+                createdUser,
+                command.ConfirmEmailImmediately
+            );
+            if (confirmationEmailResult.IsResultFailed)
             {
-                var confirmationEmailResult = await this.ConfirmUserEmail(createdUser, confirmationToken);
-                if (confirmationEmailResult.IsResultFailed)
-                {
-                    return confirmationEmailResult.GenerateErrorResult<UserDto>();
-                }
-            }
-            else
-            {
-                this.SendUserEmailConfirmation(createdUser.Email, confirmationToken);
+                return GenerateHandlerErrorResult(confirmationEmailResult);
             }
         }
 
@@ -102,7 +103,22 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult<UserDto>(ServiceResultType.Success, userDto);
     }
 
-    private async Task<ServiceResult<AppUser>> CreateUser(AppUser user, string password)
+    private static ServiceResult<UserDto> GenerateHandlerErrorResult(ServiceResult serviceResult) =>
+        serviceResult.GenerateErrorResult<UserDto>();
+
+    /// <summary>
+    /// Creates user entity.
+    /// </summary>
+    /// <param name="user">
+    /// <see cref="AppUser"/>.
+    /// </param>
+    /// <param name="password">
+    /// User password.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="ServiceResult"/>.
+    /// </returns>
+    private async Task<ServiceResult<AppUser>> ProcessUserCreation(AppUser user, string password)
     {
         var userCreationResult = await this.userManager.CreateAsync(user, password);
         if (!userCreationResult.Succeeded)
@@ -116,7 +132,19 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult<AppUser>(ServiceResultType.Success, user);
     }
 
-    private async Task<ServiceResult> AssignRoleToUser(AppUser user, string role)
+    /// <summary>
+    /// Assigns role to newly created user.
+    /// </summary>
+    /// <param name="user">
+    /// <see cref="AppUser"/>.
+    /// </param>
+    /// <param name="role">
+    /// Role to assign.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="ServiceResult"/>.
+    /// </returns>
+    private async Task<ServiceResult> ProcessRoleAssignment(AppUser user, string role)
     {
         var existingRole = await this.roleManager.FindByNameAsync(role);
         if (existingRole == null)
@@ -139,6 +167,38 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult(ServiceResultType.Success);
     }
 
+    /// <summary>
+    /// Processes user email confirmation.
+    /// </summary>
+    /// <param name="user">
+    /// <see cref="AppUser"/>.
+    /// </param>
+    /// <param name="shouldConfirmImmediately">
+    /// Indicates whether newly created user email should be confirmed without email sending.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="ServiceResult"/>.
+    /// </returns>.
+    private async Task<ServiceResult> ProcessUserEmailConfirmation(AppUser user, bool shouldConfirmImmediately)
+    {
+        var confirmationToken = await this.GenerateConfirmationToken(user);
+
+        if (shouldConfirmImmediately)
+        {
+            var confirmationEmailResult = await this.ConfirmUserEmail(user, confirmationToken);
+            if (confirmationEmailResult.IsResultFailed)
+            {
+                return confirmationEmailResult.GenerateErrorResult();
+            }
+        }
+        else
+        {
+            this.SendConfirmationEmail(user.Email, confirmationToken);
+        }
+
+        return new ServiceResult(ServiceResultType.Success);
+    }
+
     private async Task<ServiceResult<string>> ConfirmUserEmail(AppUser user, string confirmationToken)
     {
         var emailConfirmationResult = await this.userManager.ConfirmEmailAsync(user, confirmationToken);
@@ -156,19 +216,34 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     private async Task<string> GenerateConfirmationToken(AppUser user) =>
         await this.userManager.GenerateEmailConfirmationTokenAsync(user);
 
-    private void SendUserEmailConfirmation(string email, string confirmationToken)
+    private void SendConfirmationEmail(string email, string confirmationToken)
     {
-        // todo: process handlebars template cast
-        Task.Run(() => this.SendConfirmationEmail(email)).ConfigureAwait(continueOnCapturedContext: false);
+        Task
+            .Run(() => this.HandleUserEmailConfirmationSending(email, confirmationToken))
+            .ConfigureAwait(continueOnCapturedContext: false);
     }
 
-    private void SendConfirmationEmail(string email)
+    private void HandleUserEmailConfirmationSending(string email, string confirmationToken)
     {
-        var emailTemplate = this.databaseContext.EmailTemplates.Single(x =>
-            x.Id == EntityConfigurationConstants.EmailConfirmationTemplateId
+        var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(email, confirmationToken);
+
+        var emailTemplate = this.databaseContext.EmailTemplates.Single(template =>
+            template.Id == EntityConfigurationConstants.EmailConfirmationTemplateId
         );
 
-        // todo: Extract email subject from email template entity
-        this.emailService.SendEmailAsync(email, "Confirm your email", emailTemplate.Layout);
+        var emailLayout = GenerateEmailLayout(emailTemplate.Layout, confirmationLink);
+
+        this.emailService.SendEmailAsync(email, emailTemplate.Subject, emailLayout);
+    }
+
+    private static string GenerateEmailLayout(string predefinedEmailLayout, string confirmationLink)
+    {
+        var template = Handlebars.Compile(predefinedEmailLayout);
+        var templateData = new
+        {
+            link = confirmationLink,
+        };
+
+        return template(templateData);
     }
 }
