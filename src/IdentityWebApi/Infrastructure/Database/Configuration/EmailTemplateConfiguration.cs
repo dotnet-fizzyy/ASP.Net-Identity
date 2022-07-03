@@ -38,10 +38,11 @@ public class EmailTemplateConfiguration : IEntityTypeConfiguration<EmailTemplate
         builder.HasIndex(prop => prop.Name)
             .IsUnique();
 
-        builder.HasData(new
+        builder.HasData(new EmailTemplate
         {
             Id = EntityConfigurationConstants.EmailConfirmationTemplateId,
             Name = Templates.EmailConfirmationTemplate,
+            Subject = EmailSubjects.EmailConfirmation,
             Layout = TemplateReader.ReadTemplateFromFolder(Templates.EmailConfirmationTemplate),
             CreationDate = new DateTime(2021, 7, 4),
             IsDeleted = false,

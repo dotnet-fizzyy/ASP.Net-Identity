@@ -76,7 +76,7 @@ public class AuthController : ControllerBase
 
         await this.emailService.SendEmailAsync(
             creationResult.Data.userDto.Email,
-            EmailSubjects.AccountConfirmation,
+            EmailSubjects.EmailConfirmation,
             $"<a href='{confirmationLink}'>confirm</a>"
         );
 

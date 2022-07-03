@@ -1,6 +1,17 @@
 namespace IdentityWebApi.Core.Constants;
 
 /// <summary>
+/// Exception messages.
+/// </summary>
+public static class EmailSubjects
+{
+    /// <summary>
+    /// Gets account confirmation subject template.
+    /// </summary>
+    public const string EmailConfirmation = "Account email confirmation";
+}
+
+/// <summary>
 /// Email template names.
 /// </summary>
 public static class Templates
@@ -25,17 +36,6 @@ public static class ExceptionMessageConstants
     /// Gets invalid authentication data exception message.
     /// </summary>
     public const string InvalidAuthData = "Unable to find user with provided parameter";
-}
-
-/// <summary>
-/// Exception messages.
-/// </summary>
-public static class EmailSubjects
-{
-    /// <summary>
-    /// Gets account confirmation subject template.
-    /// </summary>
-    public const string AccountConfirmation = "Account confirmation";
 }
 
 /// <summary>
