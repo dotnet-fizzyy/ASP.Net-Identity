@@ -11,7 +11,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.ApplicationLogic.Services.EmailTemplate.GetEmailTemplateById;
+namespace IdentityWebApi.ApplicationLogic.Services.EmailTemplate.Queries.GetEmailTemplateById;
 
 /// <summary>
 /// Gets email template by id query CQRS handler.
