@@ -1,11 +1,14 @@
 using AutoMapper;
 
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.Core.Entities;
+using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Results;
 using IdentityWebApi.Infrastructure.Database;
 
 using MediatR;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,8 +34,29 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Servi
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<UserResultDto>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ServiceResult<UserResultDto>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
-        throw new System.NotImplementedException();
+        var existingAppUser = await this.GetUser(command.User.Id);
+        if (existingAppUser == null)
+        {
+            return new ServiceResult<UserResultDto>(ServiceResultType.NotFound);
+        }
+
+        UpdateUserDetails(existingAppUser, command.User);
+
+        await this.databaseContext.SaveChangesAsync();
+
+        var updatedUserDto = this.mapper.Map<AppUser, UserResultDto>(existingAppUser);
+
+        return new ServiceResult<UserResultDto>(ServiceResultType.Success, updatedUserDto);
+    }
+
+    private async Task<AppUser> GetUser(Guid id) =>
+        await this.databaseContext.SearchById<AppUser>(id);
+
+    private static void UpdateUserDetails(AppUser appUser, UserDto userDto)
+    {
+        appUser.UserName = userDto.UserName;
+        appUser.PhoneNumber = userDto.PhoneNumber;
     }
 }
