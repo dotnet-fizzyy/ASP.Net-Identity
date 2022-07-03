@@ -171,11 +171,15 @@ namespace IdentityWebApi.Infrastructure.Database.Migrations
 
                     b.Property<string>("Layout")
                         .IsRequired()
-                        .HasColumnType("nvarchar(4096)");
+                        .HasColumnType("nvarchar(4000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Subject")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 

@@ -11,12 +11,17 @@ public class EmailTemplate : IBaseEntity
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Gets or sets name.
+    /// Gets or sets email name.
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
-    /// Gets or sets template layout.
+    /// Gets or sets email subject.
+    /// </summary>
+    public string Subject { get; set; }
+
+    /// <summary>
+    /// Gets or sets email body layout.
     /// </summary>
     public string Layout { get; set; }
 

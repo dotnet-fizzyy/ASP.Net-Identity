@@ -22,12 +22,15 @@ public class EmailTemplateConfiguration : IEntityTypeConfiguration<EmailTemplate
 
         builder.HasKey(prop => prop.Id);
 
+        builder.Property(prop => prop.Subject)
+            .HasMaxLength(256);
+
         builder.Property(prop => prop.Name)
             .IsRequired();
 
         builder.Property(prop => prop.Layout)
             .IsRequired()
-            .HasColumnType("nvarchar(4096)");
+            .HasColumnType("nvarchar(4000)");
 
         builder.Property(prop => prop.CreationDate)
             .HasDefaultValueSql("getdate()");

@@ -16,16 +16,17 @@ public class AppUserRoleConfiguration : IEntityTypeConfiguration<AppUserRole>
         builder.HasQueryFilter(prop => !prop.IsDeleted);
 
         builder
-            .HasOne(x => x.Role)
-            .WithMany(x => x.UserRoles)
-            .HasForeignKey(x => x.RoleId)
-            .HasPrincipalKey(x => x.Id)
+            .HasOne(prop => prop.Role)
+            .WithMany(prop => prop.UserRoles)
+            .HasForeignKey(prop => prop.RoleId)
+            .HasPrincipalKey(prop => prop.Id)
             .IsRequired();
+
         builder
-            .HasOne(x => x.AppUser)
-            .WithMany(x => x.UserRoles)
-            .HasForeignKey(x => x.UserId)
-            .HasPrincipalKey(x => x.Id)
+            .HasOne(prop => prop.AppUser)
+            .WithMany(prop => prop.UserRoles)
+            .HasForeignKey(prop => prop.UserId)
+            .HasPrincipalKey(prop => prop.Id)
             .IsRequired();
     }
 }
