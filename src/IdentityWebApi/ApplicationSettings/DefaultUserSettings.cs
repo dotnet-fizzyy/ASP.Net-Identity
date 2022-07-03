@@ -1,3 +1,5 @@
+using IdentityWebApi.ApplicationLogic.Validation;
+
 using System.ComponentModel.DataAnnotations;
 
 namespace IdentityWebApi.ApplicationSettings;
@@ -10,25 +12,25 @@ public class DefaultUserSettings
     /// <summary>
     /// Gets or sets name.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets password.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string Password { get; set; }
 
     /// <summary>
     /// Gets or sets role.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string Role { get; set; }
 
     /// <summary>
     /// Gets or sets email.
     /// </summary>
-    [Required]
+    [DefaultValue]
     [EmailAddress]
     public string Email { get; set; }
 

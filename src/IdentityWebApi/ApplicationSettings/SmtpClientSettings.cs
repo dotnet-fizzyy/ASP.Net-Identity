@@ -14,7 +14,7 @@ public class SmtpClientSettings : IValidatable
     /// <summary>
     /// Gets or sets host.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string Host { get; set; }
 
     /// <summary>
@@ -26,19 +26,19 @@ public class SmtpClientSettings : IValidatable
     /// <summary>
     /// Gets or sets email name.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string EmailName { get; set; }
 
     /// <summary>
     /// Gets or sets email address.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string EmailAddress { get; set; }
 
     /// <summary>
     /// Gets or sets email password.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string Password { get; set; }
 
     /// <summary>

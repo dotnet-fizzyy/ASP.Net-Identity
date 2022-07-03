@@ -1,3 +1,5 @@
+using IdentityWebApi.ApplicationLogic.Validation;
+
 using NetEscapades.Configuration.Validation;
 
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +14,7 @@ public class IpStackSettings : IValidatable
     /// <summary>
     /// Gets or sets IpStack access key.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string AccessKey { get; set; }
 
     /// <summary>
