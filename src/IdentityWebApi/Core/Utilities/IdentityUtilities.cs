@@ -11,7 +11,7 @@ namespace IdentityWebApi.Core.Utilities;
 public static class IdentityUtilities
 {
     /// <summary>
-    /// Concats all identity error messages into one string separated by comma.
+    /// Concatenates all identity error messages into one string separated by comma.
     /// </summary>
     /// <param name="errors">Collection of <see cref="IdentityError"/>.</param>
     /// <returns>String with errors description separated by comma.</returns>
