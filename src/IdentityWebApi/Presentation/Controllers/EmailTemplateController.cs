@@ -32,10 +32,12 @@ public class EmailTemplateController : ControllerBase
     /// <summary>
     /// Returns email template.
     /// </summary>
-    /// <response code="200">Entity has been found.</response>
-    /// <response code="404">Unable to find entity.</response>
     /// <param name="id">Email template identifier.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    /// <response code="200">Email template has been found.</response>
+    /// <response code="404">Unable to find email template.</response>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
+    /// </returns>
     [HttpGet("id/{id:guid}")]
     [ProducesResponseType(typeof(EmailTemplateDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

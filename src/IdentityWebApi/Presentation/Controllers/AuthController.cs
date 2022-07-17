@@ -53,7 +53,9 @@ public class AuthController : ControllerBase
     /// <param name="userModel"><see cref="UserRegistrationDto"/>.</param>
     /// <response code="201">Created user.</response>
     /// <response code="404">Unable to create user due to missing role.</response>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// </returns>
     [HttpPost("sign-up")]
     [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -89,7 +91,9 @@ public class AuthController : ControllerBase
     /// <param name="userModel"><see cref="UserSignInDto"/>.</param>
     /// <response code="200">User has authenticated.</response>
     /// <response code="400">Unable to authenticate with provided credentials.</response>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// </returns>
     [HttpPost("sign-in")]
     [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -116,7 +120,9 @@ public class AuthController : ControllerBase
     /// <param name="token">Confirmation token.</param>
     /// <response code="204">Email has been confirmed.</response>
     /// <response code="404">User with provided email is not found.</response>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// </returns>
     [HttpGet("confirm-email")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

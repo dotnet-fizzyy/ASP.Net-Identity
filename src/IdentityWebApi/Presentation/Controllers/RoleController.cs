@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace IdentityWebApi.Presentation.Controllers;
 
 /// <summary>
-/// Role controller (available only for Admin).
+/// Role controller.
 /// </summary>
 [Authorize(Roles = UserRoleConstants.Admin)]
 public class RoleController : ControllerBase
@@ -57,9 +57,11 @@ public class RoleController : ControllerBase
     /// Grants role to user.
     /// </summary>
     /// <param name="userRoleDto"><see cref="UserRoleDto"/>.</param>
-    /// <response code="204">Role has been found.</response>
+    /// <response code="204">Role has been granted.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// </returns>
     [HttpPost("grant")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
@@ -79,9 +81,11 @@ public class RoleController : ControllerBase
     /// Revokes role from user.
     /// </summary>
     /// <param name="userRoleDto"><see cref="UserRoleDto"/>.</param>
-    /// <response code="204">Role has been found.</response>
+    /// <response code="204">Role has been revoked.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// </returns>
     [HttpPost("revoke")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
@@ -103,7 +107,9 @@ public class RoleController : ControllerBase
     /// <param name="roleDto"><see cref="RoleCreationDto"/>.</param>
     /// <response code="201">Role has been created.</response>
     /// <response code="400">Role already exists.</response>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// </returns>
     [HttpPost]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
@@ -123,9 +129,11 @@ public class RoleController : ControllerBase
     /// Updates role entity.
     /// </summary>
     /// <param name="roleDto"><see cref="RoleDto"/>.</param>
-    /// <response code="200">Role has been updated.</response>
+    /// <response code="200">Role details have been updated.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// </returns>
     [HttpPut]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
@@ -145,9 +153,11 @@ public class RoleController : ControllerBase
     /// Removes role entity.
     /// </summary>
     /// <param name="id">Role identifier.</param>
-    /// <response code="204">Role has been removed.</response>
+    /// <response code="204">Role has been removed from DB.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// </returns>
     [HttpDelete("id/{id:guid}")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]

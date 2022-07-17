@@ -10,6 +10,7 @@ using IdentityWebApi.Presentation.Services;
 using MediatR;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -35,10 +36,16 @@ public class UserController : ControllerBase
     /// <summary>
     /// Returns information about user by User HTTP context.
     /// </summary>
-    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    /// <response code="200">User has been found.</response>
+    /// <response code="404">Unable to find user.</response>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
+    /// </returns>
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<UserResultDto>> GetUserByToken()
+    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserResultDto>> GetUserByIdentity()
     {
         var userIdResult = ClaimsService.GetUserIdFromIdentityUser(this.User);
 
@@ -47,16 +54,32 @@ public class UserController : ControllerBase
             return this.CreateFailedResponseByServiceResult(userIdResult);
         }
 
-        return await this.GetUser(userIdResult.Data);
+        var userId = userIdResult.Data;
+
+        var query = new GetUserByIdQuery(userId);
+        var userResult = await this.Mediator.Send(query);
+
+        if (userResult.IsResultFailed)
+        {
+            return this.CreateFailedResponseByServiceResult(userResult);
+        }
+
+        return userResult.Data;
     }
 
     /// <summary>
-    /// Returns information about user.
+    /// Returns information about user by id.
     /// </summary>
     /// <param name="id">User identifier.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    /// <response code="200">User has been found.</response>
+    /// <response code="404">Unable to find user.</response>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
+    /// </returns>
     [Authorize]
     [HttpGet("id/{id:guid}")]
+    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserResultDto>> GetUser(Guid id)
     {
         var query = new GetUserByIdQuery(id);
@@ -74,9 +97,17 @@ public class UserController : ControllerBase
     /// Creates user entity.
     /// </summary>
     /// <param name="user"><see cref="UserDto"/>.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    /// <response code="201">User has been created.</response>
+    /// <response code="404">Role to assign to user is not found.</response>
+    /// <response code="500">Unable to create user due to internal issues.</response>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
+    /// </returns>
     [Authorize]
     [HttpPost]
+    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserDto user)
     {
         // todo: extract from body
@@ -95,9 +126,15 @@ public class UserController : ControllerBase
     /// Updates user entity.
     /// </summary>
     /// <param name="user"><see cref="UserDto"/>.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    /// <response code="200">User details have been updated.</response>
+    /// <response code="404">Unable to find user.</response>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
+    /// </returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpPut]
+    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserResultDto>> UpdateUser([FromBody, BindRequired] UserDto user)
     {
         var command = new UpdateUserCommand(user);
@@ -115,9 +152,15 @@ public class UserController : ControllerBase
     /// Updates user entity with "IsDeleted=true".
     /// </summary>
     /// <param name="id">User identifier.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    /// <response code="204">User status "IsDeleted" has been set to true.</response>
+    /// <response code="404">Unable to find user.</response>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
+    /// </returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/soft-remove")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> SoftRemoveUser(Guid id)
     {
         var command = new SoftRemoveUserByIdCommand(id);
@@ -135,9 +178,15 @@ public class UserController : ControllerBase
     /// Removes user entity from DB.
     /// </summary>
     /// <param name="id">User identifier.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    /// <response code="204">User has been removed from DB.</response>
+    /// <response code="404">Unable to find user.</response>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
+    /// </returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/hard-remove")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> HardRemoveUser(Guid id)
     {
         var command = new HardRemoveUserByIdCommand(id);
