@@ -75,7 +75,7 @@ internal static class AuthenticationExtensions
                         return AuthConstants.JwtBearerAuthType;
                     }
 
-                    return AuthConstants.AppAuthPolicyName;
+                    return AuthConstants.CookiesAuthScheme;
                 };
             });
     }

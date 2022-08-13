@@ -61,7 +61,7 @@ public class Startup
 
         services.RegisterControllers();
 
-        services.RegisterSwagger();
+        services.RegisterSwagger(appSettings.IdentitySettings);
     }
 
     /// <summary>

@@ -1,3 +1,6 @@
+using IdentityWebApi.ApplicationSettings;
+using IdentityWebApi.Core.Enums;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -17,7 +20,8 @@ internal static class SwaggerExtensions
     /// Configures Swagger services.
     /// </summary>
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
-    public static void RegisterSwagger(this IServiceCollection services)
+    /// <param name="identitySettings"><see cref="IdentitySettings"/>.</param>
+    public static void RegisterSwagger(this IServiceCollection services, IdentitySettings identitySettings)
     {
         services.AddSwaggerGen(c =>
         {
@@ -31,6 +35,34 @@ internal static class SwaggerExtensions
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 
             c.IncludeXmlComments(xmlPath);
+
+            if (identitySettings.AuthType != AuthType.Jwt)
+            {
+                return;
+            }
+
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization via Bearer scheme: Bearer {token}",
+                Scheme = "JWT",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer",
+                        },
+                    },
+                    Array.Empty<string>()
+                },
+            });
         });
     }
 
