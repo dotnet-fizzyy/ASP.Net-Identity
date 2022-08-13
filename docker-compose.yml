@@ -1,12 +1,21 @@
 version: '3.4'
 
 services:
-    api:
+    proxy:
+        image: nginx:alpine
+        ports:
+            - "13501:80"
+        volumes:
+            -  "./nginx/nginx.conf:/etc/nginx/nginx.conf"
+        depends_on:
+            -   identity-api
+
+    identity-api:
         build:
             context: .
             dockerfile: Dockerfile
         ports:
-            - "13501:80"
+            - "13502:80"
         environment:
             ASPNETCORE_ENVIRONMENT: docker
         depends_on:

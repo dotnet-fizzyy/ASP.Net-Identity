@@ -14,7 +14,7 @@ public class DbSettings : IValidatable
     /// <summary>
     /// Gets or sets DB host.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string Host { get; set; }
 
     /// <summary>
@@ -26,19 +26,19 @@ public class DbSettings : IValidatable
     /// <summary>
     /// Gets or sets DB Instance.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string Instance { get; set; }
 
     /// <summary>
     /// Gets or sets DB User.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string User { get; set; }
 
     /// <summary>
     /// Gets or sets DB Password.
     /// </summary>
-    [Required]
+    [DefaultValue]
     public string Password { get; set; }
 
     /// <summary>

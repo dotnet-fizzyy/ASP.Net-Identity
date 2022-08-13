@@ -8,6 +8,11 @@ namespace IdentityWebApi.ApplicationSettings;
 public class AppSettings : IValidatable
 {
     /// <summary>
+    /// Gets or sets <see cref="ApiSettings" />.
+    /// </summary>
+    public ApiSettings Api { get; set; }
+
+    /// <summary>
     /// Gets or sets <see cref="DbSettings"/>.
     /// </summary>
     public DbSettings DbSettings { get; set; }

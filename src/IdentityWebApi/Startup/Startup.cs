@@ -50,7 +50,7 @@ public class Startup
 
         services.RegisterAutomapper();
 
-        services.RegisterHealthChecks(appSettings.DbSettings.ConnectionString);
+        services.RegisterHealthChecks(appSettings.Api.Url, appSettings.DbSettings.ConnectionString);
 
         services.AddHttpContextAccessor();
 
@@ -88,6 +88,7 @@ public class Startup
             .AllowCredentials()
         );
 
+        app.UseDefaultFiles();
         app.UseStaticFiles();
 
         app.RegisterExceptionHandler();
@@ -95,6 +96,8 @@ public class Startup
         app.UseHttpsRedirection();
 
         app.UseRouting();
+
+        app.RegisterProxyServerHeaders();
 
         app.UseAuthentication();
         app.UseAuthorization();
@@ -115,6 +118,9 @@ public class Startup
 
     private static AppSettings ReadAppSettings(IConfiguration configuration)
     {
+        var apiSettings = configuration
+            .GetSection(nameof(AppSettings.Api))
+            .Get<ApiSettings>();
         var dbSettings = configuration
             .GetSection(nameof(AppSettings.DbSettings))
             .Get<DbSettings>();
@@ -133,6 +139,7 @@ public class Startup
 
         return new AppSettings
         {
+            Api = apiSettings,
             DbSettings = dbSettings,
             SmtpClientSettings = smtpClientSettings,
             IpStackSettings = ipStackSettings,

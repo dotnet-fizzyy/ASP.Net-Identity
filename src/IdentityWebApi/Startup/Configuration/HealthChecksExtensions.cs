@@ -14,14 +14,15 @@ namespace IdentityWebApi.Startup.Configuration;
 /// </summary>
 internal static class HealthChecksExtensions
 {
-    private const string HealthCheckRoute = "/health-check";
+    private const string HealthCheckRoute = "health-check";
 
     /// <summary>
     /// Registers Health-Check services for Infrastructure layer.
     /// </summary>
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
+    /// <param name="appUrl">API url.</param>
     /// <param name="connectionString">DB connection string.</param>
-    public static void RegisterHealthChecks(this IServiceCollection services, string connectionString)
+    public static void RegisterHealthChecks(this IServiceCollection services, string appUrl, string connectionString)
     {
         services
             .AddHealthChecks()
@@ -30,7 +31,7 @@ internal static class HealthChecksExtensions
         services
             .AddHealthChecksUI(options =>
             {
-                options.AddHealthCheckEndpoint("HealthCheck API", HealthCheckRoute);
+                options.AddHealthCheckEndpoint("HealthCheck API", $"{appUrl}/{HealthCheckRoute}");
             })
             .AddSqlServerStorage(connectionString);
     }
