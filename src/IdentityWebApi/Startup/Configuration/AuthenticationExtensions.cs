@@ -1,5 +1,6 @@
 using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Enums;
+using IdentityWebApi.Presentation.Services;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Startup.Configuration;
@@ -66,8 +66,7 @@ internal static class AuthenticationExtensions
                     ValidAudience = identitySettings.Jwt.ValidAudience,
 
                     ValidateIssuerSigningKey = identitySettings.Jwt.ValidateIssuerSigningKey,
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(identitySettings.Jwt.IssuerSigningKey)),
+                    IssuerSigningKey = JwtService.CreateSecuritySigningKey(identitySettings.Jwt.IssuerSigningKey),
                 };
             })
             .AddPolicyScheme(AppAuthSchemeName, AppAuthSchemeName, opt =>

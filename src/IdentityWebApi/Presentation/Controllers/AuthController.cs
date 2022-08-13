@@ -1,6 +1,8 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.ConfirmEmail;
+using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Constants;
+using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
+using System;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Controllers;
@@ -26,6 +29,7 @@ public class AuthController : ControllerBase
     private readonly IAuthService authService;
     private readonly IEmailService emailService;
     private readonly IHttpContextService httpContextService;
+    private readonly AppSettings appSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthController"/> class.
@@ -34,17 +38,20 @@ public class AuthController : ControllerBase
     /// <param name="emailService"><see cref="IEmailService"/>.</param>
     /// <param name="httpContextService"><see cref="IHttpContextService"/>.</param>
     /// <param name="mediator"><see cref="IMediator"/>.</param>
+    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
     public AuthController(
         IAuthService authService,
         IEmailService emailService,
         IHttpContextService httpContextService,
-        IMediator mediator
+        IMediator mediator,
+        AppSettings appSettings
     )
         : base(mediator)
     {
         this.authService = authService;
         this.emailService = emailService;
         this.httpContextService = httpContextService;
+        this.appSettings = appSettings;
     }
 
     /// <summary>
@@ -94,10 +101,11 @@ public class AuthController : ControllerBase
     /// <returns>
     /// A <see cref="Task"/> representing the asynchronous operation.
     /// </returns>
+    // todo: use CQRS.
     [HttpPost("sign-in")]
     [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<UserResultDto>> SignIn([FromBody, BindRequired] UserSignInDto userModel)
+    public async Task<IActionResult> SignIn([FromBody, BindRequired] UserSignInDto userModel)
     {
         var signInResult = await this.authService.SignInUserAsync(userModel);
 
@@ -106,11 +114,24 @@ public class AuthController : ControllerBase
             return this.CreateFailedResponseByServiceResult(signInResult);
         }
 
-        var claims = ClaimsService.AssignClaims(signInResult.Data);
+        var claimsPrinciple = ClaimsService.AssignClaims(signInResult.Data);
 
-        await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims);
+        if (this.appSettings.IdentitySettings.AuthType == AuthType.Jwt)
+        {
+            // todo: pass from app settings
+            var token = JwtService.GenerateJwtToken(
+                this.appSettings.IdentitySettings.Jwt.IssuerSigningKey,
+                this.appSettings.IdentitySettings.Jwt.ValidIssuer,
+                this.appSettings.IdentitySettings.Jwt.ValidAudience,
+                TimeSpan.FromMinutes(60),
+                claimsPrinciple.Claims);
 
-        return signInResult.Data;
+            return this.Ok((token, signInResult.Data));
+        }
+
+        await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrinciple);
+
+        return this.Ok(signInResult.Data);
     }
 
     /// <summary>
