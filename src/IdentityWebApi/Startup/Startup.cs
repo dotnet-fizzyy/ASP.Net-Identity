@@ -43,7 +43,7 @@ public class Startup
 
         // Identity server setup should go before Auth setup
         services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString);
-        services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
+        services.RegisterAuthSettings(appSettings.IdentitySettings);
 
         services.RegisterMediatr();
         services.RegisterValidationPipeline();
