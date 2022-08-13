@@ -53,3 +53,24 @@ public static class UserRoleConstants
     /// </summary>
     public const string User = "User";
 }
+
+/// <summary>
+/// Authentication and authorization constants.
+/// </summary>
+public static class AuthConstants
+{
+    /// <summary>
+    /// Gets application authentication and authorization policy name.
+    /// </summary>
+    public const string AppAuthPolicyName = "IdentityAuthenticationPolicy";
+
+    /// <summary>
+    /// Gets cookies authentication and authorization scheme name.
+    /// </summary>
+    public const string CookiesAuthScheme = "Cookies";
+
+    /// <summary>
+    /// Gets JWT authentication and authorization scheme name.
+    /// </summary>
+    public const string JwtBearerAuthType = "Bearer";
+}

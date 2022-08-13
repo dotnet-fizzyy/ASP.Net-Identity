@@ -1,8 +1,8 @@
 using IdentityWebApi.ApplicationSettings;
+using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Presentation.Services;
 
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -17,11 +17,6 @@ namespace IdentityWebApi.Startup.Configuration;
 /// </summary>
 internal static class AuthenticationExtensions
 {
-    private const string AppAuthSchemeName = "IdentityAuthenticationScheme";
-
-    private const string CookiesAuthType = CookieAuthenticationDefaults.AuthenticationScheme;
-    private const string JwtBearerAuthType = "Bearer";
-
     /// <summary>
     /// Registers authentication and authorization settings and services.
     /// </summary>
@@ -32,11 +27,11 @@ internal static class AuthenticationExtensions
         services
             .AddAuthentication(opt =>
             {
-                opt.DefaultScheme = AppAuthSchemeName;
-                opt.DefaultChallengeScheme = AppAuthSchemeName;
-                opt.DefaultAuthenticateScheme = AppAuthSchemeName;
+                opt.DefaultScheme = AuthConstants.AppAuthPolicyName;
+                opt.DefaultChallengeScheme = AuthConstants.AppAuthPolicyName;
+                opt.DefaultAuthenticateScheme = AuthConstants.AppAuthPolicyName;
             })
-            .AddCookie(CookiesAuthType, options =>
+            .AddCookie(AuthConstants.CookiesAuthScheme, options =>
             {
                 options.SlidingExpiration = identitySettings.Cookies.SlidingExpiration;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(identitySettings.Cookies.ExpirationMinutes);
@@ -55,7 +50,7 @@ internal static class AuthenticationExtensions
                     return Task.CompletedTask;
                 };
             })
-            .AddJwtBearer(JwtBearerAuthType, opt =>
+            .AddJwtBearer(AuthConstants.JwtBearerAuthType, opt =>
             {
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -71,16 +66,16 @@ internal static class AuthenticationExtensions
                     IssuerSigningKey = JwtService.CreateSecuritySigningKey(identitySettings.Jwt.IssuerSigningKey),
                 };
             })
-            .AddPolicyScheme(AppAuthSchemeName, AppAuthSchemeName, opt =>
+            .AddPolicyScheme(AuthConstants.AppAuthPolicyName, AuthConstants.AppAuthPolicyName, opt =>
             {
                 opt.ForwardDefaultSelector = _ =>
                 {
                     if (identitySettings.AuthType == AuthType.Jwt)
                     {
-                        return JwtBearerAuthType;
+                        return AuthConstants.JwtBearerAuthType;
                     }
 
-                    return CookiesAuthType;
+                    return AuthConstants.AppAuthPolicyName;
                 };
             });
     }

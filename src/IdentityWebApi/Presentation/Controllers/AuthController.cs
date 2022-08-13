@@ -11,7 +11,6 @@ using IdentityWebApi.Presentation.Services;
 using MediatR;
 
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -129,7 +128,7 @@ public class AuthController : ControllerBase
             return this.Ok((token, signInResult.Data));
         }
 
-        await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrinciple);
+        await this.HttpContext.SignInAsync(AuthConstants.CookiesAuthScheme, claimsPrinciple);
 
         return this.Ok(signInResult.Data);
     }
