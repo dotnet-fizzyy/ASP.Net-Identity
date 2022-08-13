@@ -123,7 +123,7 @@ public class AuthController : ControllerBase
                 this.appSettings.IdentitySettings.Jwt.IssuerSigningKey,
                 this.appSettings.IdentitySettings.Jwt.ValidIssuer,
                 this.appSettings.IdentitySettings.Jwt.ValidAudience,
-                TimeSpan.FromMinutes(60),
+                TimeSpan.FromMinutes(this.appSettings.IdentitySettings.Jwt.ExpirationMinutes),
                 claimsPrinciple.Claims);
 
             return this.Ok((token, signInResult.Data));

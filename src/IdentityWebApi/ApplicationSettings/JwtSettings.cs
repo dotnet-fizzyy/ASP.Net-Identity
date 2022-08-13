@@ -21,6 +21,11 @@ public class JwtSettings
     public bool ValidateAudience { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether JWT lifetime should be validated.
+    /// </summary>
+    public bool ValidateLifeTime { get; set; }
+
+    /// <summary>
     /// Gets or sets JWT valid audience.
     /// </summary>
     public string ValidAudience { get; set; }
@@ -34,4 +39,9 @@ public class JwtSettings
     /// Gets or sets JWT issue signing key.
     /// </summary>
     public string IssuerSigningKey { get; set; }
+
+    /// <summary>
+    /// Gets or sets JWT expiration minutes.
+    /// </summary>
+    public int ExpirationMinutes { get; set; }
 }

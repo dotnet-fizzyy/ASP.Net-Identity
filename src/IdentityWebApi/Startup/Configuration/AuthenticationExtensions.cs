@@ -65,6 +65,8 @@ internal static class AuthenticationExtensions
                     ValidateAudience = identitySettings.Jwt.ValidateAudience,
                     ValidAudience = identitySettings.Jwt.ValidAudience,
 
+                    ValidateLifetime = identitySettings.Jwt.ValidateLifeTime,
+
                     ValidateIssuerSigningKey = identitySettings.Jwt.ValidateIssuerSigningKey,
                     IssuerSigningKey = JwtService.CreateSecuritySigningKey(identitySettings.Jwt.IssuerSigningKey),
                 };
