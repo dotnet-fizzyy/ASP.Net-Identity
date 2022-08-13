@@ -29,6 +29,12 @@ internal static class SwaggerExtensions
             {
                 Title = "IdentityWebApi",
                 Version = "v1",
+                Description = "Identity Web API for managing users",
+                Contact = new OpenApiContact
+                {
+                    Name = "Fizzyy",
+                    Email = "ezzyfizzy27@gmail.com",
+                },
             });
 
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
