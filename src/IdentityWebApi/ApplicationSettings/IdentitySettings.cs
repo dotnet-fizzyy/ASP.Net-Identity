@@ -1,3 +1,5 @@
+using IdentityWebApi.Core.Enums;
+
 using NetEscapades.Configuration.Validation;
 
 using System.Collections.Generic;
@@ -30,6 +32,16 @@ public class IdentitySettings : IValidatable
     /// Gets or sets <see cref="EmailSettings"/>.
     /// </summary>
     public EmailSettings Email { get; set; }
+
+    /// <summary>
+    /// Gets or sets app authentication type ("Jwt" or "Cookies").
+    /// </summary>
+    public AuthType AuthType { get; set; }
+
+    /// <summary>
+    /// Gets or sets <see cref="JwtSettings"/>.
+    /// </summary>
+    public JwtSettings Jwt { get; set; }
 
     /// <summary>
     /// Gets or sets <see cref="CookiesSettings"/>.
