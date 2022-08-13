@@ -1,8 +1,11 @@
 using IdentityWebApi.ApplicationSettings;
+using IdentityWebApi.Core.Constants;
+using IdentityWebApi.Core.Enums;
+using IdentityWebApi.Presentation.Services;
 
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 using System;
 using System.Threading.Tasks;
@@ -18,21 +21,20 @@ internal static class AuthenticationExtensions
     /// Registers authentication and authorization settings and services.
     /// </summary>
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
-    /// <param name="cookiesSettings">Cookies settings configuration.</param>
-    public static void RegisterAuthSettings(this IServiceCollection services, CookiesSettings cookiesSettings)
+    /// <param name="identitySettings">Identity Core settings configuration.</param>
+    public static void RegisterAuthSettings(this IServiceCollection services, IdentitySettings identitySettings)
     {
         services
             .AddAuthentication(opt =>
             {
-                // Default schemes that must be applied for cookies validation
-                opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                opt.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                opt.DefaultScheme = AuthConstants.AppAuthPolicyName;
+                opt.DefaultChallengeScheme = AuthConstants.AppAuthPolicyName;
+                opt.DefaultAuthenticateScheme = AuthConstants.AppAuthPolicyName;
             })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            .AddCookie(AuthConstants.CookiesAuthScheme, options =>
             {
-                options.SlidingExpiration = cookiesSettings.SlidingExpiration;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(cookiesSettings.ExpirationMinutes);
+                options.SlidingExpiration = identitySettings.Cookies.SlidingExpiration;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(identitySettings.Cookies.ExpirationMinutes);
 
                 options.Events.OnRedirectToLogin = context =>
                 {
@@ -46,6 +48,34 @@ internal static class AuthenticationExtensions
                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
 
                     return Task.CompletedTask;
+                };
+            })
+            .AddJwtBearer(AuthConstants.JwtBearerAuthType, opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = identitySettings.Jwt.ValidateIssuer,
+                    ValidIssuer = identitySettings.Jwt.ValidIssuer,
+
+                    ValidateAudience = identitySettings.Jwt.ValidateAudience,
+                    ValidAudience = identitySettings.Jwt.ValidAudience,
+
+                    ValidateLifetime = identitySettings.Jwt.ValidateLifeTime,
+
+                    ValidateIssuerSigningKey = identitySettings.Jwt.ValidateIssuerSigningKey,
+                    IssuerSigningKey = JwtService.CreateSecuritySigningKey(identitySettings.Jwt.IssuerSigningKey),
+                };
+            })
+            .AddPolicyScheme(AuthConstants.AppAuthPolicyName, AuthConstants.AppAuthPolicyName, opt =>
+            {
+                opt.ForwardDefaultSelector = _ =>
+                {
+                    if (identitySettings.AuthType == AuthType.Jwt)
+                    {
+                        return AuthConstants.JwtBearerAuthType;
+                    }
+
+                    return AuthConstants.CookiesAuthScheme;
                 };
             });
     }

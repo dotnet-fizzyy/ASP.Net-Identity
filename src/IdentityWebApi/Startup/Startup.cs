@@ -43,7 +43,7 @@ public class Startup
 
         // Identity server setup should go before Auth setup
         services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString);
-        services.RegisterAuthSettings(appSettings.IdentitySettings.Cookies);
+        services.RegisterAuthSettings(appSettings.IdentitySettings);
 
         services.RegisterMediatr();
         services.RegisterValidationPipeline();
@@ -61,7 +61,7 @@ public class Startup
 
         services.RegisterControllers();
 
-        services.RegisterSwagger();
+        services.RegisterSwagger(appSettings.IdentitySettings);
     }
 
     /// <summary>
@@ -115,11 +115,21 @@ public class Startup
 
     private static AppSettings ReadAppSettings(IConfiguration configuration)
     {
-        var dbSettings = configuration.GetSection(nameof(AppSettings.DbSettings)).Get<DbSettings>();
-        var smtpClientSettings = configuration.GetSection(nameof(AppSettings.SmtpClientSettings)).Get<SmtpClientSettings>();
-        var ipStackSettings = configuration.GetSection(nameof(AppSettings.IpStackSettings)).Get<IpStackSettings>();
-        var regionVerification = configuration.GetSection(nameof(AppSettings.RegionsVerificationSettings)).Get<RegionsVerificationSettings>();
-        var identitySettings = configuration.GetSection(nameof(AppSettings.IdentitySettings)).Get<IdentitySettings>();
+        var dbSettings = configuration
+            .GetSection(nameof(AppSettings.DbSettings))
+            .Get<DbSettings>();
+        var smtpClientSettings = configuration
+            .GetSection(nameof(AppSettings.SmtpClientSettings))
+            .Get<SmtpClientSettings>();
+        var ipStackSettings = configuration
+            .GetSection(nameof(AppSettings.IpStackSettings))
+            .Get<IpStackSettings>();
+        var regionVerification = configuration
+            .GetSection(nameof(AppSettings.RegionsVerificationSettings))
+            .Get<RegionsVerificationSettings>();
+        var identitySettings = configuration
+            .GetSection(nameof(AppSettings.IdentitySettings))
+            .Get<IdentitySettings>();
 
         return new AppSettings
         {

@@ -13,7 +13,7 @@ namespace IdentityWebApi.Presentation.Services;
 /// <summary>
 /// User claims service.
 /// </summary>
-public class ClaimsService
+public static class ClaimsService
 {
     /// <summary>
     /// Gets user id from <see cref="ClaimsPrincipal"/> user.
