@@ -1,4 +1,6 @@
 using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace IdentityWebApi.Core.Interfaces.Presentation;
 
@@ -7,6 +9,13 @@ namespace IdentityWebApi.Core.Interfaces.Presentation;
 /// </summary>
 public interface IHttpContextService
 {
+    /// <summary>
+    /// Signs in user using cookies authentication mechanism.
+    /// </summary>
+    /// <param name="user"><see cref="ClaimsPrincipal"/> user to perform authentication.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task SignInUsingCookiesAsync(ClaimsPrincipal user);
+
     /// <summary>
     /// Generates link to confirm email on registration process.
     /// </summary>

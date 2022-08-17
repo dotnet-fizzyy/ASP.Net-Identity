@@ -1,9 +1,13 @@
+using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.Presentation;
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Services;
 
@@ -22,6 +26,12 @@ public class HttpContextService : IHttpContextService
     {
         this.httpContext = httpContextAccessor.HttpContext;
         this.linkGenerator = linkGenerator;
+    }
+
+    /// <inheritdoc/>
+    public async Task SignInUsingCookiesAsync(ClaimsPrincipal user)
+    {
+        await this.httpContext.SignInAsync(AuthConstants.CookiesAuthScheme, user);
     }
 
     /// <inheritdoc/>
