@@ -51,7 +51,7 @@ public class UserController : ControllerBase
 
         if (userIdResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(userIdResult);
+            return this.CreateResponseByServiceResult(userIdResult);
         }
 
         var userId = userIdResult.Data;
@@ -61,7 +61,7 @@ public class UserController : ControllerBase
 
         if (userResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(userResult);
+            return this.CreateResponseByServiceResult(userResult);
         }
 
         return userResult.Data;
@@ -87,7 +87,7 @@ public class UserController : ControllerBase
 
         if (userResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(userResult);
+            return this.CreateResponseByServiceResult(userResult);
         }
 
         return userResult.Data;
@@ -116,7 +116,7 @@ public class UserController : ControllerBase
 
         if (userCreationResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(userCreationResult);
+            return this.CreateResponseByServiceResult(userCreationResult);
         }
 
         return this.CreatedAtAction(nameof(this.CreateUser), userCreationResult.Data);
@@ -142,7 +142,7 @@ public class UserController : ControllerBase
 
         if (userUpdateResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(userUpdateResult);
+            return this.CreateResponseByServiceResult(userUpdateResult);
         }
 
         return userUpdateResult.Data;
@@ -168,7 +168,7 @@ public class UserController : ControllerBase
 
         if (userRemoveResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(userRemoveResult);
+            return this.CreateResponseByServiceResult(userRemoveResult);
         }
 
         return this.NoContent();
@@ -194,7 +194,7 @@ public class UserController : ControllerBase
 
         if (userRemoveResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(userRemoveResult);
+            return this.CreateResponseByServiceResult(userRemoveResult);
         }
 
         return this.NoContent();

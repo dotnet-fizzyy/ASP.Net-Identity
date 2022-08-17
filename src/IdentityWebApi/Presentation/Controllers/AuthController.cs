@@ -1,21 +1,18 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.ConfirmEmail;
-using IdentityWebApi.ApplicationSettings;
+using IdentityWebApi.ApplicationLogic.Services.User.Models;
 using IdentityWebApi.Core.Constants;
-using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;
-using IdentityWebApi.Presentation.Services;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-using System;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Controllers;
@@ -28,7 +25,6 @@ public class AuthController : ControllerBase
     private readonly IAuthService authService;
     private readonly IEmailService emailService;
     private readonly IHttpContextService httpContextService;
-    private readonly AppSettings appSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthController"/> class.
@@ -37,20 +33,17 @@ public class AuthController : ControllerBase
     /// <param name="emailService"><see cref="IEmailService"/>.</param>
     /// <param name="httpContextService"><see cref="IHttpContextService"/>.</param>
     /// <param name="mediator"><see cref="IMediator"/>.</param>
-    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
     public AuthController(
         IAuthService authService,
         IEmailService emailService,
         IHttpContextService httpContextService,
-        IMediator mediator,
-        AppSettings appSettings
+        IMediator mediator
     )
         : base(mediator)
     {
         this.authService = authService;
         this.emailService = emailService;
         this.httpContextService = httpContextService;
-        this.appSettings = appSettings;
     }
 
     /// <summary>
@@ -72,7 +65,7 @@ public class AuthController : ControllerBase
         if (creationResult.IsResultFailed)
         {
             // todo: replace 404 with 400
-            return this.CreateFailedResponseByServiceResult(creationResult);
+            return this.CreateResponseByServiceResult(creationResult);
         }
 
         var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(
@@ -100,37 +93,20 @@ public class AuthController : ControllerBase
     /// <returns>
     /// A <see cref="Task"/> representing the asynchronous operation.
     /// </returns>
-    // todo: use CQRS.
     [HttpPost("sign-in")]
-    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(AuthUserResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> SignIn([FromBody, BindRequired] UserSignInDto userModel)
+    public async Task<ActionResult<AuthUserResponse>> SignIn([FromBody, BindRequired] UserSignInDto userModel)
     {
-        var signInResult = await this.authService.SignInUserAsync(userModel);
+        var authUserCommand = new AuthenticateUserCommand(userModel.Email, userModel.Password);
+        var authUserResult = await this.Mediator.Send(authUserCommand);
 
-        if (signInResult.IsResultFailed)
+        if (authUserResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(signInResult);
+            return this.CreateResponseByServiceResult(authUserResult);
         }
 
-        var claimsPrinciple = ClaimsService.AssignClaims(signInResult.Data);
-
-        if (this.appSettings.IdentitySettings.AuthType == AuthType.Jwt)
-        {
-            // todo: pass from app settings
-            var token = JwtService.GenerateJwtToken(
-                this.appSettings.IdentitySettings.Jwt.IssuerSigningKey,
-                this.appSettings.IdentitySettings.Jwt.ValidIssuer,
-                this.appSettings.IdentitySettings.Jwt.ValidAudience,
-                TimeSpan.FromMinutes(this.appSettings.IdentitySettings.Jwt.ExpirationMinutes),
-                claimsPrinciple.Claims);
-
-            return this.Ok((token, signInResult.Data));
-        }
-
-        await this.HttpContext.SignInAsync(AuthConstants.CookiesAuthScheme, claimsPrinciple);
-
-        return this.Ok(signInResult.Data);
+        return authUserResult.Data;
     }
 
     /// <summary>
@@ -156,7 +132,7 @@ public class AuthController : ControllerBase
 
         if (confirmationResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(confirmationResult);
+            return this.CreateResponseByServiceResult(confirmationResult);
         }
 
         return this.NoContent();

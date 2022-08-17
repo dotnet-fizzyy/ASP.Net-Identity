@@ -47,7 +47,7 @@ public class RoleController : ControllerBase
 
         if (roleResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(roleResult);
+            return this.CreateResponseByServiceResult(roleResult);
         }
 
         return roleResult.Data;
@@ -71,7 +71,7 @@ public class RoleController : ControllerBase
 
         if (roleGrantResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(roleGrantResult);
+            return this.CreateResponseByServiceResult(roleGrantResult);
         }
 
         return this.NoContent();
@@ -95,7 +95,7 @@ public class RoleController : ControllerBase
 
         if (roleRevocationResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(roleRevocationResult);
+            return this.CreateResponseByServiceResult(roleRevocationResult);
         }
 
         return this.NoContent();
@@ -119,7 +119,7 @@ public class RoleController : ControllerBase
 
         if (roleCreationResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(roleCreationResult);
+            return this.CreateResponseByServiceResult(roleCreationResult);
         }
 
         return this.CreatedAtAction(nameof(this.CreateRole), roleCreationResult.Data);
@@ -143,7 +143,7 @@ public class RoleController : ControllerBase
 
         if (roleUpdateResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(roleUpdateResult);
+            return this.CreateResponseByServiceResult(roleUpdateResult);
         }
 
         return roleUpdateResult.Data;
@@ -167,7 +167,7 @@ public class RoleController : ControllerBase
 
         if (roleRemoveResult.IsResultFailed)
         {
-            return this.CreateFailedResponseByServiceResult(roleRemoveResult);
+            return this.CreateResponseByServiceResult(roleRemoveResult);
         }
 
         return this.NoContent();
