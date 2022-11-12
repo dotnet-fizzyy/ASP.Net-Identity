@@ -16,6 +16,8 @@ namespace IdentityWebApi.Startup;
 /// </summary>
 public class Startup
 {
+    private readonly AppSettings appSettings;
+
     /// <inheritdoc cref="IConfiguration"/>
     public IConfiguration Configuration { get; }
 
@@ -26,6 +28,8 @@ public class Startup
     public Startup(IConfiguration configuration)
     {
         this.Configuration = configuration;
+
+        this.appSettings = ReadAppSettings(configuration);
     }
 
     /// <summary>
@@ -35,22 +39,20 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        var appSettings = ReadAppSettings(this.Configuration);
-
         services.ValidateSettingParameters(this.Configuration);
 
-        services.RegisterServices(appSettings);
+        services.RegisterServices(this.appSettings);
 
         // Identity server setup should go before Auth setup
-        services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString);
-        services.RegisterAuthSettings(appSettings.IdentitySettings);
+        services.RegisterIdentityServer(this.appSettings.IdentitySettings, this.appSettings.DbSettings.ConnectionString);
+        services.RegisterAuthSettings(this.appSettings.IdentitySettings);
 
         services.RegisterMediatr();
         services.RegisterValidationPipeline();
 
         services.RegisterAutomapper();
 
-        services.RegisterHealthChecks(appSettings.Api.Url, appSettings.DbSettings.ConnectionString);
+        services.RegisterHealthChecks(this.appSettings.Api.Url, this.appSettings.DbSettings.ConnectionString);
 
         services.AddHttpContextAccessor();
 
@@ -61,7 +63,7 @@ public class Startup
 
         services.RegisterControllers();
 
-        services.RegisterSwagger(appSettings.IdentitySettings);
+        services.RegisterSwagger(this.appSettings.IdentitySettings);
     }
 
     /// <summary>
@@ -73,8 +75,6 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
     {
-        var appSettings = ReadAppSettings(this.Configuration);
-
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -109,10 +109,10 @@ public class Startup
             endpoints.RegisterHealthCheckEndpoint();
         });
 
-        serviceProvider.InitializeUserRoles(appSettings.IdentitySettings.Roles).Wait();
+        serviceProvider.InitializeUserRoles(this.appSettings.IdentitySettings.Roles).Wait();
         serviceProvider.InitializeDefaultUsers(
-            appSettings.IdentitySettings.DefaultUsers,
-            appSettings.IdentitySettings.Email.RequireConfirmation
+            this. appSettings.IdentitySettings.DefaultUsers,
+            this.appSettings.IdentitySettings.Email.RequireConfirmation
         ).Wait();
     }
 
