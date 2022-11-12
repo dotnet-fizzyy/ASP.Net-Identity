@@ -6,8 +6,8 @@ This project represents application that is responsible for handling users and r
 
 ### Built With
 
-* [C# 10](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-10);
-* [ASP.Net 6.0 WebAPI](https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-6.0?view=aspnetcore-6.0);
+* [C# 11](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-11);
+* [ASP.Net 7.0 WebAPI](https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-7.0?view=aspnetcore-7.0);
 * [Entity Framework](https://entityframeworkcore.com);
 * [Identity Server Core](https://docs.identityserver.io/en/latest/quickstarts/6_aspnet_identity.html);
 * [Handlebars](https://handlebarsjs.com/);
@@ -22,7 +22,7 @@ Before launching this application make sure you have prepared the following comp
 
 * Windows | macOS | Linux;
 * [MSSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2019?rtc=1);
-* [.Net 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0);
+* [.Net 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0);
 * [Visual Studio](https://visualstudio.microsoft.com/) | [Visual Studio Code](https://code.visualstudio.com/) | [Rider](https://www.jetbrains.com/rider/);
 * [SSMS](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15) | [DBeaver](https://dbeaver.io/) | [DataGrip](https://www.jetbrains.com/datagrip/);
 * [Docker](https://www.docker.com) - Optional;
@@ -45,7 +45,7 @@ Docker is not necessary to launch application if you have prepared prerequisites
 
 1. Follow the first step from previous article;
 2. Switch open project root directory via terminal;
-3. Run the following command: 
+3. Run the following command:
     ```
     docker-compose up --build
     ```
