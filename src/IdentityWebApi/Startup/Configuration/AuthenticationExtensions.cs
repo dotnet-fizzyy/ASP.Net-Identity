@@ -1,7 +1,7 @@
-using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Presentation.Services;
+using IdentityWebApi.Startup.ApplicationSettings;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

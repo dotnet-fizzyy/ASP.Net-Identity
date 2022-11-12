@@ -4,53 +4,47 @@ using NetEscapades.Configuration.Validation;
 
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.ApplicationSettings;
+namespace IdentityWebApi.Startup.ApplicationSettings;
 
 /// <summary>
-/// Database settings.
+/// Email client settings.
 /// </summary>
-public class DbSettings : IValidatable
+public class SmtpClientSettings : IValidatable
 {
     /// <summary>
-    /// Gets or sets DB host.
+    /// Gets or sets host.
     /// </summary>
     [DefaultValue]
     public string Host { get; set; }
 
     /// <summary>
-    /// Gets or sets DB Port.
+    /// Gets or sets port.
     /// </summary>
     [DefaultValue]
     public int Port { get; set; }
 
     /// <summary>
-    /// Gets or sets DB Instance.
+    /// Gets or sets email name.
     /// </summary>
     [DefaultValue]
-    public string Instance { get; set; }
+    public string EmailName { get; set; }
 
     /// <summary>
-    /// Gets or sets DB User.
+    /// Gets or sets email address.
     /// </summary>
     [DefaultValue]
-    public string User { get; set; }
+    public string EmailAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets DB Password.
+    /// Gets or sets email password.
     /// </summary>
     [DefaultValue]
     public string Password { get; set; }
 
     /// <summary>
-    /// Gets computed DB connection string.
+    /// Gets or sets a value indicating whether email client should use SSL.
     /// </summary>
-    public string ConnectionString =>
-        $"Server={this.Host},{this.Port};" +
-        $"Database={this.Instance};" +
-        $"User={this.User};" +
-        $"Password={this.Password};" +
-        "MultipleActiveResultSets=True;" +
-        "TrustServerCertificate=True;";
+    public bool UseSsl { get; set; }
 
     /// <summary>
     /// Validates settings properties.

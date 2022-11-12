@@ -5,7 +5,7 @@ using NetEscapades.Configuration.Validation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.ApplicationSettings;
+namespace IdentityWebApi.Startup.ApplicationSettings;
 
 /// <summary>
 /// Identity settings.

@@ -1,5 +1,5 @@
-using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
+using IdentityWebApi.Startup.ApplicationSettings;
 
 using MailKit.Net.Smtp;
 

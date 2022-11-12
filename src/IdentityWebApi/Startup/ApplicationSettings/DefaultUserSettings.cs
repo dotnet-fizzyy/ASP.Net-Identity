@@ -2,7 +2,7 @@ using IdentityWebApi.ApplicationLogic.Validation;
 
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.ApplicationSettings;
+namespace IdentityWebApi.Startup.ApplicationSettings;
 
 /// <summary>
 /// Default user settings.

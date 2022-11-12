@@ -2,13 +2,13 @@ using AutoMapper;
 
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Services.User.Models;
-using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.Presentation;
 using IdentityWebApi.Core.Results;
 using IdentityWebApi.Infrastructure.Database;
 using IdentityWebApi.Presentation.Services;
+using IdentityWebApi.Startup.ApplicationSettings;
 
 using MediatR;
 

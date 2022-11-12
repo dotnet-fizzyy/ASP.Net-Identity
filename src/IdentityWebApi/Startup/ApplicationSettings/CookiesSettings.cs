@@ -4,7 +4,7 @@ using NetEscapades.Configuration.Validation;
 
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.ApplicationSettings;
+namespace IdentityWebApi.Startup.ApplicationSettings;
 
 /// <summary>
 /// Cookies settings.

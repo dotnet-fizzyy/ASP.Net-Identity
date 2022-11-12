@@ -1,6 +1,6 @@
 using IdentityWebApi.ApplicationLogic.Validation;
 
-namespace IdentityWebApi.ApplicationSettings;
+namespace IdentityWebApi.Startup.ApplicationSettings;
 
 /// <summary>
 /// Gets or sets API settings.

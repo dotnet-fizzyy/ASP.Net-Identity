@@ -1,9 +1,9 @@
 using AutoMapper;
 
-using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Models;
 using IdentityWebApi.Infrastructure.Net.Models;
+using IdentityWebApi.Startup.ApplicationSettings;
 
 using Newtonsoft.Json;
 

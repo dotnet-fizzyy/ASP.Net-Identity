@@ -3,7 +3,6 @@ using AutoMapper;
 using HandlebarsDotNet;
 
 using IdentityWebApi.ApplicationLogic.Models.Action;
-using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
@@ -12,6 +11,7 @@ using IdentityWebApi.Core.Results;
 using IdentityWebApi.Core.Utilities;
 using IdentityWebApi.Infrastructure.Database;
 using IdentityWebApi.Infrastructure.Database.Constants;
+using IdentityWebApi.Startup.ApplicationSettings;
 
 using MediatR;
 

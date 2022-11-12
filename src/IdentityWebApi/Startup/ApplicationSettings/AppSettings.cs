@@ -1,6 +1,6 @@
 using NetEscapades.Configuration.Validation;
 
-namespace IdentityWebApi.ApplicationSettings;
+namespace IdentityWebApi.Startup.ApplicationSettings;
 
 /// <summary>
 /// General application settings.

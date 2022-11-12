@@ -1,6 +1,6 @@
-using IdentityWebApi.ApplicationSettings;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Presentation.Models.Response;
+using IdentityWebApi.Startup.ApplicationSettings;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
