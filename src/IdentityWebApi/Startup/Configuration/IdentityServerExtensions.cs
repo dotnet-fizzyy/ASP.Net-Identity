@@ -27,8 +27,7 @@ internal static class IdentityServerExtensions
     public static void RegisterIdentityServer(
         this IServiceCollection services,
         IdentitySettings identitySettings,
-        string dbConnectionString
-    )
+        string dbConnectionString)
     {
         services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlServer(dbConnectionString)
@@ -57,12 +56,14 @@ internal static class IdentityServerExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task InitializeUserRoles(this IServiceProvider serviceProvider, ICollection<string> roles)
     {
+        using var scope = serviceProvider.CreateScope();
+
         if (IsCollectionNullOrEmpty(roles))
         {
             return;
         }
 
-        var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
 
         foreach (var role in roles)
         {
@@ -83,15 +84,16 @@ internal static class IdentityServerExtensions
     public static async Task InitializeDefaultUsers(
         this IServiceProvider serviceProvider,
         ICollection<DefaultUserSettings> defaultUsers,
-        bool requireConfirmation
-    )
+        bool requireConfirmation)
     {
+        using var scope = serviceProvider.CreateScope();
+
         if (IsCollectionNullOrEmpty(defaultUsers))
         {
             return;
         }
 
-        var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
         foreach (var defaultUser in defaultUsers)
         {
@@ -132,8 +134,7 @@ internal static class IdentityServerExtensions
     private static async Task ConfirmDefaultAdminEmail(
         UserManager<AppUser> userManager,
         AppUser appUserAdmin,
-        bool requireConfirmation
-    )
+        bool requireConfirmation)
     {
         if (requireConfirmation && !await userManager.IsEmailConfirmedAsync(appUserAdmin))
         {

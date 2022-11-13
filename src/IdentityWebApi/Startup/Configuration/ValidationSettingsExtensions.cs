@@ -1,11 +1,9 @@
 using FluentValidation;
 
 using IdentityWebApi.ApplicationLogic.Pipelines;
-using IdentityWebApi.Startup.ApplicationSettings;
 
 using MediatR;
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Reflection;
@@ -17,17 +15,6 @@ namespace IdentityWebApi.Startup.Configuration;
 /// </summary>
 internal static class ValidationSettingsExtensions
 {
-    /// <summary>
-    /// Validates <see cref="AppSettings"/> parameters read from appsettings.json.
-    /// </summary>
-    /// <param name="services"><see cref="IServiceCollection"/>.</param>
-    /// <param name="configuration"><see cref="IConfiguration"/>.</param>
-    public static void ValidateSettingParameters(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.UseConfigurationValidation();
-        services.ConfigureValidatableSetting<AppSettings>(configuration);
-    }
-
     /// <summary>
     /// Registers validation behaviour pipeline.
     /// </summary>

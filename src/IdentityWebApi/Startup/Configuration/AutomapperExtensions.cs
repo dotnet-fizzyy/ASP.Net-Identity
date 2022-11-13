@@ -13,6 +13,6 @@ internal static class AutomapperExtensions
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
     public static void RegisterAutomapper(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(Startup));
+        services.AddAutoMapper(typeof(Program));
     }
 }

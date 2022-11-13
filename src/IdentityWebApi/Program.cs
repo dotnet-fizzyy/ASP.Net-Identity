@@ -1,28 +1,17 @@
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using IdentityWebApi.Startup;
+using IdentityWebApi.Startup.Configuration;
 
-namespace IdentityWebApi;
+using Microsoft.AspNetCore.Builder;
 
-/// <summary>
-/// Entrypoint application class.
-/// </summary>
-public static class Program
-{
-    /// <summary>
-    /// Entrypoint application method.
-    /// </summary>
-    /// <param name="args">Console arguments.</param>
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
+var builder = WebApplication.CreateBuilder(args);
 
-    private static IWebHostBuilder CreateHostBuilder(string[] args) =>
-        WebHost.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((_, config) =>
-            {
-                config.AddEnvironmentVariables();
-            })
-            .UseStartup<Startup.Startup>();
-}
+var appSettings = builder.Configuration.ReadAppSettings();
+appSettings.Validate();
+
+builder.Services.Configure(appSettings);
+
+var app = builder.Build();
+
+app.Configure(appSettings);
+
+app.Run();
