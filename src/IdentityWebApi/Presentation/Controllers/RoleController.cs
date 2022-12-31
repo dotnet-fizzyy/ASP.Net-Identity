@@ -1,14 +1,17 @@
+using System;
+using System.Threading.Tasks;
+
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Services.Role.Queries.GetRoleById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-using System;
-using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Controllers;
 
@@ -23,8 +26,10 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="RoleController"/> class.
     /// </summary>
-    /// <param name="roleService"><see cref="IRoleService"/>.</param>
-    public RoleController(IRoleService roleService)
+    /// <param name="mediator">Instance of <see cref="IMediator"/>.</param>
+    /// <param name="roleService">Instance of <see cref="IRoleService"/>.</param>
+    public RoleController(IMediator mediator, IRoleService roleService)
+        : base(mediator)
     {
         this.roleService = roleService;
     }
@@ -43,7 +48,8 @@ public class RoleController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<RoleDto>> GetRoleById(Guid id)
     {
-        var roleResult = await this.roleService.GetRoleByIdAsync(id);
+        var query = new GetRoleByIdQuery(id);
+        var roleResult = await this.Mediator.Send(query);
 
         if (roleResult.IsResultFailed)
         {
