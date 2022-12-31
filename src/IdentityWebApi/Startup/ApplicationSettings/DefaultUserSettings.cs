@@ -1,6 +1,6 @@
-using IdentityWebApi.ApplicationLogic.Validation;
-
 using System.ComponentModel.DataAnnotations;
+
+using IdentityWebApi.Core.Utilities;
 
 namespace IdentityWebApi.Startup.ApplicationSettings;
 

@@ -1,8 +1,8 @@
-using IdentityWebApi.ApplicationLogic.Validation;
+using System.ComponentModel.DataAnnotations;
+
+using IdentityWebApi.Core.Utilities;
 
 using NetEscapades.Configuration.Validation;
-
-using System.ComponentModel.DataAnnotations;
 
 namespace IdentityWebApi.Startup.ApplicationSettings;
 

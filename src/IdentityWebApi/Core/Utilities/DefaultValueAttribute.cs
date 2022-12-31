@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityWebApi.ApplicationLogic.Validation;
+namespace IdentityWebApi.Core.Utilities;
 
 /// <summary>
 /// Validation of default allowed value.

@@ -1,4 +1,4 @@
-using IdentityWebApi.ApplicationLogic.Validation;
+using IdentityWebApi.Core.Utilities;
 
 namespace IdentityWebApi.Startup.ApplicationSettings;
 
