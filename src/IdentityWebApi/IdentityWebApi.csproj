@@ -4,8 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <LangVersion>11</LangVersion>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        
-        <CodeAnalysisRuleSet>../../IdentityWebApi.ruleset</CodeAnalysisRuleSet>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

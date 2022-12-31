@@ -31,8 +31,7 @@ public class EmailService : IEmailService
 
         email.From.Add(new MailboxAddress(
                 this.appSettings.SmtpClientSettings.EmailName,
-                this.appSettings.SmtpClientSettings.EmailAddress)
-        );
+                this.appSettings.SmtpClientSettings.EmailAddress));
         email.To.Add(new MailboxAddress(string.Empty, emailToSend));
         email.Subject = subject;
         email.Body = new TextPart(TextFormat.Html)
@@ -45,13 +44,11 @@ public class EmailService : IEmailService
         await smtpClient.ConnectAsync(
             this.appSettings.SmtpClientSettings.Host,
             this.appSettings.SmtpClientSettings.Port,
-            this.appSettings.SmtpClientSettings.UseSsl
-        );
+            this.appSettings.SmtpClientSettings.UseSsl);
 
         await smtpClient.AuthenticateAsync(
             this.appSettings.SmtpClientSettings.EmailAddress,
-            this.appSettings.SmtpClientSettings.Password
-        );
+            this.appSettings.SmtpClientSettings.Password);
         await smtpClient.SendAsync(email);
 
         await smtpClient.DisconnectAsync(true);

@@ -47,8 +47,7 @@ internal static class ExceptionHandlerExtensions
                     }
 
                     await context.Response.WriteAsJsonAsync(
-                        new ErrorResponse(contextFeature.Error.Source, errorMessage)
-                    );
+                        new ErrorResponse(contextFeature.Error.Source, errorMessage));
                 }
             });
         });

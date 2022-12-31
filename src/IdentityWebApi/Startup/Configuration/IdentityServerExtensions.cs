@@ -30,8 +30,7 @@ internal static class IdentityServerExtensions
         string dbConnectionString)
     {
         services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer(dbConnectionString)
-        );
+            options.UseSqlServer(dbConnectionString));
 
         services.AddIdentity<AppUser, AppRole>(options =>
             {

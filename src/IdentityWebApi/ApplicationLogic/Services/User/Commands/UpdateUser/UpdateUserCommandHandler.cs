@@ -1,6 +1,6 @@
 using AutoMapper;
 
-using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Results;
@@ -11,7 +11,6 @@ using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.UpdateUser;
 

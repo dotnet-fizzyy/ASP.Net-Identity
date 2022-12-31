@@ -26,8 +26,7 @@ public class ValidationPipelineBehaviour<TRequest, TResponse> : IPipelineBehavio
     /// </summary>
     /// <param name="validators">Collection of <see cref="IValidator{T}"/>.</param>
     public ValidationPipelineBehaviour(
-        IEnumerable<IValidator<TRequest>> validators
-    )
+        IEnumerable<IValidator<TRequest>> validators)
     {
         this.validators = validators;
     }
@@ -36,16 +35,14 @@ public class ValidationPipelineBehaviour<TRequest, TResponse> : IPipelineBehavio
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         if (this.validators.Any())
         {
             var context = new ValidationContext<TRequest>(request);
 
             var validationResults = await Task.WhenAll(
-                this.validators.Select(v => v.ValidateAsync(context, cancellationToken))
-            );
+                this.validators.Select(v => v.ValidateAsync(context, cancellationToken)));
 
             var failures = validationResults
                 .SelectMany(result => result.Errors)
@@ -56,8 +53,7 @@ public class ValidationPipelineBehaviour<TRequest, TResponse> : IPipelineBehavio
             {
                 throw new ModelValidationException(
                     typeof(TRequest).Name,
-                    failures.Select(x => x.ErrorMessage)
-                );
+                    failures.Select(x => x.ErrorMessage));
             }
         }
 

@@ -57,8 +57,7 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
         {
             return new ServiceResult<AppRole>(
                 ServiceResultType.NotFound,
-                UserRepository.MissingUserEntityExceptionMessage
-            );
+                UserRepository.MissingUserEntityExceptionMessage);
         }
 
         appUser.UserRoles.Add(new AppUserRole
@@ -84,8 +83,7 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
         {
             return new ServiceResult<AppRole>(
                 ServiceResultType.NotFound,
-                UserRepository.MissingUserEntityExceptionMessage
-            );
+                UserRepository.MissingUserEntityExceptionMessage);
         }
 
         appUser.UserRoles.Remove(appUser.UserRoles.First(x => x.Role.Id == roleId && x.AppUser.Id == userId));

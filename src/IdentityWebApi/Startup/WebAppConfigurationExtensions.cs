@@ -32,8 +32,7 @@ public static class WebAppConfigurationExtensions
             .SetIsOriginAllowed(_ => true)
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials()
-        );
+            .AllowCredentials());
 
         app.UseDefaultFiles();
         app.UseStaticFiles();

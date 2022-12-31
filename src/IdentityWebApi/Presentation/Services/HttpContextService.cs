@@ -41,8 +41,7 @@ public class HttpContextService : IHttpContextService
             "ConfirmEmail",
             "Auth",
             new { email, token },
-            this.httpContext.Request.Scheme
-        );
+            this.httpContext.Request.Scheme);
 
     /// <inheritdoc/>
     public string GenerateGetUserLink(Guid id) =>
@@ -51,6 +50,5 @@ public class HttpContextService : IHttpContextService
             "GetUser",
             "User",
             new { id },
-            this.httpContext.Request.Scheme
-        );
+            this.httpContext.Request.Scheme);
 }

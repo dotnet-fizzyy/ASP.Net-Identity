@@ -37,8 +37,7 @@ public class AuthController : ControllerBase
         IAuthService authService,
         IEmailService emailService,
         IHttpContextService httpContextService,
-        IMediator mediator
-    )
+        IMediator mediator)
         : base(mediator)
     {
         this.authService = authService;
@@ -70,14 +69,12 @@ public class AuthController : ControllerBase
 
         var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(
             creationResult.Data.userDto.Email,
-            creationResult.Data.token
-        );
+            creationResult.Data.token);
 
         await this.emailService.SendEmailAsync(
             creationResult.Data.userDto.Email,
             EmailSubjects.EmailConfirmation,
-            $"<a href='{confirmationLink}'>confirm</a>"
-        );
+            $"<a href='{confirmationLink}'>confirm</a>");
 
         var getUserLink = this.httpContextService.GenerateGetUserLink(creationResult.Data.userDto.Id);
 
@@ -124,8 +121,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ConfirmEmail(
         [FromQuery, BindRequired] string email,
-        [FromQuery, BindRequired] string token
-    )
+        [FromQuery, BindRequired] string token)
     {
         var command = new ConfirmEmailCommand(email, token);
         var confirmationResult = await this.Mediator.Send(command);

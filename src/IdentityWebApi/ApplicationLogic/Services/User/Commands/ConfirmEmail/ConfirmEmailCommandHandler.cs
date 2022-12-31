@@ -44,8 +44,7 @@ public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, S
         {
             return new ServiceResult(
                 ServiceResultType.InvalidData,
-                IdentityUtilities.ConcatenateIdentityErrorMessages(confirmationResult.Errors)
-            );
+                IdentityUtilities.ConcatenateIdentityErrorMessages(confirmationResult.Errors));
         }
 
         return new ServiceResult(ServiceResultType.Success);

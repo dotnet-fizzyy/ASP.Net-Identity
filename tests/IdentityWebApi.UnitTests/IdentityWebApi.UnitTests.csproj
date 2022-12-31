@@ -4,6 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <LangVersion>11</LangVersion>
         <IsPackable>false</IsPackable>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
 
     <ItemGroup>

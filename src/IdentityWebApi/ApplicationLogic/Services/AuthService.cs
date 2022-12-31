@@ -1,13 +1,13 @@
 using AutoMapper;
 
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Results;
 
 using System.Threading.Tasks;
-using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.ApplicationLogic.Services;
 
@@ -44,8 +44,7 @@ public class AuthService : IAuthService
         return new ServiceResult<(UserResult userDto, string token)>(
             createdResult.Result,
             createdResult.Message,
-            (userDtoModel, createdResult.Data.token)
-        );
+            (userDtoModel, createdResult.Data.token));
     }
 
     /// <inheritdoc/>
@@ -60,8 +59,7 @@ public class AuthService : IAuthService
         return new ServiceResult<UserResult>(
             signInResult.Result,
             signInResult.Message,
-            userDtoModel
-        );
+            userDtoModel);
     }
 
     /// <inheritdoc/>

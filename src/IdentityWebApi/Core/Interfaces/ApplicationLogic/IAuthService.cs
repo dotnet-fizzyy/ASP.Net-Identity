@@ -1,8 +1,8 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.Core.Results;
 
 using System.Threading.Tasks;
-using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.Core.Interfaces.ApplicationLogic;
 

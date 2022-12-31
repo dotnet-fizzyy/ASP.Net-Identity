@@ -21,8 +21,7 @@ public static class TemplateReader
         var pathToFile = Path.Combine(
             projectDirectory,
             templateRootFolder,
-            fullTemplateName
-        );
+            fullTemplateName);
 
         var template = new StreamReader(pathToFile).ReadToEnd();
 

@@ -1,10 +1,10 @@
 using AutoMapper;
 
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.Core.Entities;
 
 using System.Linq;
-using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.ApplicationLogic.Mappers;
 

@@ -83,8 +83,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         AppUser appUser,
         string password,
         string role,
-        bool shouldConfirmImmediately
-    )
+        bool shouldConfirmImmediately)
     {
         var token = string.Empty;
         var userCreationResult = await this.userManager.CreateAsync(appUser, password);
@@ -93,8 +92,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         {
             return new ServiceResult<(AppUser appUser, string token)>(
                 ServiceResultType.InternalError,
-                CreateErrorMessage(userCreationResult.Errors)
-            );
+                CreateErrorMessage(userCreationResult.Errors));
         }
 
         if (!string.IsNullOrWhiteSpace(role))
@@ -103,8 +101,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
             {
                 return new ServiceResult<(AppUser appUser, string token)>(
                     ServiceResultType.NotFound,
-                    RoleRepository.MissingRoleExceptionMessage
-                );
+                    RoleRepository.MissingRoleExceptionMessage);
             }
 
             var roleAssignmentResult = await this.userManager.AddToRoleAsync(appUser, role);
@@ -112,8 +109,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
             {
                 return new ServiceResult<(AppUser appUser, string token)>(
                     ServiceResultType.InternalError,
-                    CreateErrorMessage(roleAssignmentResult.Errors)
-                );
+                    CreateErrorMessage(roleAssignmentResult.Errors));
             }
         }
 
@@ -148,8 +144,7 @@ public class UserRepository : BaseRepository<AppUser>, IUserRepository
         {
             return new ServiceResult<AppUser>(
                 ServiceResultType.InternalError,
-                CreateErrorMessage(confirmationResult.Errors)
-            );
+                CreateErrorMessage(confirmationResult.Errors));
         }
 
         return new ServiceResult<AppUser>(ServiceResultType.Success);

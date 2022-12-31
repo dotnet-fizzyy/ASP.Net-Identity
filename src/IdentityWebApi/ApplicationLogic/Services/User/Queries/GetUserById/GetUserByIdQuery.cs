@@ -1,11 +1,10 @@
-using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.Common;
 using IdentityWebApi.Core.Results;
 
 using MediatR;
 
 using System;
-using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 

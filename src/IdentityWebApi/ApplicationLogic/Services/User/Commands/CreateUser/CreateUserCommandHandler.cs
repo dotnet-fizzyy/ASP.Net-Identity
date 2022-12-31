@@ -90,8 +90,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         {
             var confirmationEmailResult = await this.ProcessUserEmailConfirmation(
                 createdUser,
-                command.ConfirmEmailImmediately
-            );
+                command.ConfirmEmailImmediately);
             if (confirmationEmailResult.IsResultFailed)
             {
                 return GenerateHandlerErrorResult(confirmationEmailResult);
@@ -125,8 +124,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         {
             return new ServiceResult<AppUser>(
                 ServiceResultType.InternalError,
-                IdentityUtilities.ConcatenateIdentityErrorMessages(userCreationResult.Errors)
-            );
+                IdentityUtilities.ConcatenateIdentityErrorMessages(userCreationResult.Errors));
         }
 
         return new ServiceResult<AppUser>(ServiceResultType.Success, user);
@@ -151,8 +149,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         {
             return new ServiceResult(
                 ServiceResultType.NotFound,
-                "No role exists to assign to user"
-            );
+                "No role exists to assign to user");
         }
 
         var roleAssignmentResult = await this.userManager.AddToRoleAsync(user, role);
@@ -160,8 +157,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         {
             return new ServiceResult<AppUser>(
                 ServiceResultType.InternalError,
-                IdentityUtilities.ConcatenateIdentityErrorMessages(roleAssignmentResult.Errors)
-            );
+                IdentityUtilities.ConcatenateIdentityErrorMessages(roleAssignmentResult.Errors));
         }
 
         return new ServiceResult(ServiceResultType.Success);
@@ -206,8 +202,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         {
             return new ServiceResult<string>(
                 ServiceResultType.InternalError,
-                IdentityUtilities.ConcatenateIdentityErrorMessages(emailConfirmationResult.Errors)
-            );
+                IdentityUtilities.ConcatenateIdentityErrorMessages(emailConfirmationResult.Errors));
         }
 
         return new ServiceResult<string>(ServiceResultType.Success, confirmationToken);
@@ -227,9 +222,9 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     {
         var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(email, confirmationToken);
 
-        var emailTemplate = this.databaseContext.EmailTemplates.Single(template =>
-            template.Id == EntityConfigurationConstants.EmailConfirmationTemplateId
-        );
+        var emailTemplate =
+            this.databaseContext.EmailTemplates.Single(template =>
+                template.Id == EntityConfigurationConstants.EmailConfirmationTemplateId);
 
         var emailLayout = GenerateEmailLayout(emailTemplate.Layout, confirmationLink);
 

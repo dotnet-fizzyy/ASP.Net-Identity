@@ -28,8 +28,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     public UnitOfWork(
         DatabaseContext databaseContext,
         IUserRepository userRepository,
-        IRoleRepository roleRepository
-    )
+        IRoleRepository roleRepository)
     {
         this.databaseContext = databaseContext;
 

@@ -54,8 +54,7 @@ public interface IUserRepository : IBaseRepository<AppUser>
         AppUser appUser,
         string password,
         string role,
-        bool shouldConfirmImmediately
-    );
+        bool shouldConfirmImmediately);
 
     /// <summary>
     /// Removes user by id.

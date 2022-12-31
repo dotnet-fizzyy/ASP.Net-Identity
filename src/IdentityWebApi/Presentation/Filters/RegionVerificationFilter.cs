@@ -47,10 +47,10 @@ public class RegionVerificationFilter : IAsyncActionFilter
             var ipAddressDetails = await this.netService.GetIpAddressDetails(userIpV4);
 
             var isCountryCodeMissing = string.IsNullOrEmpty(ipAddressDetails.CountryCode);
-            var isRequestRegionProhibited = this.appSettings.RegionsVerificationSettings.ProhibitedRegions
-                .Any(reg =>
-                    string.Equals(reg, ipAddressDetails.CountryCode, StringComparison.OrdinalIgnoreCase)
-                );
+            var isRequestRegionProhibited =
+                this.appSettings.RegionsVerificationSettings.ProhibitedRegions
+                    .Any(reg =>
+                        string.Equals(reg, ipAddressDetails.CountryCode, StringComparison.OrdinalIgnoreCase));
 
             if (isCountryCodeMissing || isRequestRegionProhibited)
             {
