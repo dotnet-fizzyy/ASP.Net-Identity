@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.Role.Queries.GetRoleById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
@@ -41,12 +42,12 @@ public class RoleController : ControllerBase
     /// <response code="200">Role has been found.</response>
     /// <response code="404">Unable to find role.</response>
     /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="RoleDto"/> Role.
+    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="RoleResult"/> Role.
     /// </returns>
     [HttpGet("id/{id:guid}")]
-    [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RoleResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<RoleDto>> GetRoleById(Guid id)
+    public async Task<ActionResult<RoleResult>> GetRoleById(Guid id)
     {
         var query = new GetRoleByIdQuery(id);
         var roleResult = await this.Mediator.Send(query);

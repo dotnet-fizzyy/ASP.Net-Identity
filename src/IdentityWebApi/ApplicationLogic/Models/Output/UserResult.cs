@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 
-namespace IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Common;
+
+namespace IdentityWebApi.ApplicationLogic.Models.Output;
 
 /// <summary>
-/// User result DTO model.
+/// Result "User" model.
 /// </summary>
-public class UserResultDto : BaseUserDto
+public class UserResult : BaseUser
 {
     /// <summary>
     /// Gets or sets user roles names.

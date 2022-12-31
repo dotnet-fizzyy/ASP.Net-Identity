@@ -26,7 +26,7 @@ namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
 /// <summary>
 /// Create user CQRS handler.
 /// </summary>
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ServiceResult<UserDto>>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ServiceResult<Models.Action.UserDto>>
 {
     private readonly UserManager<AppUser> userManager;
     private readonly RoleManager<AppRole> roleManager;
@@ -65,11 +65,11 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<UserDto>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
+    public async Task<ServiceResult<Models.Action.UserDto>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
-        var userEntity = this.mapper.Map<AppUser>(command.User);
+        var userEntity = this.mapper.Map<AppUser>(command.UserDto);
 
-        var userCreationResult = await this.ProcessUserCreation(userEntity, command.User.Password);
+        var userCreationResult = await this.ProcessUserCreation(userEntity, command.UserDto.Password);
         if (userCreationResult.IsResultFailed)
         {
             return GenerateHandlerErrorResult(userCreationResult);
@@ -77,9 +77,9 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
         var createdUser = userCreationResult.Data;
 
-        if (!string.IsNullOrEmpty(command.User.UserRole))
+        if (!string.IsNullOrEmpty(command.UserDto.UserRole))
         {
-            var roleAssignmentResult = await this.ProcessRoleAssignment(createdUser, command.User.UserRole);
+            var roleAssignmentResult = await this.ProcessRoleAssignment(createdUser, command.UserDto.UserRole);
             if (roleAssignmentResult.IsResultFailed)
             {
                 return GenerateHandlerErrorResult(roleAssignmentResult);
@@ -98,13 +98,13 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
             }
         }
 
-        var userDto = this.mapper.Map<UserDto>(createdUser);
+        var userDto = this.mapper.Map<Models.Action.UserDto>(createdUser);
 
-        return new ServiceResult<UserDto>(ServiceResultType.Success, userDto);
+        return new ServiceResult<Models.Action.UserDto>(ServiceResultType.Success, userDto);
     }
 
-    private static ServiceResult<UserDto> GenerateHandlerErrorResult(ServiceResult serviceResult) =>
-        serviceResult.GenerateErrorResult<UserDto>();
+    private static ServiceResult<Models.Action.UserDto> GenerateHandlerErrorResult(ServiceResult serviceResult) =>
+        serviceResult.GenerateErrorResult<Models.Action.UserDto>();
 
     /// <summary>
     /// Creates user entity.

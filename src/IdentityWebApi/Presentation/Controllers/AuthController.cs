@@ -1,7 +1,7 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.ConfirmEmail;
-using IdentityWebApi.ApplicationLogic.Services.User.Models;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
     /// A <see cref="Task"/> representing the asynchronous operation.
     /// </returns>
     [HttpPost("sign-up")]
-    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationDto userModel)
     {
@@ -94,9 +94,9 @@ public class AuthController : ControllerBase
     /// A <see cref="Task"/> representing the asynchronous operation.
     /// </returns>
     [HttpPost("sign-in")]
-    [ProducesResponseType(typeof(AuthUserResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(AuthUserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<AuthUserResponse>> SignIn([FromBody, BindRequired] UserSignInDto userModel)
+    public async Task<ActionResult<AuthUserResult>> SignIn([FromBody, BindRequired] UserSignInDto userModel)
     {
         var authUserCommand = new AuthenticateUserCommand(userModel.Email, userModel.Password);
         var authUserResult = await this.Mediator.Send(authUserCommand);

@@ -2,6 +2,7 @@ using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Results;
 
 using System.Threading.Tasks;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.Core.Interfaces.ApplicationLogic;
 
@@ -15,14 +16,14 @@ public interface IAuthService
     /// </summary>
     /// <param name="userModel"><see cref="UserRegistrationDto"/>.</param>
     /// <returns>A <see cref="ServiceResult{T}"/> with created user and confirmation email token.</returns>
-    Task<ServiceResult<(UserResultDto userDto, string token)>> SignUpUserAsync(UserRegistrationDto userModel);
+    Task<ServiceResult<(UserResult userDto, string token)>> SignUpUserAsync(UserRegistrationDto userModel);
 
     /// <summary>
     /// Performs user sign-up.
     /// </summary>
     /// <param name="userModel"><see cref="UserSignInDto"/>.</param>
     /// <returns>A <see cref="ServiceResult{T}"/> with user.</returns>
-    Task<ServiceResult<UserResultDto>> SignInUserAsync(UserSignInDto userModel);
+    Task<ServiceResult<UserResult>> SignInUserAsync(UserSignInDto userModel);
 
     /// <summary>
     /// Confirms user email.

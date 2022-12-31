@@ -11,13 +11,14 @@ using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.UpdateUser;
 
 /// <summary>
 /// Update user CQRS handler.
 /// </summary>
-public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ServiceResult<UserResultDto>>
+public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ServiceResult<UserResult>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
@@ -34,27 +35,27 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Servi
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<UserResultDto>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
+    public async Task<ServiceResult<UserResult>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
-        var existingAppUser = await this.GetUser(command.User.Id);
+        var existingAppUser = await this.GetUser(command.UserDto.Id);
         if (existingAppUser == null)
         {
-            return new ServiceResult<UserResultDto>(ServiceResultType.NotFound);
+            return new ServiceResult<UserResult>(ServiceResultType.NotFound);
         }
 
-        UpdateUserDetails(existingAppUser, command.User);
+        UpdateUserDetails(existingAppUser, command.UserDto);
 
         await this.databaseContext.SaveChangesAsync();
 
-        var updatedUserDto = this.mapper.Map<AppUser, UserResultDto>(existingAppUser);
+        var updatedUserDto = this.mapper.Map<AppUser, UserResult>(existingAppUser);
 
-        return new ServiceResult<UserResultDto>(ServiceResultType.Success, updatedUserDto);
+        return new ServiceResult<UserResult>(ServiceResultType.Success, updatedUserDto);
     }
 
     private async Task<AppUser> GetUser(Guid id) =>
         await this.databaseContext.SearchById<AppUser>(id);
 
-    private static void UpdateUserDetails(AppUser appUser, UserDto userDto)
+    private static void UpdateUserDetails(AppUser appUser, Models.Action.UserDto userDto)
     {
         appUser.UserName = userDto.UserName;
         appUser.PhoneNumber = userDto.PhoneNumber;

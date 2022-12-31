@@ -5,13 +5,14 @@ using IdentityWebApi.Core.Results;
 using MediatR;
 
 using System;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 
 /// <summary>
 /// Get user by id CQRS query.
 /// </summary>
-public record GetUserByIdQuery : IBaseId, IRequest<ServiceResult<UserResultDto>>
+public record GetUserByIdQuery : IBaseId, IRequest<ServiceResult<UserResult>>
 {
     /// <summary>
     /// Gets user id.

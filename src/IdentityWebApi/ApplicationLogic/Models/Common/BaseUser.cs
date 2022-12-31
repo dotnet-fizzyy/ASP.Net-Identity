@@ -1,11 +1,11 @@
 using System;
 
-namespace IdentityWebApi.ApplicationLogic.Models.Action;
+namespace IdentityWebApi.ApplicationLogic.Models.Common;
 
 /// <summary>
-/// Base User DTO model.
+/// Base "User" model.
 /// </summary>
-public abstract class BaseUserDto
+public abstract class BaseUser
 {
     /// <summary>
     /// Gets or sets user id.

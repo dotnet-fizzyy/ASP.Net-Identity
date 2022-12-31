@@ -48,9 +48,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ApplicationLogic\Models" />
       <Folder Include="ApplicationLogic\Services\EmailTemplate\Commands" />
       <Folder Include="ApplicationLogic\Services\EmailTemplate\Queries" />
+      <Folder Include="ApplicationLogic\Services\Role\Commands" />
       <Folder Include="Infrastructure\Database\Migrations" />
     </ItemGroup>
 

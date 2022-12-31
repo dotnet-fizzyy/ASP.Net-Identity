@@ -1,4 +1,4 @@
-using IdentityWebApi.ApplicationLogic.Services.User.Models;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.Core.Results;
 
 using MediatR;
@@ -8,7 +8,7 @@ namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.AuthenticateUse
 /// <summary>
 /// Authenticate user CQRS command.
 /// </summary>
-public record AuthenticateUserCommand : IRequest<ServiceResult<AuthUserResponse>>
+public record AuthenticateUserCommand : IRequest<ServiceResult<AuthUserResult>>
 {
     /// <summary>
     /// Gets user email.

@@ -1,9 +1,11 @@
+using IdentityWebApi.ApplicationLogic.Models.Common;
+
 namespace IdentityWebApi.ApplicationLogic.Models.Action;
 
 /// <summary>
 /// User DTO model.
 /// </summary>
-public class UserDto : BaseUserDto
+public class UserDto : BaseUser
 {
     /// <summary>
     /// Gets or sets password.

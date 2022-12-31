@@ -8,12 +8,12 @@ namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
 /// <summary>
 /// Create user CQRS command.
 /// </summary>
-public record CreateUserCommand : IRequest<ServiceResult<UserDto>>
+public record CreateUserCommand : IRequest<ServiceResult<Models.Action.UserDto>>
 {
     /// <summary>
     /// Gets user.
     /// </summary>
-    public UserDto User { get; }
+    public Models.Action.UserDto UserDto { get; }
 
     /// <summary>
     /// Gets a value indicating whether email confirmation should be processed immediately.
@@ -23,11 +23,11 @@ public record CreateUserCommand : IRequest<ServiceResult<UserDto>>
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateUserCommand"/> class.
     /// </summary>
-    /// <param name="user"><see cref="UserDto"/>.</param>
+    /// <param name="userDto"><see cref="UserDto"/>.</param>
     /// <param name="confirmEmailImmediately">indicating whether email confirmation should be immediate.</param>
-    public CreateUserCommand(UserDto user, bool confirmEmailImmediately)
+    public CreateUserCommand(Models.Action.UserDto userDto, bool confirmEmailImmediately)
     {
-        this.User = user;
+        this.UserDto = userDto;
         this.ConfirmEmailImmediately = confirmEmailImmediately;
     }
 }

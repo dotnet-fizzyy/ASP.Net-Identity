@@ -4,6 +4,7 @@ using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Entities;
 
 using System.Linq;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.ApplicationLogic.Mappers;
 
@@ -17,7 +18,7 @@ public class UserProfile : Profile
     /// </summary>
     public UserProfile()
     {
-        this.CreateMap<AppUser, UserResultDto>()
+        this.CreateMap<AppUser, UserResult>()
             .ForMember(
                 dist => dist.Roles,
                 opts =>

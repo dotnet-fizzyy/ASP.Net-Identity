@@ -1,4 +1,5 @@
 using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.HardRemoveUserById;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.SoftRemoveUserById;
@@ -43,9 +44,9 @@ public class UserController : ControllerBase
     /// </returns>
     [Authorize]
     [HttpGet]
-    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserResultDto>> GetUserByIdentity()
+    public async Task<ActionResult<UserResult>> GetUserByIdentity()
     {
         var userIdResult = ClaimsService.GetUserIdFromIdentityUser(this.User);
 
@@ -78,9 +79,9 @@ public class UserController : ControllerBase
     /// </returns>
     [Authorize]
     [HttpGet("id/{id:guid}")]
-    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserResultDto>> GetUser(Guid id)
+    public async Task<ActionResult<UserResult>> GetUser(Guid id)
     {
         var query = new GetUserByIdQuery(id);
         var userResult = await this.Mediator.Send(query);
@@ -96,7 +97,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Creates user entity.
     /// </summary>
-    /// <param name="user"><see cref="UserDto"/>.</param>
+    /// <param name="userDto"><see cref="UserDto"/>.</param>
     /// <response code="201">User has been created.</response>
     /// <response code="404">Role to assign to user is not found.</response>
     /// <response code="500">Unable to create user due to internal issues.</response>
@@ -105,13 +106,13 @@ public class UserController : ControllerBase
     /// </returns>
     [Authorize]
     [HttpPost]
-    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<UserResultDto>> CreateUser([FromBody, BindRequired] UserDto user)
+    public async Task<ActionResult<UserResult>> CreateUser([FromBody, BindRequired] UserDto userDto)
     {
         // todo: extract from body
-        var command = new CreateUserCommand(user, false);
+        var command = new CreateUserCommand(userDto, false);
         var userCreationResult = await this.Mediator.Send(command);
 
         if (userCreationResult.IsResultFailed)
@@ -125,7 +126,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Updates user entity.
     /// </summary>
-    /// <param name="user"><see cref="UserDto"/>.</param>
+    /// <param name="userDto"><see cref="UserDto"/>.</param>
     /// <response code="200">User details have been updated.</response>
     /// <response code="404">Unable to find user.</response>
     /// <returns>
@@ -133,11 +134,11 @@ public class UserController : ControllerBase
     /// </returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpPut]
-    [ProducesResponseType(typeof(UserResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserResultDto>> UpdateUser([FromBody, BindRequired] UserDto user)
+    public async Task<ActionResult<UserResult>> UpdateUser([FromBody, BindRequired] UserDto userDto)
     {
-        var command = new UpdateUserCommand(user);
+        var command = new UpdateUserCommand(userDto);
         var userUpdateResult = await this.Mediator.Send(command);
 
         if (userUpdateResult.IsResultFailed)

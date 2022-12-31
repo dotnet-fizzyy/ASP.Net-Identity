@@ -1,12 +1,11 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace IdentityWebApi.Presentation.Models.Response;
+
+#pragma warning disable SA1313
 
 /// <summary>
 /// Error response model.
 /// </summary>
-/// <param name="Message">qwe.</param>
-[SuppressMessage("StyleCop.CSharp.NamingRules", "SA1313:Parameter names should begin with lower-case letter", Justification = "<Pending />")]
+/// <param name="Message">Error message.</param>
 internal record ErrorResponse(string Message)
 {
     /// <summary>

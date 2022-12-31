@@ -11,13 +11,14 @@ using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 
 /// <summary>
 /// Gets user by id query CQRS handler.
 /// </summary>
-public class GetsUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, ServiceResult<UserResultDto>>
+public class GetsUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, ServiceResult<UserResult>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
@@ -34,17 +35,17 @@ public class GetsUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, Servic
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<UserResultDto>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
+    public async Task<ServiceResult<UserResult>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
         var userEntity = await this.databaseContext.SearchById<AppUser>(query.Id);
 
         if (userEntity == null)
         {
-            return new ServiceResult<UserResultDto>(ServiceResultType.NotFound);
+            return new ServiceResult<UserResult>(ServiceResultType.NotFound);
         }
 
-        var userDto = this.mapper.Map<UserResultDto>(userEntity);
+        var userDto = this.mapper.Map<UserResult>(userEntity);
 
-        return new ServiceResult<UserResultDto>(userDto);
+        return new ServiceResult<UserResult>(userDto);
     }
 }

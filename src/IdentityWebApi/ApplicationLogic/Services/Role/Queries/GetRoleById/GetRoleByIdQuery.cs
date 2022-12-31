@@ -1,17 +1,17 @@
-using System;
-
-using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.Common;
 using IdentityWebApi.Core.Results;
 
 using MediatR;
+
+using System;
 
 namespace IdentityWebApi.ApplicationLogic.Services.Role.Queries.GetRoleById;
 
 /// <summary>
 /// Get role by id CQRS query.
 /// </summary>
-public record GetRoleByIdQuery : IBaseId, IRequest<ServiceResult<RoleDto>>
+public record GetRoleByIdQuery : IBaseId, IRequest<ServiceResult<RoleResult>>
 {
     /// <summary>
     /// Gets role id.

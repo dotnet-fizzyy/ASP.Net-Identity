@@ -22,8 +22,7 @@ public sealed class DatabaseContext : IdentityDbContext<
     AppUserRole,
     IdentityUserLogin<Guid>,
     IdentityRoleClaim<Guid>,
-    IdentityUserToken<Guid>
->
+    IdentityUserToken<Guid>>
 {
     /// <summary>
     /// Gets or sets <see cref="EmailTemplate"/> table.
@@ -48,7 +47,7 @@ public sealed class DatabaseContext : IdentityDbContext<
     /// <returns>Entity by search criteria.</returns>
     public async Task<T> SearchById<T>(Guid id)
         where T : class, IBaseEntity =>
-            await this.Set<T>().SingleOrDefaultAsync(x => x.Id == id);
+            await this.Set<T>().SingleOrDefaultAsync(entity => entity.Id == id);
 
     /// <summary>
     /// Searches for entity by id with including properties.
@@ -62,16 +61,15 @@ public sealed class DatabaseContext : IdentityDbContext<
         where T : class, IBaseEntity
     {
         var query = includeTracking
-            ? this.Set<T>().Where(x => x.Id == id)
-            : this.Set<T>().Where(x => x.Id == id).AsNoTracking();
+            ? this.Set<T>().Where(entity => entity.Id == id)
+            : this.Set<T>().Where(entity => entity.Id == id).AsNoTracking();
 
         if (includes.Any())
         {
             query = includes
                 .Aggregate(
                     query,
-                    (current, includeProperty) => current.Include(includeProperty)
-                );
+                    (current, includeProperty) => current.Include(includeProperty));
         }
 
         return await query.SingleOrDefaultAsync();
