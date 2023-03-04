@@ -66,10 +66,14 @@ internal static class IdentityServerExtensions
 
         foreach (var role in roles)
         {
-            if (!await roleManager.RoleExistsAsync(role))
+            var isRoleAlreadyExists = await roleManager.RoleExistsAsync(role);
+
+            if (isRoleAlreadyExists)
             {
-                await roleManager.CreateAsync(new AppRole { Name = role });
+                continue;
             }
+
+            await roleManager.CreateAsync(new AppRole { Name = role });
         }
     }
 
@@ -107,6 +111,7 @@ internal static class IdentityServerExtensions
             }
 
             var existingAdmin = await userManager.FindByEmailAsync(defaultUser.Email);
+
             if (existingAdmin != null)
             {
                 await ConfirmDefaultAdminEmail(userManager, existingAdmin, requireConfirmation);
@@ -120,10 +125,14 @@ internal static class IdentityServerExtensions
                 Email = defaultUser.Email,
             };
 
-            await userManager.CreateAsync(appUserAdmin, defaultUser.Password);
-            await userManager.AddToRoleAsync(appUserAdmin, defaultUser.Role);
-
-            await ConfirmDefaultAdminEmail(userManager, appUserAdmin, requireConfirmation);
+            await userManager
+                .CreateAsync(appUserAdmin, defaultUser.Password)
+                .ContinueWith(
+                    _ => userManager.AddToRoleAsync(appUserAdmin, defaultUser.Role),
+                    TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.NotOnCanceled)
+                .ContinueWith(
+                    _ => ConfirmDefaultAdminEmail(userManager, appUserAdmin, requireConfirmation),
+                    TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.NotOnCanceled);
         }
     }
 
@@ -132,7 +141,9 @@ internal static class IdentityServerExtensions
         AppUser appUserAdmin,
         bool requireConfirmation)
     {
-        if (requireConfirmation && !await userManager.IsEmailConfirmedAsync(appUserAdmin))
+        var isEmailAlreadyConfirmed = await userManager.IsEmailConfirmedAsync(appUserAdmin);
+
+        if (requireConfirmation && !isEmailAlreadyConfirmed)
         {
             var token = await userManager.GenerateEmailConfirmationTokenAsync(appUserAdmin);
 
