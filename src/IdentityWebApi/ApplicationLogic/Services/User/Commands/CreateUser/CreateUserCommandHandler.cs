@@ -38,13 +38,13 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateUserCommandHandler"/> class.
     /// </summary>
-    /// <param name="userManager"><see cref="UserManager{T}"/>.</param>
-    /// <param name="roleManager"><see cref="RoleManager{T}"/>.</param>
-    /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
-    /// <param name="emailService"><see cref="IEmailService"/>.</param>
-    /// <param name="httpContextService"><see cref="IHttpContextService"/>.</param>
-    /// <param name="mapper"><see cref="IMapper"/>.</param>
+    /// <param name="userManager">Instance of <see cref="UserManager{T}"/>.</param>
+    /// <param name="roleManager">Instance of <see cref="RoleManager{T}"/>.</param>
+    /// <param name="databaseContext">Instance of <see cref="DatabaseContext"/>.</param>
+    /// <param name="appSettings">Instance of <see cref="AppSettings"/>.</param>
+    /// <param name="emailService">Instance of <see cref="IEmailService"/>.</param>
+    /// <param name="httpContextService">Instance of <see cref="IHttpContextService"/>.</param>
+    /// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
     public CreateUserCommandHandler(
         UserManager<AppUser> userManager,
         RoleManager<AppRole> roleManager,
@@ -68,7 +68,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     {
         var userEntity = this.mapper.Map<AppUser>(command.UserDto);
 
-        var userCreationResult = await this.ProcessUserCreation(userEntity, command.UserDto.Password);
+        var userCreationResult = await this.CreateUserAsync(userEntity, command.UserDto.Password);
+
         if (userCreationResult.IsResultFailed)
         {
             return GenerateHandlerErrorResult(userCreationResult);
@@ -78,7 +79,9 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
         if (!string.IsNullOrEmpty(command.UserDto.UserRole))
         {
-            var roleAssignmentResult = await this.ProcessRoleAssignment(createdUser, command.UserDto.UserRole);
+            var roleAssignmentResult =
+                    await this.AssignRoleAsync(createdUser, command.UserDto.UserRole);
+
             if (roleAssignmentResult.IsResultFailed)
             {
                 return GenerateHandlerErrorResult(roleAssignmentResult);
@@ -87,9 +90,9 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
         if (this.appSettings.IdentitySettings.Email.RequireConfirmation)
         {
-            var confirmationEmailResult = await this.ProcessUserEmailConfirmation(
-                createdUser,
-                command.ConfirmEmailImmediately);
+            var confirmationEmailResult =
+                    await this.ProcessUserEmailConfirmationAsync(createdUser, command.ConfirmEmailImmediately);
+
             if (confirmationEmailResult.IsResultFailed)
             {
                 return GenerateHandlerErrorResult(confirmationEmailResult);
@@ -101,12 +104,10 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult<Models.Action.UserDto>(ServiceResultType.Success, userDto);
     }
 
-    private static ServiceResult<Models.Action.UserDto> GenerateHandlerErrorResult(ServiceResult serviceResult) =>
-        serviceResult.GenerateErrorResult<Models.Action.UserDto>();
-
-    private async Task<ServiceResult<AppUser>> ProcessUserCreation(AppUser user, string password)
+    private async Task<ServiceResult<AppUser>> CreateUserAsync(AppUser user, string password)
     {
         var userCreationResult = await this.userManager.CreateAsync(user, password);
+
         if (!userCreationResult.Succeeded)
         {
             return new ServiceResult<AppUser>(
@@ -117,9 +118,10 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult<AppUser>(ServiceResultType.Success, user);
     }
 
-    private async Task<ServiceResult> ProcessRoleAssignment(AppUser user, string role)
+    private async Task<ServiceResult> AssignRoleAsync(AppUser user, string role)
     {
         var existingRole = await this.roleManager.FindByNameAsync(role);
+
         if (existingRole == null)
         {
             return new ServiceResult(
@@ -128,6 +130,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         }
 
         var roleAssignmentResult = await this.userManager.AddToRoleAsync(user, role);
+
         if (!roleAssignmentResult.Succeeded)
         {
             return new ServiceResult<AppUser>(
@@ -138,13 +141,14 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult(ServiceResultType.Success);
     }
 
-    private async Task<ServiceResult> ProcessUserEmailConfirmation(AppUser user, bool shouldConfirmImmediately)
+    private async Task<ServiceResult> ProcessUserEmailConfirmationAsync(AppUser user, bool shouldConfirmImmediately)
     {
-        var confirmationToken = await this.GenerateConfirmationToken(user);
+        var confirmationToken = await this.GenerateEmailConfirmationTokenAsync(user);
 
         if (shouldConfirmImmediately)
         {
             var confirmationEmailResult = await this.ConfirmUserEmail(user, confirmationToken);
+
             if (confirmationEmailResult.IsResultFailed)
             {
                 return confirmationEmailResult.GenerateErrorResult();
@@ -161,6 +165,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     private async Task<ServiceResult<string>> ConfirmUserEmail(AppUser user, string confirmationToken)
     {
         var emailConfirmationResult = await this.userManager.ConfirmEmailAsync(user, confirmationToken);
+
         if (!emailConfirmationResult.Succeeded)
         {
             return new ServiceResult<string>(
@@ -171,7 +176,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult<string>(ServiceResultType.Success, confirmationToken);
     }
 
-    private async Task<string> GenerateConfirmationToken(AppUser user) =>
+    private async Task<string> GenerateEmailConfirmationTokenAsync(AppUser user) =>
         await this.userManager.GenerateEmailConfirmationTokenAsync(user);
 
     private void SendConfirmationEmail(string email, string confirmationToken)
@@ -184,13 +189,16 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(email, confirmationToken);
 
         var emailTemplate =
-            this.databaseContext.EmailTemplates.Single(template =>
-                template.Id == EntityConfigurationConstants.EmailConfirmationTemplateId);
+                this.databaseContext.EmailTemplates.Single(
+                    template => template.Id == EntityConfigurationConstants.EmailConfirmationTemplateId);
 
         var emailLayout = GenerateEmailLayout(emailTemplate.Layout, confirmationLink);
 
         this.emailService.SendEmailAsync(email, emailTemplate.Subject, emailLayout);
     }
+
+    private static ServiceResult<Models.Action.UserDto> GenerateHandlerErrorResult(ServiceResult serviceResult) =>
+        serviceResult.GenerateErrorResult<Models.Action.UserDto>();
 
     private static string GenerateEmailLayout(string predefinedEmailLayout, string confirmationLink)
     {
