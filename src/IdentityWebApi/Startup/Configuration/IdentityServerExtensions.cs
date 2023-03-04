@@ -1,4 +1,5 @@
 using IdentityWebApi.Core.Entities;
+using IdentityWebApi.Core.Utilities;
 using IdentityWebApi.Infrastructure.Database;
 using IdentityWebApi.Startup.ApplicationSettings;
 
@@ -8,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Startup.Configuration;
@@ -57,7 +57,7 @@ internal static class IdentityServerExtensions
     {
         using var scope = serviceProvider.CreateScope();
 
-        if (IsCollectionNullOrEmpty(roles))
+        if (roles.IsNullOrEmpty())
         {
             return;
         }
@@ -87,7 +87,7 @@ internal static class IdentityServerExtensions
     {
         using var scope = serviceProvider.CreateScope();
 
-        if (IsCollectionNullOrEmpty(defaultUsers))
+        if (defaultUsers.IsNullOrEmpty())
         {
             return;
         }
@@ -126,9 +126,6 @@ internal static class IdentityServerExtensions
             await ConfirmDefaultAdminEmail(userManager, appUserAdmin, requireConfirmation);
         }
     }
-
-    private static bool IsCollectionNullOrEmpty<T>(ICollection<T> collection) =>
-        collection == null || !collection.Any();
 
     private static async Task ConfirmDefaultAdminEmail(
         UserManager<AppUser> userManager,
