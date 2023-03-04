@@ -2,7 +2,6 @@ using AutoMapper;
 
 using HandlebarsDotNet;
 
-using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
@@ -105,18 +104,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     private static ServiceResult<Models.Action.UserDto> GenerateHandlerErrorResult(ServiceResult serviceResult) =>
         serviceResult.GenerateErrorResult<Models.Action.UserDto>();
 
-    /// <summary>
-    /// Creates user entity.
-    /// </summary>
-    /// <param name="user">
-    /// <see cref="AppUser"/>.
-    /// </param>
-    /// <param name="password">
-    /// User password.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="ServiceResult"/>.
-    /// </returns>
     private async Task<ServiceResult<AppUser>> ProcessUserCreation(AppUser user, string password)
     {
         var userCreationResult = await this.userManager.CreateAsync(user, password);
@@ -130,18 +117,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult<AppUser>(ServiceResultType.Success, user);
     }
 
-    /// <summary>
-    /// Assigns role to newly created user.
-    /// </summary>
-    /// <param name="user">
-    /// <see cref="AppUser"/>.
-    /// </param>
-    /// <param name="role">
-    /// Role to assign.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="ServiceResult"/>.
-    /// </returns>
     private async Task<ServiceResult> ProcessRoleAssignment(AppUser user, string role)
     {
         var existingRole = await this.roleManager.FindByNameAsync(role);
@@ -163,18 +138,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult(ServiceResultType.Success);
     }
 
-    /// <summary>
-    /// Processes user email confirmation.
-    /// </summary>
-    /// <param name="user">
-    /// <see cref="AppUser"/>.
-    /// </param>
-    /// <param name="shouldConfirmImmediately">
-    /// Indicates whether newly created user email should be confirmed without email sending.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="ServiceResult"/>.
-    /// </returns>.
     private async Task<ServiceResult> ProcessUserEmailConfirmation(AppUser user, bool shouldConfirmImmediately)
     {
         var confirmationToken = await this.GenerateConfirmationToken(user);
@@ -213,9 +176,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
     private void SendConfirmationEmail(string email, string confirmationToken)
     {
-        Task
-            .Run(() => this.HandleUserEmailConfirmationSending(email, confirmationToken))
-            .ConfigureAwait(continueOnCapturedContext: false);
+        Task.Run(() => this.HandleUserEmailConfirmationSending(email, confirmationToken));
     }
 
     private void HandleUserEmailConfirmationSending(string email, string confirmationToken)
@@ -234,10 +195,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     private static string GenerateEmailLayout(string predefinedEmailLayout, string confirmationLink)
     {
         var template = Handlebars.Compile(predefinedEmailLayout);
-        var templateData = new
-        {
-            link = confirmationLink,
-        };
+        var templateData = new { link = confirmationLink };
 
         return template(templateData);
     }
