@@ -8,9 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-co
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityWebApi.UnitTests", "tests\IdentityWebApi.UnitTests\IdentityWebApi.UnitTests.csproj", "{3504A9E3-C8CC-4C62-B8BF-11F30D7CDE3B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{04040511-EE86-4A54-99F3-32C08E1F5D70} = {04040511-EE86-4A54-99F3-32C08E1F5D70}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{234FB9EC-F9A4-43E6-A3B8-65E0E4404132}"
 EndProject
