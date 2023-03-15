@@ -18,7 +18,7 @@ public class EmailService : IEmailService
     /// <summary>
     /// Initializes a new instance of the <see cref="EmailService"/> class.
     /// </summary>
-    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
+    /// <param name="appSettings">Instance of <see cref="AppSettings"/>.</param>
     public EmailService(AppSettings appSettings)
     {
         this.appSettings = appSettings;
@@ -29,15 +29,14 @@ public class EmailService : IEmailService
     {
         var email = new MimeMessage();
 
-        email.From.Add(new MailboxAddress(
+        email.From.Add(
+            new MailboxAddress(
                 this.appSettings.SmtpClientSettings.EmailName,
                 this.appSettings.SmtpClientSettings.EmailAddress));
-        email.To.Add(new MailboxAddress(string.Empty, emailToSend));
+        email.To.Add(new MailboxAddress(name: string.Empty, emailToSend));
+
         email.Subject = subject;
-        email.Body = new TextPart(TextFormat.Html)
-        {
-            Text = message,
-        };
+        email.Body = new TextPart(TextFormat.Html) { Text = message, };
 
         using var smtpClient = new SmtpClient();
 
@@ -51,6 +50,6 @@ public class EmailService : IEmailService
             this.appSettings.SmtpClientSettings.Password);
         await smtpClient.SendAsync(email);
 
-        await smtpClient.DisconnectAsync(true);
+        await smtpClient.DisconnectAsync(quit: true);
     }
 }
