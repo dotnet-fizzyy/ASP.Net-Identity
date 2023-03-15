@@ -1,0 +1,13 @@
+#!/bin/sh
+
+dotnet clean; dotnet build
+
+rc=$?
+
+if [[ $rc != 0 ]];
+then
+  echo "building failed"
+  exit $rc
+fi
+
+exit 0
