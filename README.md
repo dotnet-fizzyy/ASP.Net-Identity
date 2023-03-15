@@ -33,11 +33,12 @@ Before launching this application make sure you have prepared the following comp
    ```sh
    git clone https://github.com/dotnet-fizzyy/ASP.Net-Identity.git
    ```
-2. Run **IdentityWebApi.sln** in the root directory;
-3. Depending on your OS, choose IIS or Kestrel as hosting webservices;
-4. Make sure your MSSQL database instance is running. Otherwise you will not be able to launch app;
-5. Start the application;
-6. Visit the following URL: https://localhost:{port}/swagger. You should be able to see Swagger description;
+2. Execute the following command to configure git hooks for repository: `git config --local core.hooksPath .githooks/`. If you use Linux/MacOS, make sure you have enough permissions to run hooks, execute the following command: `sudo chmod +x .githooks/*`.
+3. Run **IdentityWebApi.sln** in the root directory;
+4. Depending on your OS, choose IIS or Kestrel as hosting webservices;
+5. Make sure your MSSQL database instance is running. Otherwise you will not be able to launch app;
+6. Start the application;
+7. Visit the following URL: https://localhost:{port}/swagger. You should be able to see Swagger description;
 
 ### Docker launch
 
