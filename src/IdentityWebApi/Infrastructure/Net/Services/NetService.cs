@@ -36,7 +36,8 @@ public class NetService : INetService
     /// <inheritdoc />
     public async Task<IpAddressDetails> GetIpAddressDetails(string ipv4)
     {
-        var httpResponse = await HttpClient.GetAsync($"{IpStackUrl}/{ipv4}?access_key={this.appSettings.IpStackSettings.AccessKey}");
+        var httpResponse =
+              await HttpClient.GetAsync($"{IpStackUrl}/{ipv4}?access_key={this.appSettings.IpStackSettings.AccessKey}");
         var responseMessage = httpResponse.EnsureSuccessStatusCode();
 
         var jsonResponseMessage = await responseMessage.Content.ReadAsStringAsync();

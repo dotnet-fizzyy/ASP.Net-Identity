@@ -20,6 +20,7 @@ public abstract class BaseRepository<T> : IBaseRepository<T>
     /// Database EF context.
     /// </summary>
     protected readonly DatabaseContext DatabaseContext;
+
     private readonly DbSet<T> entity;
 
     /// <summary>

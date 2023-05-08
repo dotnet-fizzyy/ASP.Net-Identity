@@ -29,8 +29,7 @@ public class AuthService : IAuthService
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<(UserResult userDto, string token)>> SignUpUserAsync(
-        UserRegistrationDto userModel)
+    public async Task<ServiceResult<(UserResult userDto, string token)>> SignUpUserAsync(UserRegistrationDto userModel)
     {
         var userEntity = this.mapper.Map<AppUser>(userModel);
 

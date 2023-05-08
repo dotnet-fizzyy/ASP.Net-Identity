@@ -13,7 +13,7 @@ public class GetEmailTemplateByIdQueryValidator : AbstractValidator<GetEmailTemp
     /// Initializes a new instance of the <see cref="GetEmailTemplateByIdQueryValidator"/> class.
     /// </summary>
     public GetEmailTemplateByIdQueryValidator()
-     {
-          this.Include(new BaseIdValidator());
-     }
+    {
+        this.Include(new BaseIdValidator());
+    }
 }

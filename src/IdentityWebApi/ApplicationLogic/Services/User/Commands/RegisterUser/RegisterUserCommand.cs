@@ -1,4 +1,5 @@
 using IdentityWebApi.Core.Results;
+
 using MediatR;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.RegisterUser;

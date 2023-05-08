@@ -16,7 +16,8 @@ namespace IdentityWebApi.ApplicationLogic.Services.EmailTemplate.Queries.GetEmai
 /// <summary>
 /// Gets email template by id query CQRS handler.
 /// </summary>
-public class GetEmailTemplateByIdQueryHandler : IRequestHandler<GetEmailTemplateByIdQuery, ServiceResult<EmailTemplateDto>>
+public class
+    GetEmailTemplateByIdQueryHandler : IRequestHandler<GetEmailTemplateByIdQuery, ServiceResult<EmailTemplateDto>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
@@ -33,7 +34,8 @@ public class GetEmailTemplateByIdQueryHandler : IRequestHandler<GetEmailTemplate
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<EmailTemplateDto>> Handle(GetEmailTemplateByIdQuery query, CancellationToken cancellationToken)
+    public async Task<ServiceResult<EmailTemplateDto>> Handle(
+        GetEmailTemplateByIdQuery query, CancellationToken cancellationToken)
     {
         var emailTemplateEntity = await this.databaseContext.SearchById<Core.Entities.EmailTemplate>(query.Id);
 

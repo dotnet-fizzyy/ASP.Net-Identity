@@ -15,11 +15,11 @@ public class ConfirmEmailCommandValidator : AbstractValidator<ConfirmEmailComman
     public ConfirmEmailCommandValidator()
     {
         this.RuleFor(prop => prop.Email)
-                .NotEmpty()
-                    .WithMessage(ValidationConstants.NullOrEmptyValue);
+            .NotEmpty()
+            .WithMessage(ValidationConstants.NullOrEmptyValue);
 
         this.RuleFor(prop => prop.Token)
-                .NotEmpty()
-                    .WithMessage(ValidationConstants.NullOrEmptyValue);
+            .NotEmpty()
+            .WithMessage(ValidationConstants.NullOrEmptyValue);
     }
 }

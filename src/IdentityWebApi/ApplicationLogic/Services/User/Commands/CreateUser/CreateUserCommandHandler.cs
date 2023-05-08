@@ -64,7 +64,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<Models.Action.UserDto>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
+    public async Task<ServiceResult<Models.Action.UserDto>> Handle(
+        CreateUserCommand command, CancellationToken cancellationToken)
     {
         var userEntity = this.mapper.Map<AppUser>(command.UserDto);
 
@@ -80,7 +81,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         if (!string.IsNullOrEmpty(command.UserDto.UserRole))
         {
             var roleAssignmentResult =
-                    await this.AssignRoleAsync(createdUser, command.UserDto.UserRole);
+                  await this.AssignRoleAsync(createdUser, command.UserDto.UserRole);
 
             if (roleAssignmentResult.IsResultFailed)
             {
@@ -91,7 +92,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         if (this.appSettings.IdentitySettings.Email.RequireConfirmation)
         {
             var confirmationEmailResult =
-                    await this.ProcessUserEmailConfirmationAsync(createdUser, command.ConfirmEmailImmediately);
+                  await this.ProcessUserEmailConfirmationAsync(createdUser, command.ConfirmEmailImmediately);
 
             if (confirmationEmailResult.IsResultFailed)
             {
@@ -189,8 +190,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(email, confirmationToken);
 
         var emailTemplate =
-                this.databaseContext.EmailTemplates.Single(
-                    template => template.Id == EntityConfigurationConstants.EmailConfirmationTemplateId);
+              this.databaseContext.EmailTemplates.Single(
+                template => template.Id == EntityConfigurationConstants.EmailConfirmationTemplateId);
 
         var emailLayout = GenerateEmailLayout(emailTemplate.Layout, confirmationLink);
 
