@@ -19,7 +19,7 @@ public static class JwtService
     /// <param name="key">Original token signing key.</param>
     /// <returns><see cref="SymmetricSecurityKey"/> encoded key.</returns>
     public static SymmetricSecurityKey CreateSecuritySigningKey(string key) =>
-        new (Encoding.UTF8.GetBytes(key));
+        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
 
     /// <summary>
     /// Generates JWT token.

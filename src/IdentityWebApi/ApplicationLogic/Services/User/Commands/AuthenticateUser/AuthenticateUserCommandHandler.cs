@@ -1,6 +1,6 @@
 using AutoMapper;
 
-using IdentityWebApi.ApplicationLogic.Models.Action;
+using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.Presentation;
@@ -20,8 +20,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-
-using IdentityWebApi.ApplicationLogic.Models.Output;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 
@@ -109,7 +107,7 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
     }
 
     private static ServiceResult<AuthUserResult> GenerateFailedAuthResult() =>
-        new (ServiceResultType.InvalidData, FailedAuthenticationErrorMessage);
+        new ServiceResult<AuthUserResult>(ServiceResultType.InvalidData, FailedAuthenticationErrorMessage);
 
     private static IEnumerable<string> GetUserRoleNames(AppUser user) =>
         user.UserRoles.Select(userRole => userRole.Role.Name).ToList();
