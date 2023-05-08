@@ -26,7 +26,7 @@ public class SqliteConfiguration : IDisposable
 
         this.DatabaseContext = new DatabaseContext(options);
     }
-    
+
     public void Dispose()
     {
         this.connection?.Close();

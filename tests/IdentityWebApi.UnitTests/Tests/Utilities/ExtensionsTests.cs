@@ -22,7 +22,7 @@ public class ExtensionsTests
     {
         // Arrange
         var collection = new List<int> { 1 };
-        
+
         // Act & Assert
         Assert.False(collection.IsNullOrEmpty());
     }
