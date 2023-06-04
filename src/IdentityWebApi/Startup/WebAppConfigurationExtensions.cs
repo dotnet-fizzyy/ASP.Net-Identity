@@ -28,11 +28,11 @@ public static class WebAppConfigurationExtensions
             app.UseSwaggerApp();
         }
 
-        app.UseCors(x => x
-            .SetIsOriginAllowed(_ => true)
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials());
+        app.UseCors(policyBuilder => policyBuilder
+              .SetIsOriginAllowed(_ => true)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
