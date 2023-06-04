@@ -22,25 +22,34 @@ internal static class HealthChecksExtensions
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
     /// <param name="appUrl">API url.</param>
     /// <param name="connectionString">DB connection string.</param>
-    public static void RegisterHealthChecks(this IServiceCollection services, string appUrl, string connectionString)
+    /// <param name="enableHealthCheckUi">Enable Health-Check UI or not.</param>
+    public static void RegisterHealthChecks(
+        this IServiceCollection services,
+        string appUrl,
+        string connectionString,
+        bool enableHealthCheckUi)
     {
         services
             .AddHealthChecks()
             .AddDbContextCheck<DatabaseContext>();
 
-        services
-            .AddHealthChecksUI(options =>
-            {
-                options.AddHealthCheckEndpoint("HealthCheck API", $"{appUrl}/{HealthCheckRoute}");
-            })
-            .AddSqlServerStorage(connectionString);
+        if (enableHealthCheckUi)
+        {
+            services
+                .AddHealthChecksUI(options =>
+                {
+                    options.AddHealthCheckEndpoint("HealthCheck API", $"{appUrl}/{HealthCheckRoute}");
+                })
+                .AddSqlServerStorage(connectionString);
+        }
     }
 
     /// <summary>
     /// Adds endpoint for Health-Checks UI.
     /// </summary>
     /// <param name="endpoints"><see cref="IEndpointRouteBuilder"/>.</param>
-    public static void RegisterHealthCheckEndpoint(this IEndpointRouteBuilder endpoints)
+    /// <param name="enableHealthCheckUi">Enable Health-Check UI or not.</param>
+    public static void RegisterHealthCheckEndpoint(this IEndpointRouteBuilder endpoints, bool enableHealthCheckUi)
     {
         endpoints.MapHealthChecks(HealthCheckRoute, new HealthCheckOptions
         {
@@ -48,6 +57,9 @@ internal static class HealthChecksExtensions
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
         });
 
-        endpoints.MapHealthChecksUI(options => { options.UIPath = "/health-check-ui"; });
+        if (enableHealthCheckUi)
+        {
+            endpoints.MapHealthChecksUI(options => { options.UIPath = "/health-check-ui"; });
+        }
     }
 }

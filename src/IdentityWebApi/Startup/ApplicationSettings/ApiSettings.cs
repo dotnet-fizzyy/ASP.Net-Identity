@@ -12,4 +12,9 @@ public class ApiSettings
     /// </summary>
     [DefaultValue]
     public string Url { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether Health-Check UI should be disabled or not.
+    /// </summary>
+    public bool EnableHealthCheckUi { get; set; }
 }

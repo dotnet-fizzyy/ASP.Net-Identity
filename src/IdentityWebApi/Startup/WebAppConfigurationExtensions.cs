@@ -52,7 +52,7 @@ public static class WebAppConfigurationExtensions
         {
             endpoints.MapControllers();
 
-            endpoints.RegisterHealthCheckEndpoint();
+            endpoints.RegisterHealthCheckEndpoint(appSettings.Api.EnableHealthCheckUi);
         });
 
         app.Services

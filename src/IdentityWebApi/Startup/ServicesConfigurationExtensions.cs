@@ -32,7 +32,10 @@ public static class ServicesConfigurationExtensions
 
         services.RegisterAutomapper();
 
-        services.RegisterHealthChecks(appSettings.Api.Url, appSettings.DbSettings.ConnectionString);
+        services.RegisterHealthChecks(
+            appSettings.Api.Url,
+            appSettings.DbSettings.ConnectionString,
+            appSettings.Api.EnableHealthCheckUi);
 
         services.AddHttpContextAccessor();
 
