@@ -70,12 +70,15 @@ internal static class AuthenticationExtensions
             {
                 opt.ForwardDefaultSelector = _ =>
                 {
-                    if (identitySettings.AuthType == AuthType.Jwt)
+                    return identitySettings.AuthType switch
                     {
-                        return AuthConstants.JwtBearerAuthType;
-                    }
-
-                    return AuthConstants.CookiesAuthScheme;
+                        AuthType.Jwt =>
+                            AuthConstants.JwtBearerAuthType,
+                        AuthType.Cookies =>
+                            AuthConstants.CookiesAuthScheme,
+                        var _ =>
+                            throw new ArgumentException("Authentication type is not provided")
+                    };
                 };
             });
     }
