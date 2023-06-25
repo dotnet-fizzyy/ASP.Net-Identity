@@ -47,7 +47,7 @@ public sealed class DatabaseContext : IdentityDbContext<
     /// <returns>Entity by search criteria.</returns>
     public async Task<T> SearchById<T>(Guid id)
         where T : class, IBaseEntity =>
-            await this.Set<T>().SingleOrDefaultAsync(entity => entity.Id == id);
+            await this.Set<T>().SingleOrDefaultAsync(entity => entity.Id == id && !entity.IsDeleted);
 
     /// <summary>
     /// Searches for entity by id with including properties.

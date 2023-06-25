@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Models.Output;
+using IdentityWebApi.ApplicationLogic.Services.Role.Commands.GrantRoleToUser;
 using IdentityWebApi.ApplicationLogic.Services.Role.Queries.GetRoleById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
@@ -74,7 +75,8 @@ public class RoleController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleDto userRoleDto)
     {
-        var roleGrantResult = await this.roleService.GrantRoleToUserAsync(userRoleDto);
+        var command = new GrantRoleToUserCommand(userRoleDto.UserId, userRoleDto.RoleId);
+        var roleGrantResult = await this.Mediator.Send(command);
 
         if (roleGrantResult.IsResultFailed)
         {
