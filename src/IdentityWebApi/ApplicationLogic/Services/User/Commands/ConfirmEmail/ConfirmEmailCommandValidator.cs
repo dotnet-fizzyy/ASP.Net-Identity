@@ -1,6 +1,6 @@
 using FluentValidation;
 
-using IdentityWebApi.ApplicationLogic.Validation;
+using IdentityWebApi.Core.Constants;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.ConfirmEmail;
 
