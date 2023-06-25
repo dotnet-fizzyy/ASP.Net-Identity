@@ -14,25 +14,19 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     private readonly DatabaseContext databaseContext;
 
     /// <inheritdoc/>
-    public IUserRepository UserRepository { get; }
-
-    /// <inheritdoc/>
     public IRoleRepository RoleRepository { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
     /// </summary>
     /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-    /// <param name="userRepository"><see cref="IUserRepository"/>.</param>
     /// <param name="roleRepository"><see cref="IRoleRepository"/>.</param>
     public UnitOfWork(
         DatabaseContext databaseContext,
-        IUserRepository userRepository,
         IRoleRepository roleRepository)
     {
         this.databaseContext = databaseContext;
 
-        this.UserRepository = userRepository;
         this.RoleRepository = roleRepository;
     }
 

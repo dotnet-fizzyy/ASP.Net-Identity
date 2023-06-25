@@ -10,11 +10,6 @@ namespace IdentityWebApi.Core.Interfaces.Infrastructure;
 public interface IUnitOfWork
 {
     /// <summary>
-    /// Gets user repository abstraction.
-    /// </summary>
-    IUserRepository UserRepository { get; }
-
-    /// <summary>
     /// Gets role repository abstraction.
     /// </summary>
     IRoleRepository RoleRepository { get; }

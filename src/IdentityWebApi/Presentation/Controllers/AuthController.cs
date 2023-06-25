@@ -2,9 +2,8 @@ using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.ConfirmEmail;
+using IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
 using IdentityWebApi.Core.Constants;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
-using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;
 
 using MediatR;
@@ -22,26 +21,16 @@ namespace IdentityWebApi.Presentation.Controllers;
 /// </summary>
 public class AuthController : ControllerBase
 {
-    private readonly IAuthService authService;
-    private readonly IEmailService emailService;
     private readonly IHttpContextService httpContextService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthController"/> class.
     /// </summary>
-    /// <param name="authService"><see cref="IAuthService"/>.</param>
-    /// <param name="emailService"><see cref="IEmailService"/>.</param>
     /// <param name="httpContextService"><see cref="IHttpContextService"/>.</param>
     /// <param name="mediator"><see cref="IMediator"/>.</param>
-    public AuthController(
-        IAuthService authService,
-        IEmailService emailService,
-        IHttpContextService httpContextService,
-        IMediator mediator)
+    public AuthController(IHttpContextService httpContextService, IMediator mediator)
         : base(mediator)
     {
-        this.authService = authService;
-        this.emailService = emailService;
         this.httpContextService = httpContextService;
     }
 
@@ -51,34 +40,24 @@ public class AuthController : ControllerBase
     /// <param name="userModel"><see cref="UserRegistrationDto"/>.</param>
     /// <response code="201">Created user.</response>
     /// <response code="404">Unable to create user due to missing role.</response>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("sign-up")]
     [ProducesResponseType(typeof(UserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationDto userModel)
     {
-        var creationResult = await this.authService.SignUpUserAsync(userModel);
+        var createUserCommand = new CreateUserCommand(userModel.Email, userModel.Password, userModel.UserName, UserRoleConstants.User);
+
+        var creationResult = await this.Mediator.Send(createUserCommand);
 
         if (creationResult.IsResultFailed)
         {
-            // todo: replace 404 with 400
             return this.CreateResponseByServiceResult(creationResult);
         }
 
-        var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(
-            creationResult.Data.userDto.Email,
-            creationResult.Data.token);
+        var getUserLink = this.httpContextService.GenerateGetUserLink(creationResult.Data.Id);
 
-        await this.emailService.SendEmailAsync(
-            creationResult.Data.userDto.Email,
-            EmailSubjects.EmailConfirmation,
-            $"<a href='{confirmationLink}'>confirm</a>");
-
-        var getUserLink = this.httpContextService.GenerateGetUserLink(creationResult.Data.userDto.Id);
-
-        return this.Created(getUserLink, creationResult.Data.userDto);
+        return this.Created(getUserLink, creationResult.Data);
     }
 
     /// <summary>
@@ -87,9 +66,7 @@ public class AuthController : ControllerBase
     /// <param name="userModel"><see cref="UserSignInDto"/>.</param>
     /// <response code="200">User has authenticated.</response>
     /// <response code="400">Unable to authenticate with provided credentials.</response>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("sign-in")]
     [ProducesResponseType(typeof(AuthUserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -113,9 +90,7 @@ public class AuthController : ControllerBase
     /// <param name="token">Confirmation token.</param>
     /// <response code="204">Email has been confirmed.</response>
     /// <response code="404">User with provided email is not found.</response>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpGet("confirm-email")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

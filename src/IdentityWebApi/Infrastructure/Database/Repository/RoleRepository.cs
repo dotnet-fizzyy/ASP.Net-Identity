@@ -21,6 +21,7 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
     public const string MissingRoleExceptionMessage = "No such role exists";
 
     private const string ExistingRoleEntityExceptionMessage = "This role already exists";
+    private const string MissingUserEntityExceptionMessage = "No such user exists";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoleRepository"/> class.
@@ -57,7 +58,7 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
         {
             return new ServiceResult<AppRole>(
                 ServiceResultType.NotFound,
-                UserRepository.MissingUserEntityExceptionMessage);
+                MissingUserEntityExceptionMessage);
         }
 
         appUser.UserRoles.Add(new AppUserRole
@@ -83,7 +84,7 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
         {
             return new ServiceResult<AppRole>(
                 ServiceResultType.NotFound,
-                UserRepository.MissingUserEntityExceptionMessage);
+                MissingUserEntityExceptionMessage);
         }
 
         appUser.UserRoles.Remove(appUser.UserRoles.First(x => x.Role.Id == roleId && x.AppUser.Id == userId));

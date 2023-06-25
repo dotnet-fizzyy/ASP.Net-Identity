@@ -28,7 +28,6 @@ internal static class ServicesExtensions
         services.AddSingleton(appSettings);
 
         // Services
-        services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IRoleService, RoleService>();
         services.AddSingleton<INetService, NetService>();
@@ -37,7 +36,6 @@ internal static class ServicesExtensions
 
         // Repository
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
     }
 }

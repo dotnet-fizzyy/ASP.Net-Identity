@@ -30,4 +30,22 @@ public record CreateUserCommand : IRequest<ServiceResult<Models.Action.UserDto>>
         this.UserDto = userDto;
         this.ConfirmEmailImmediately = confirmEmailImmediately;
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CreateUserCommand"/> class.
+    /// </summary>
+    /// <param name="email">Given email.</param>
+    /// <param name="password">Given password.</param>
+    /// <param name="username">Given username.</param>
+    /// <param name="role">Given user role.</param>
+    public CreateUserCommand(string email, string password, string username, string role)
+    {
+        this.UserDto = new UserDto
+        {
+            Email = email,
+            Password = password,
+            UserName = username,
+            UserRole = role,
+        };
+    }
 }
