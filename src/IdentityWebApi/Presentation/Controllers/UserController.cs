@@ -111,8 +111,17 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<UserResult>> CreateUser([FromBody, BindRequired] UserDto userDto)
     {
-        // todo: extract from body
-        var command = new CreateUserCommand(userDto, confirmEmailImmediately: false);
+        var command = new CreateUserCommand
+        {
+            Id = userDto.Id,
+            Email = userDto.Email,
+            UserRole = userDto.UserRole,
+            UserName = userDto.UserName,
+            Password = userDto.Password,
+            PhoneNumber = userDto.PhoneNumber,
+            ConcurrencyStamp = userDto.ConcurrencyStamp,
+            ConfirmEmailImmediately = true,
+        };
         var userCreationResult = await this.Mediator.Send(command);
 
         if (userCreationResult.IsResultFailed)

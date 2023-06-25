@@ -3,49 +3,52 @@ using IdentityWebApi.Core.Results;
 
 using MediatR;
 
+using System;
+
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
 
 /// <summary>
 /// Create user CQRS command.
 /// </summary>
-public record CreateUserCommand : IRequest<ServiceResult<Models.Action.UserDto>>
+public record CreateUserCommand : IRequest<ServiceResult<UserDto>>
 {
     /// <summary>
-    /// Gets user.
+    /// Gets or sets user id.
     /// </summary>
-    public Models.Action.UserDto UserDto { get; }
+    public Guid Id { get; set; }
 
     /// <summary>
-    /// Gets a value indicating whether email confirmation should be processed immediately.
+    /// Gets or sets user name.
     /// </summary>
-    public bool ConfirmEmailImmediately { get; }
+    public string UserName { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateUserCommand"/> class.
+    /// Gets or sets concurrency stamp.
     /// </summary>
-    /// <param name="userDto"><see cref="UserDto"/>.</param>
-    /// <param name="confirmEmailImmediately">indicating whether email confirmation should be immediate.</param>
-    public CreateUserCommand(Models.Action.UserDto userDto, bool confirmEmailImmediately)
-    {
-        this.UserDto = userDto;
-        this.ConfirmEmailImmediately = confirmEmailImmediately;
-    }
+    public string ConcurrencyStamp { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateUserCommand"/> class.
+    /// Gets or sets email.
     /// </summary>
-    /// <param name="email">Given email.</param>
-    /// <param name="password">Given password.</param>
-    /// <param name="username">Given username.</param>
-    /// <param name="role">Given user role.</param>
-    public CreateUserCommand(string email, string password, string username, string role)
-    {
-        this.UserDto = new UserDto
-        {
-            Email = email,
-            Password = password,
-            UserName = username,
-            UserRole = role,
-        };
-    }
+    public string Email { get; set; }
+
+    /// <summary>
+    /// Gets or sets phone number.
+    /// </summary>
+    public string PhoneNumber { get; set; }
+
+    /// <summary>
+    /// Gets or sets password.
+    /// </summary>
+    public string Password { get; set; }
+
+    /// <summary>
+    /// Gets or sets user role.
+    /// </summary>
+    public string UserRole { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether email confirmation should be processed immediately.
+    /// </summary>
+    public bool ConfirmEmailImmediately { get; set; }
 }

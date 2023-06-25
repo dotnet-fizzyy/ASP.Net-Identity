@@ -37,16 +37,22 @@ public class AuthController : ControllerBase
     /// <summary>
     /// User account registration.
     /// </summary>
-    /// <param name="userModel"><see cref="UserRegistrationDto"/>.</param>
+    /// <param name="userRegistrationDto"><see cref="UserRegistrationDto"/>.</param>
     /// <response code="201">Created user.</response>
     /// <response code="404">Unable to create user due to missing role.</response>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("sign-up")]
     [ProducesResponseType(typeof(UserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationDto userModel)
+    public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationDto userRegistrationDto)
     {
-        var createUserCommand = new CreateUserCommand(userModel.Email, userModel.Password, userModel.UserName, UserRoleConstants.User);
+        var createUserCommand = new CreateUserCommand
+        {
+            Email = userRegistrationDto.Email,
+            UserName = userRegistrationDto.UserName,
+            Password = userRegistrationDto.Password,
+            UserRole = UserRoleConstants.User,
+        };
 
         var creationResult = await this.Mediator.Send(createUserCommand);
 

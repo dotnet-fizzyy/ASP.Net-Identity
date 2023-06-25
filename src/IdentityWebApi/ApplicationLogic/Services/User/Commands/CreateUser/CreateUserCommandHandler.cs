@@ -67,9 +67,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     public async Task<ServiceResult<Models.Action.UserDto>> Handle(
         CreateUserCommand command, CancellationToken cancellationToken)
     {
-        var userEntity = this.mapper.Map<AppUser>(command.UserDto);
-
-        var userCreationResult = await this.CreateUserAsync(userEntity, command.UserDto.Password);
+        var userCreationResult = await this.CreateUserAsync(command);
 
         if (userCreationResult.IsResultFailed)
         {
@@ -78,10 +76,10 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
         var createdUser = userCreationResult.Data;
 
-        if (!string.IsNullOrEmpty(command.UserDto.UserRole))
+        if (!string.IsNullOrEmpty(command.UserRole))
         {
             var roleAssignmentResult =
-                  await this.AssignRoleAsync(createdUser, command.UserDto.UserRole);
+                  await this.AssignRoleAsync(createdUser, command.UserRole);
 
             if (roleAssignmentResult.IsResultFailed)
             {
@@ -105,9 +103,11 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         return new ServiceResult<Models.Action.UserDto>(ServiceResultType.Success, userDto);
     }
 
-    private async Task<ServiceResult<AppUser>> CreateUserAsync(AppUser user, string password)
+    private async Task<ServiceResult<AppUser>> CreateUserAsync(CreateUserCommand command)
     {
-        var userCreationResult = await this.userManager.CreateAsync(user, password);
+        var userEntity = this.mapper.Map<AppUser>(command);
+
+        var userCreationResult = await this.userManager.CreateAsync(userEntity, command.Password);
 
         if (!userCreationResult.Succeeded)
         {
@@ -116,7 +116,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
                 IdentityUtilities.ConcatenateIdentityErrorMessages(userCreationResult.Errors));
         }
 
-        return new ServiceResult<AppUser>(ServiceResultType.Success, user);
+        return new ServiceResult<AppUser>(ServiceResultType.Success, userEntity);
     }
 
     private async Task<ServiceResult> AssignRoleAsync(AppUser user, string role)

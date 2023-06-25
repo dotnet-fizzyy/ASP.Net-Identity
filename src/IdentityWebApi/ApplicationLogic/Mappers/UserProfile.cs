@@ -1,8 +1,9 @@
 using AutoMapper;
 
-using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Models.Output;
+using IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
 using IdentityWebApi.Core.Entities;
+using IdentityWebApi.Core.Utilities;
 
 using System.Linq;
 
@@ -20,14 +21,18 @@ public class UserProfile : Profile
     {
         this.CreateMap<AppUser, UserResult>()
             .ForMember(
-                dist => dist.Roles,
+                dest => dest.Roles,
                 opts =>
                 {
-                    opts.PreCondition(en => en.UserRoles != null && en.UserRoles.Any());
-                    opts.MapFrom(en => en.UserRoles.Select(x => x.Role.Name));
+                    opts.PreCondition(appUser => !appUser.UserRoles.IsNullOrEmpty());
+                    opts.MapFrom(appUser => appUser.UserRoles.Select(appUserRole => appUserRole.Role.Name));
                 });
 
-        this.CreateMap<UserDto, AppUser>();
-        this.CreateMap<UserRegistrationDto, AppUser>();
+        this.CreateMap<CreateUserCommand, AppUser>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.ConcurrencyStamp, opt => opt.MapFrom(src => src.ConcurrencyStamp))
+            .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
     }
 }
