@@ -30,18 +30,6 @@ public class RoleService : IRoleService
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<RoleDto>> GetRoleByIdAsync(Guid id)
-    {
-        var roleEntityResult = await this.unitOfWork.RoleRepository.GetRoleByIdAsync(id);
-
-        var roleModel = roleEntityResult.Data is not null
-            ? this.mapper.Map<RoleDto>(roleEntityResult.Data)
-            : default;
-
-        return new ServiceResult<RoleDto>(roleEntityResult.Result, roleModel);
-    }
-
-    /// <inheritdoc/>
     public async Task<ServiceResult> GrantRoleToUserAsync(UserRoleDto roleDto) =>
         await this.HandleAppRole(
             this.unitOfWork.RoleRepository.GrantRoleToUserAsync,

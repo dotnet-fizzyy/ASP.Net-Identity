@@ -33,18 +33,6 @@ public class RoleRepository : BaseRepository<AppRole>, IRoleRepository
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<AppRole>> GetRoleByIdAsync(Guid id)
-    {
-        var appRole = await this.GetAppRole(id);
-        if (appRole is null)
-        {
-            return new ServiceResult<AppRole>(ServiceResultType.NotFound);
-        }
-
-        return new ServiceResult<AppRole>(ServiceResultType.Success, appRole);
-    }
-
-    /// <inheritdoc/>
     public async Task<ServiceResult> GrantRoleToUserAsync(Guid userId, Guid roleId)
     {
         var appRole = await this.GetAppRole(roleId);

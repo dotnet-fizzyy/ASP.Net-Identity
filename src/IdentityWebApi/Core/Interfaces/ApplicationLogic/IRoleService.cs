@@ -12,13 +12,6 @@ namespace IdentityWebApi.Core.Interfaces.ApplicationLogic;
 public interface IRoleService
 {
     /// <summary>
-    /// Gets role by id.
-    /// </summary>
-    /// <param name="id">Role id.</param>
-    /// <returns>A <see cref="ServiceResult{T}"/> with role.</returns>
-    Task<ServiceResult<RoleDto>> GetRoleByIdAsync(Guid id);
-
-    /// <summary>
     /// Grants role to user.
     /// </summary>
     /// <param name="roleDto"><see cref="UserRoleDto"/>.</param>

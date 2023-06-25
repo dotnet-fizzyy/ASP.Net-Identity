@@ -13,13 +13,6 @@ namespace IdentityWebApi.Core.Interfaces.Infrastructure;
 public interface IRoleRepository
 {
     /// <summary>
-    /// Searching for AppRole by identifier.
-    /// </summary>
-    /// <param name="id">Role identifier (PK).</param>
-    /// <returns>A <see cref="Task{ServiceResult}"/> representing the result of the asynchronous operation.</returns>
-    Task<ServiceResult<AppRole>> GetRoleByIdAsync(Guid id);
-
-    /// <summary>
     /// Grant role to user.
     /// </summary>
     /// <param name="userId">User identifier (PK).</param>
