@@ -44,6 +44,9 @@
     <ItemGroup>
       <Folder Include="ApplicationLogic\Services\EmailTemplate\Commands" />
       <Folder Include="ApplicationLogic\Services\EmailTemplate\Queries" />
+      <Folder Include="ApplicationLogic\Services\Role\Commands\CreateRole\" />
+      <Folder Include="ApplicationLogic\Services\Role\Commands\HardRoleRemoveById\" />
+      <Folder Include="ApplicationLogic\Services\Role\Commands\SoftRemoveRoleById\" />
       <Folder Include="Infrastructure\Database\Migrations" />
     </ItemGroup>
 

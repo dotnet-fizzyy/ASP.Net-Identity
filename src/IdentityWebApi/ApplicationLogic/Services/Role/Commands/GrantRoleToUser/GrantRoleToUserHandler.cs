@@ -5,11 +5,15 @@ using IdentityWebApi.Infrastructure.Database;
 
 using MediatR;
 
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.GrantRoleToUser;
 
+/// <summary>
+/// Grant role to user CQRS handler.
+/// </summary>
 public class GrantRoleToUserHandler : IRequestHandler<GrantRoleToUserCommand, ServiceResult>
 {
     private readonly DatabaseContext databaseContext;
@@ -33,22 +37,38 @@ public class GrantRoleToUserHandler : IRequestHandler<GrantRoleToUserCommand, Se
             return new ServiceResult(ServiceResultType.NotFound, "No role found by provided id.");
         }
 
-        var appUser = await this.databaseContext.SearchById<AppUser>(request.UserId);
+        var appUser =
+              await this.databaseContext.SearchById<AppUser>(
+                  request.UserId,
+                  includeTracking: true,
+                  include => include.UserRoles);
 
         if (appUser is null)
         {
             return new ServiceResult(ServiceResultType.NotFound, "No user found by provided id.");
         }
 
-        AddNewRoleToUser(appUser, appRole);
+        var assignRoleToUserResult = AddNewRoleToUser(appUser, appRole);
+
+        if (assignRoleToUserResult.IsResultFailed)
+        {
+            return assignRoleToUserResult.GenerateErrorResult();
+        }
 
         await this.databaseContext.SaveChangesAsync(cancellationToken);
 
         return new ServiceResult(ServiceResultType.Success);
     }
 
-    private static void AddNewRoleToUser(AppUser appUser, AppRole appRole)
+    private static ServiceResult AddNewRoleToUser(AppUser appUser, AppRole appRole)
     {
+        var existingAppUserRole = appRole.UserRoles.SingleOrDefault(userRole => userRole.RoleId == appRole.Id);
+
+        if (existingAppUserRole is not null)
+        {
+            return new ServiceResult(ServiceResultType.InvalidData, "User is already assigned to this role");
+        }
+
         var appUserRole = new AppUserRole
         {
             Role = appRole,
@@ -56,5 +76,7 @@ public class GrantRoleToUserHandler : IRequestHandler<GrantRoleToUserCommand, Se
         };
 
         appUser.UserRoles.Add(appUserRole);
+
+        return new ServiceResult(ServiceResultType.Success);
     }
 }

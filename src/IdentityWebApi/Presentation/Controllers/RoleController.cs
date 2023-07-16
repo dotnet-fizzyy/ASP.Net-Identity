@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.GrantRoleToUser;
+using IdentityWebApi.ApplicationLogic.Services.Role.Commands.RevokeRoleFromUser;
 using IdentityWebApi.ApplicationLogic.Services.Role.Queries.GetRoleById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
@@ -100,11 +101,12 @@ public class RoleController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RevokeRoleFromUser([FromBody, BindRequired] UserRoleDto userRoleDto)
     {
-        var roleRevocationResult = await this.roleService.RevokeRoleFromUser(userRoleDto);
+        var command = new RevokeRoleFromUserCommand(userRoleDto.UserId, userRoleDto.RoleId);
+        var roleRevokeResult = await this.Mediator.Send(command);
 
-        if (roleRevocationResult.IsResultFailed)
+        if (roleRevokeResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(roleRevocationResult);
+            return this.CreateResponseByServiceResult(roleRevokeResult);
         }
 
         return this.NoContent();
