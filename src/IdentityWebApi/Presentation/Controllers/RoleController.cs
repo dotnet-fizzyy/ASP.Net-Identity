@@ -1,9 +1,7 @@
-using System;
-using System.Threading.Tasks;
-
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.GrantRoleToUser;
+using IdentityWebApi.ApplicationLogic.Services.Role.Commands.HardRemoveRoleById;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.RevokeRoleFromUser;
 using IdentityWebApi.ApplicationLogic.Services.Role.Queries.GetRoleById;
 using IdentityWebApi.Core.Constants;
@@ -15,6 +13,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Controllers;
 
@@ -164,17 +166,18 @@ public class RoleController : ControllerBase
     /// Removes role entity.
     /// </summary>
     /// <param name="id">Role identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="204">Role has been removed from DB.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation.
-    /// </returns>
-    [HttpDelete("id/{id:guid}")]
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [Authorize(Roles = UserRoleConstants.Admin)]
+    [HttpDelete("id/{id:guid}/hard-remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> RemoveRole(Guid id)
+    public async Task<IActionResult> RemoveRole(Guid id, CancellationToken cancellationToken)
     {
-        var roleRemoveResult = await this.roleService.RemoveRoleAsync(id);
+        var command = new HardRemoveRoleByIdCommand(id);
+        var roleRemoveResult = await this.Mediator.Send(command, cancellationToken);
 
         if (roleRemoveResult.IsResultFailed)
         {
