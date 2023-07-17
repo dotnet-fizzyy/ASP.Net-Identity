@@ -27,7 +27,7 @@ public class RevokeRoleFromUserHandler : IRequestHandler<RevokeRoleFromUserComma
         this.databaseContext = databaseContext;
     }
 
-    /// <inheritdoc />.
+    /// <inheritdoc />
     public async Task<ServiceResult> Handle(RevokeRoleFromUserCommand request, CancellationToken cancellationToken)
     {
         var appRole = await this.databaseContext.SearchById<AppRole>(request.RoleId);
