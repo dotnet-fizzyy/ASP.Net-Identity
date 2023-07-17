@@ -52,7 +52,7 @@ public class RevokeRoleFromUserHandler : IRequestHandler<RevokeRoleFromUserComma
 
         if (revokeRoleFromUserResult.IsResultFailed)
         {
-            return revokeRoleFromUserResult.GenerateErrorResult();
+            return revokeRoleFromUserResult;
         }
 
         await this.databaseContext.SaveChangesAsync(cancellationToken);

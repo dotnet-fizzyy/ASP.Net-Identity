@@ -152,7 +152,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
             if (confirmationEmailResult.IsResultFailed)
             {
-                return confirmationEmailResult.GenerateErrorResult();
+                return confirmationEmailResult;
             }
         }
         else

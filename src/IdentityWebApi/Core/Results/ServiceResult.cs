@@ -52,13 +52,6 @@ public class ServiceResult
     /// <summary>
     /// Generates error result for current instance.
     /// </summary>
-    /// <returns><see cref="ServiceResult"/>.</returns>
-    public ServiceResult GenerateErrorResult() =>
-        new ServiceResult(this.Result, this.Message);
-
-    /// <summary>
-    /// Generates error result for current instance.
-    /// </summary>
     /// <typeparam name="TReturnType">Type for conversion.</typeparam>
     /// <returns><see cref="ServiceResult"/>.</returns>
     public ServiceResult<TReturnType> GenerateErrorResult<TReturnType>() =>
@@ -121,19 +114,6 @@ public class ServiceResult<T> : ServiceResult
     public ServiceResult(ServiceResultType result, T data)
         : this(result)
     {
-        this.Data = data;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ServiceResult{T}"/> class.
-    /// </summary>
-    /// <param name="result">Operation status indicator.</param>
-    /// <param name="message">Error description message.</param>
-    /// <param name="data">Result of performed operation.</param>
-    public ServiceResult(ServiceResultType result, string message, T data)
-        : this(result)
-    {
-        this.Message = message;
         this.Data = data;
     }
 }

@@ -52,7 +52,7 @@ public class GrantRoleToUserHandler : IRequestHandler<GrantRoleToUserCommand, Se
 
         if (assignRoleToUserResult.IsResultFailed)
         {
-            return assignRoleToUserResult.GenerateErrorResult();
+            return assignRoleToUserResult;
         }
 
         await this.databaseContext.SaveChangesAsync(cancellationToken);
