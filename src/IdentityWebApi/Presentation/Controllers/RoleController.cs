@@ -1,12 +1,15 @@
+using AutoMapper;
+
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Models.Output;
+using IdentityWebApi.ApplicationLogic.Services.Role.Commands.CreateRole;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.GrantRoleToUser;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.HardRemoveRoleById;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.RevokeRoleFromUser;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.SoftRemoveRoleById;
+using IdentityWebApi.ApplicationLogic.Services.Role.Commands.UpdateRole;
 using IdentityWebApi.ApplicationLogic.Services.Role.Queries.GetRoleById;
 using IdentityWebApi.Core.Constants;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 
 using MediatR;
 
@@ -27,17 +30,17 @@ namespace IdentityWebApi.Presentation.Controllers;
 [Authorize(Roles = UserRoleConstants.Admin)]
 public class RoleController : ControllerBase
 {
-    private readonly IRoleService roleService;
+    private readonly IMapper mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoleController"/> class.
     /// </summary>
     /// <param name="mediator">Instance of <see cref="IMediator"/>.</param>
-    /// <param name="roleService">Instance of <see cref="IRoleService"/>.</param>
-    public RoleController(IMediator mediator, IRoleService roleService)
+    /// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
+    public RoleController(IMediator mediator, IMapper mapper)
         : base(mediator)
     {
-        this.roleService = roleService;
+        this.mapper = mapper;
     }
 
     /// <summary>
@@ -121,15 +124,14 @@ public class RoleController : ControllerBase
     /// <param name="roleDto"><see cref="RoleCreationDto"/>.</param>
     /// <response code="201">Role has been created.</response>
     /// <response code="400">Role already exists.</response>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<RoleDto>> CreateRole([FromBody, BindRequired] RoleCreationDto roleDto)
     {
-        var roleCreationResult = await this.roleService.CreateRoleAsync(roleDto);
+        var command = this.mapper.Map<CreateRoleCommand>(roleDto);
+        var roleCreationResult = await this.Mediator.Send(command);
 
         if (roleCreationResult.IsResultFailed)
         {
@@ -151,9 +153,10 @@ public class RoleController : ControllerBase
     [HttpPut]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<RoleDto>> UpdateRole([FromBody, BindRequired] RoleDto roleDto)
+    public async Task<ActionResult<RoleResult>> UpdateRole([FromBody, BindRequired] RoleDto roleDto)
     {
-        var roleUpdateResult = await this.roleService.UpdateRoleAsync(roleDto);
+        var command = this.mapper.Map<UpdateRoleCommand>(roleDto);
+        var roleUpdateResult = await this.Mediator.Send(command);
 
         if (roleUpdateResult.IsResultFailed)
         {
