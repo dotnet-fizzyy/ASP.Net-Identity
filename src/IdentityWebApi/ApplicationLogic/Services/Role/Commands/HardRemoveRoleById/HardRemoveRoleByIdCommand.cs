@@ -13,14 +13,14 @@ namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.HardRemoveRoleB
 public record HardRemoveRoleByIdCommand : IBaseId, IRequest<ServiceResult>
 {
     /// <summary>
-    /// Gets user id.
+    /// Gets role id.
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HardRemoveRoleByIdCommand"/> class.
     /// </summary>
-    /// <param name="id">User id.</param>
+    /// <param name="id">Role id.</param>
     public HardRemoveRoleByIdCommand(Guid id)
     {
         this.Id = id;

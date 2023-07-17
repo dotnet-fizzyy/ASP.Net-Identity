@@ -28,9 +28,9 @@ public class HardRemoveRoleByIdHandler : IRequestHandler<HardRemoveRoleByIdComma
     }
 
     /// <inheritdoc />
-    public async Task<ServiceResult> Handle(HardRemoveRoleByIdCommand request, CancellationToken cancellationToken)
+    public async Task<ServiceResult> Handle(HardRemoveRoleByIdCommand command, CancellationToken cancellationToken)
     {
-        var appRole = await this.GetAppRoleAsync(request.Id);
+        var appRole = await this.GetAppRoleAsync(command.Id);
 
         if (appRole is null)
         {
