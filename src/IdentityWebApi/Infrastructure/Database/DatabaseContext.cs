@@ -61,8 +61,8 @@ public sealed class DatabaseContext : IdentityDbContext<
         where T : class, IBaseEntity
     {
         var query = includeTracking
-            ? this.Set<T>().Where(entity => entity.Id == id)
-            : this.Set<T>().Where(entity => entity.Id == id).AsNoTracking();
+            ? this.Set<T>().Where(entity => entity.Id == id && !entity.IsDeleted)
+            : this.Set<T>().Where(entity => entity.Id == id && !entity.IsDeleted).AsNoTracking();
 
         if (includes.Any())
         {
