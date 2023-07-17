@@ -3,6 +3,8 @@ using IdentityWebApi.Core.Results;
 
 using MediatR;
 
+using System;
+
 namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.UpdateRole;
 
 /// <summary>
@@ -10,6 +12,11 @@ namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.UpdateRole;
 /// </summary>
 public record UpdateRoleCommand : IRequest<ServiceResult<RoleResult>>
 {
+    /// <summary>
+    /// Gets or sets role id.
+    /// </summary>
+    public Guid Id { get; set; }
+
     /// <summary>
     /// Gets role name.
     /// </summary>

@@ -40,6 +40,16 @@ public sealed class DatabaseContext : IdentityDbContext<
     }
 
     /// <summary>
+    /// Checks whether entity with provided ID exists in DB and not softly removed.
+    /// </summary>
+    /// <param name="id">Given entity ID.</param>
+    /// <typeparam name="T">Inheritor of <see cref="IBaseEntity"/>.</typeparam>
+    /// <returns>Boolean result indicating whether entity exists or not.</returns>
+    public Task<bool> ExistsByIdAsync<T>(Guid id)
+        where T : class, IBaseEntity =>
+            this.Set<T>().AnyAsync(entity => entity.Id == id && !entity.IsDeleted);
+
+    /// <summary>
     /// Searches for entity by id.
     /// </summary>
     /// <typeparam name="T">Inheritor of <see cref="IBaseEntity"/>.</typeparam>
