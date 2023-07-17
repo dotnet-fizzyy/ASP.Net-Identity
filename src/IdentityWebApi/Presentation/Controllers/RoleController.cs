@@ -3,6 +3,7 @@ using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.GrantRoleToUser;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.HardRemoveRoleById;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.RevokeRoleFromUser;
+using IdentityWebApi.ApplicationLogic.Services.Role.Commands.SoftRemoveRoleById;
 using IdentityWebApi.ApplicationLogic.Services.Role.Queries.GetRoleById;
 using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.ApplicationLogic;
@@ -160,6 +161,30 @@ public class RoleController : ControllerBase
         }
 
         return roleUpdateResult.Data;
+    }
+
+    /// <summary>
+    /// Updates role entity with "IsDeleted=true".
+    /// </summary>
+    /// <param name="id">Role identifier.</param>
+    /// <response code="204">Role status "IsDeleted" has been set to true.</response>
+    /// <response code="404">Unable to find role.</response>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    [Authorize(Roles = UserRoleConstants.Admin)]
+    [HttpDelete("id/{id:guid}/soft-remove")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> SoftRemoveUser(Guid id)
+    {
+        var command = new SoftRemoveRoleByIdCommand(id);
+        var roleRemoveResult = await this.Mediator.Send(command);
+
+        if (roleRemoveResult.IsResultFailed)
+        {
+            return this.CreateResponseByServiceResult(roleRemoveResult);
+        }
+
+        return this.NoContent();
     }
 
     /// <summary>
