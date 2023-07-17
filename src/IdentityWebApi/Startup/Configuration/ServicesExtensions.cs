@@ -1,9 +1,5 @@
-using IdentityWebApi.ApplicationLogic.Services;
-using IdentityWebApi.Core.Interfaces.ApplicationLogic;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;
-using IdentityWebApi.Infrastructure.Database;
-using IdentityWebApi.Infrastructure.Database.Repository;
 using IdentityWebApi.Infrastructure.Net.Services;
 using IdentityWebApi.Presentation.Services;
 using IdentityWebApi.Startup.ApplicationSettings;
@@ -29,13 +25,8 @@ internal static class ServicesExtensions
 
         // Services
         services.AddTransient<IEmailService, EmailService>();
-        services.AddTransient<IRoleService, RoleService>();
         services.AddSingleton<INetService, NetService>();
 
         services.AddScoped<IHttpContextService, HttpContextService>();
-
-        // Repository
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IRoleRepository, RoleRepository>();
     }
 }
