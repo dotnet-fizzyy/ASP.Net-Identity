@@ -170,7 +170,7 @@ public class UserController : ControllerBase
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/soft-remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> SoftRemoveUser(Guid id)
     {
         var command = new SoftRemoveUserByIdCommand(id);
@@ -196,7 +196,7 @@ public class UserController : ControllerBase
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/hard-remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> HardRemoveUser(Guid id)
     {
         var command = new HardRemoveUserByIdCommand(id);

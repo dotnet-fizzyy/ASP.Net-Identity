@@ -1,4 +1,3 @@
-using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Results;
@@ -33,7 +32,7 @@ public class SoftRemoveUserByIdCommandHandler : IRequestHandler<SoftRemoveUserBy
         var user = await this.databaseContext.SearchById<AppUser>(command.Id);
         if (user == null)
         {
-            return new ServiceResult(ServiceResultType.NotFound, ExceptionMessageConstants.MissingUser);
+            return new ServiceResult(ServiceResultType.NotFound);
         }
 
         this.databaseContext.SoftRemove(user);

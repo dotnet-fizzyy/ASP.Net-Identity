@@ -25,22 +25,6 @@ public static class Templates
 /// <summary>
 /// Exception messages.
 /// </summary>
-public static class ExceptionMessageConstants
-{
-    /// <summary>
-    /// Gets missing user exception message.
-    /// </summary>
-    public const string MissingUser = "No such user exists";
-
-    /// <summary>
-    /// Gets invalid authentication data exception message.
-    /// </summary>
-    public const string InvalidAuthData = "Unable to find user with provided parameter";
-}
-
-/// <summary>
-/// Exception messages.
-/// </summary>
 public static class UserRoleConstants
 {
     /// <summary>
