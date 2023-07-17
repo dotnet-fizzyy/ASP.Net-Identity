@@ -52,7 +52,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Servi
     }
 
     private async Task<AppUser> GetUser(Guid id) =>
-        await this.databaseContext.SearchById<AppUser>(id);
+        await this.databaseContext.SearchByIdAsync<AppUser>(id);
 
     private static void UpdateUserDetails(AppUser appUser, Models.Action.UserDto userDto)
     {

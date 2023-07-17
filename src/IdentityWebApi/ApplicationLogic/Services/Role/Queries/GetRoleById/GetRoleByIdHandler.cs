@@ -35,7 +35,7 @@ public class GetRoleByIdHandler : IRequestHandler<GetRoleByIdQuery, ServiceResul
     /// <inheritdoc />
     public async Task<ServiceResult<RoleResult>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
     {
-        var roleEntity = await this.databaseContext.SearchById<AppRole>(request.Id);
+        var roleEntity = await this.databaseContext.SearchByIdAsync<AppRole>(request.Id);
 
         if (roleEntity == null)
         {

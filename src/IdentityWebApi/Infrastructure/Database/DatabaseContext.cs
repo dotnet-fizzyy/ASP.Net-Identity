@@ -55,9 +55,9 @@ public sealed class DatabaseContext : IdentityDbContext<
     /// <typeparam name="T">Inheritor of <see cref="IBaseEntity"/>.</typeparam>
     /// <param name="id">Entity id.</param>
     /// <returns>Entity by search criteria.</returns>
-    public async Task<T> SearchById<T>(Guid id)
+    public Task<T> SearchByIdAsync<T>(Guid id)
         where T : class, IBaseEntity =>
-            await this.Set<T>().SingleOrDefaultAsync(entity => entity.Id == id && !entity.IsDeleted);
+            this.Set<T>().SingleOrDefaultAsync(entity => entity.Id == id && !entity.IsDeleted);
 
     /// <summary>
     /// Searches for entity by id with including properties.
@@ -67,7 +67,7 @@ public sealed class DatabaseContext : IdentityDbContext<
     /// <param name="includeTracking">Flag indicating whether entities tracking should be enabled.</param>
     /// <param name="includes">Collection of related entities to include.</param>
     /// <returns>Entity by search criteria.</returns>
-    public async Task<T> SearchById<T>(Guid id, bool includeTracking, params Expression<Func<T, object>>[] includes)
+    public Task<T> SearchByIdAsync<T>(Guid id, bool includeTracking, params Expression<Func<T, object>>[] includes)
         where T : class, IBaseEntity
     {
         var query = includeTracking
@@ -82,7 +82,7 @@ public sealed class DatabaseContext : IdentityDbContext<
                     (current, includeProperty) => current.Include(includeProperty));
         }
 
-        return await query.SingleOrDefaultAsync();
+        return query.SingleOrDefaultAsync();
     }
 
     /// <summary>

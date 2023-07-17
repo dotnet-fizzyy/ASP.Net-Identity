@@ -29,7 +29,7 @@ public class SoftRemoveRoleByIdHandler : IRequestHandler<SoftRemoveRoleByIdComma
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(SoftRemoveRoleByIdCommand command, CancellationToken cancellationToken)
     {
-        var appRole = await this.databaseContext.SearchById<AppRole>(command.Id);
+        var appRole = await this.databaseContext.SearchByIdAsync<AppRole>(command.Id);
 
         if (appRole == null)
         {

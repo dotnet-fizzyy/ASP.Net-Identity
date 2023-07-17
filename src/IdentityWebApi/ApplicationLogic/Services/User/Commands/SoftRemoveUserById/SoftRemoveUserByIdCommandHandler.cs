@@ -29,7 +29,7 @@ public class SoftRemoveUserByIdCommandHandler : IRequestHandler<SoftRemoveUserBy
     /// <inheritdoc/>
     public async Task<ServiceResult> Handle(SoftRemoveUserByIdCommand command, CancellationToken cancellationToken)
     {
-        var user = await this.databaseContext.SearchById<AppUser>(command.Id);
+        var user = await this.databaseContext.SearchByIdAsync<AppUser>(command.Id);
         if (user == null)
         {
             return new ServiceResult(ServiceResultType.NotFound);

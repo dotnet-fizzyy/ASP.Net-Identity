@@ -43,7 +43,7 @@ public class HardRemoveUserByIdCommandHandler : IRequestHandler<HardRemoveUserBy
     }
 
     private async Task<AppUser> GetAppUserAsync(Guid id) =>
-        await this.databaseContext.SearchById<AppUser>(
+        await this.databaseContext.SearchByIdAsync<AppUser>(
             id,
             includeTracking: true,
             includedEntity => includedEntity.UserRoles);

@@ -43,7 +43,7 @@ public class HardRemoveRoleByIdHandler : IRequestHandler<HardRemoveRoleByIdComma
     }
 
     private async Task<AppRole> GetAppRoleAsync(Guid id) =>
-        await this.databaseContext.SearchById<AppRole>(
+        await this.databaseContext.SearchByIdAsync<AppRole>(
             id,
             includeTracking: true,
             includedEntity => includedEntity.UserRoles);

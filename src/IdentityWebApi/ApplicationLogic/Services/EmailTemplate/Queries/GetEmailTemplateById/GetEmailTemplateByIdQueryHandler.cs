@@ -37,7 +37,7 @@ public class
     public async Task<ServiceResult<EmailTemplateDto>> Handle(
         GetEmailTemplateByIdQuery query, CancellationToken cancellationToken)
     {
-        var emailTemplateEntity = await this.databaseContext.SearchById<Core.Entities.EmailTemplate>(query.Id);
+        var emailTemplateEntity = await this.databaseContext.SearchByIdAsync<Core.Entities.EmailTemplate>(query.Id);
 
         if (emailTemplateEntity == null)
         {
