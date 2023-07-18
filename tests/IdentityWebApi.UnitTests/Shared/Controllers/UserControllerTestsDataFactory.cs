@@ -9,8 +9,7 @@ public static class UserControllerTestsDataFactory
     public static ClaimsPrincipal GetUserIdentity(
         string userId = default,
         string email = default,
-        string[] roles = default
-    )
+        string[] roles = default)
     {
         var userClaims = new List<Claim>();
 

@@ -1,11 +1,9 @@
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Results;
-
-using Microsoft.AspNetCore.Authentication.Cookies;
+using IdentityWebApi.Core.Utilities;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 
 namespace IdentityWebApi.Presentation.Services;
@@ -42,10 +40,15 @@ public static class ClaimsService
     /// <param name="userId">User identifier.</param>
     /// <param name="email">User email.</param>
     /// <param name="userRoles">A collection of user roles.</param>
+    /// <param name="authScheme">Authentication policy.</param>
     /// <returns><see cref="ClaimsPrincipal"/> to assign to authorization user.</returns>
-    public static ClaimsPrincipal AssignClaims(Guid userId, string email, IEnumerable<string> userRoles)
+    public static ClaimsPrincipal AssignClaims(
+        Guid userId,
+        string email,
+        IReadOnlyCollection<string> userRoles,
+        string authScheme)
     {
-        var claimsUserRoles = userRoles != null && userRoles.Any()
+        var claimsUserRoles = !userRoles.IsNullOrEmpty()
                                     ? string.Join(",", userRoles)
                                     : string.Empty;
 
@@ -56,7 +59,7 @@ public static class ClaimsService
             new Claim(ClaimTypes.Role, claimsUserRoles),
         };
 
-        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var claimsIdentity = new ClaimsIdentity(claims, authScheme);
 
         return new ClaimsPrincipal(claimsIdentity);
     }

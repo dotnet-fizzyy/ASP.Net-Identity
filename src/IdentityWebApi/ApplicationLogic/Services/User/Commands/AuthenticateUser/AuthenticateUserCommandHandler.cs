@@ -1,6 +1,7 @@
 using AutoMapper;
 
 using IdentityWebApi.ApplicationLogic.Models.Output;
+using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Interfaces.Presentation;
@@ -80,13 +81,15 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
             return GenerateFailedAuthResult();
         }
 
+        var authScheme = AuthConstants.AppAuthPolicyName;
         var userRoleNames = GetUserRoleNames(user);
-        var token = string.Empty;
+        string token = null;
 
         var authUser = ClaimsService.AssignClaims(
             user.Id,
             user.Email,
-            userRoleNames);
+            userRoleNames,
+            authScheme);
 
         if (this.appSettings.IdentitySettings.AuthType == AuthType.Jwt)
         {
@@ -109,7 +112,7 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
     private static ServiceResult<AuthUserResult> GenerateFailedAuthResult() =>
         new ServiceResult<AuthUserResult>(ServiceResultType.InvalidData, FailedAuthenticationErrorMessage);
 
-    private static IEnumerable<string> GetUserRoleNames(AppUser user) =>
+    private static IReadOnlyCollection<string> GetUserRoleNames(AppUser user) =>
         user.UserRoles.Select(userRole => userRole.Role.Name).ToList();
 
     private async Task<AppUser> GetUserByEmail(string email) =>
