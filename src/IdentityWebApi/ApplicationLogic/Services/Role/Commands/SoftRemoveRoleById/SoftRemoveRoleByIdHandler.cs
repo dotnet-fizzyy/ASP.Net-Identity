@@ -29,7 +29,7 @@ public class SoftRemoveRoleByIdHandler : IRequestHandler<SoftRemoveRoleByIdComma
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(SoftRemoveRoleByIdCommand command, CancellationToken cancellationToken)
     {
-        var appRole = await this.databaseContext.SearchByIdAsync<AppRole>(command.Id);
+        var appRole = await this.databaseContext.SearchByIdAsync<AppRole>(command.Id, cancellationToken);
 
         if (appRole == null)
         {
@@ -38,7 +38,7 @@ public class SoftRemoveRoleByIdHandler : IRequestHandler<SoftRemoveRoleByIdComma
 
         this.databaseContext.SoftRemove(appRole);
 
-        await this.databaseContext.SaveChangesAsync();
+        await this.databaseContext.SaveChangesAsync(cancellationToken);
 
         return new ServiceResult(ServiceResultType.Success);
     }

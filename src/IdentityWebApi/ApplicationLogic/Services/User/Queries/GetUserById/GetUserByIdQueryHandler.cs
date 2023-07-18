@@ -36,7 +36,7 @@ public class GetsUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, Servic
     /// <inheritdoc/>
     public async Task<ServiceResult<UserResult>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        var userEntity = await this.databaseContext.SearchByIdAsync<AppUser>(query.Id);
+        var userEntity = await this.databaseContext.SearchByIdAsync<AppUser>(query.Id, cancellationToken);
 
         if (userEntity == null)
         {

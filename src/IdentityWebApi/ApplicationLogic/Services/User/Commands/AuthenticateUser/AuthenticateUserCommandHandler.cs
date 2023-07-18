@@ -64,17 +64,18 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
         AuthenticateUserCommand command,
         CancellationToken cancellationToken)
     {
-        var user = await this.GetUserByEmail(command.Email);
+        var user = await this.GetUserByEmail(command.Email, cancellationToken);
 
         if (user == null)
         {
             return GenerateFailedAuthResult();
         }
 
-        var signInResult = await this.signInManager.CheckPasswordSignInAsync(
-            user,
-            command.Password,
-            lockoutOnFailure: false);
+        var signInResult =
+              await this.signInManager.CheckPasswordSignInAsync(
+                user,
+                command.Password,
+                lockoutOnFailure: false);
 
         if (!signInResult.Succeeded)
         {
@@ -85,11 +86,12 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
         var userRoleNames = GetUserRoleNames(user);
         string token = null;
 
-        var authUser = ClaimsService.AssignClaims(
-            user.Id,
-            user.Email,
-            userRoleNames,
-            authScheme);
+        var authUser =
+              ClaimsService.AssignClaims(
+                user.Id,
+                user.Email,
+                userRoleNames,
+                authScheme);
 
         if (this.appSettings.IdentitySettings.AuthType == AuthType.Jwt)
         {
@@ -115,12 +117,12 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
     private static IReadOnlyCollection<string> GetUserRoleNames(AppUser user) =>
         user.UserRoles.Select(userRole => userRole.Role.Name).ToList();
 
-    private async Task<AppUser> GetUserByEmail(string email) =>
+    private async Task<AppUser> GetUserByEmail(string email, CancellationToken cancellationToken) =>
         await this.databaseContext.Users
             .AsNoTracking()
             .Include(user => user.UserRoles)
             .ThenInclude(userRole => userRole.Role)
-            .SingleOrDefaultAsync(user => user.Email.ToLower() == email.ToLower());
+            .SingleOrDefaultAsync(user => user.Email.ToLower() == email.ToLower(), cancellationToken);
 
     private string GenerateJwt(ClaimsPrincipal authUser)
     {

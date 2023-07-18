@@ -37,7 +37,7 @@ public class CreateRoleHandler : IRequestHandler<CreateRoleCommand, ServiceResul
     /// <inheritdoc />.
     public async Task<ServiceResult<RoleResult>> Handle(CreateRoleCommand command, CancellationToken cancellationToken)
     {
-        var isRoleWithSameNameExist = await this.SearchForExistingRoleNameAsync(command.Name);
+        var isRoleWithSameNameExist = await this.SearchForExistingRoleNameAsync(command.Name, cancellationToken);
 
         if (isRoleWithSameNameExist)
         {
@@ -48,22 +48,22 @@ public class CreateRoleHandler : IRequestHandler<CreateRoleCommand, ServiceResul
 
         var roleToCreate = this.mapper.Map<AppRole>(command);
 
-        var createdRole = await this.CreateRoleAsync(roleToCreate);
+        var createdRole = await this.CreateRoleAsync(roleToCreate, cancellationToken);
 
         var roleResult = this.mapper.Map<RoleResult>(createdRole);
 
         return new ServiceResult<RoleResult>(ServiceResultType.Success, roleResult);
     }
 
-    private Task<bool> SearchForExistingRoleNameAsync(string name) =>
+    private Task<bool> SearchForExistingRoleNameAsync(string name, CancellationToken cancellationToken) =>
         this.databaseContext.Roles.AnyAsync(
-            role => role.Name.ToLower() == name.ToLower());
+            role => role.Name.ToLower() == name.ToLower(), cancellationToken);
 
-    private async Task<AppRole> CreateRoleAsync(AppRole appRole)
+    private async Task<AppRole> CreateRoleAsync(AppRole appRole, CancellationToken cancellationToken)
     {
-        var createdRole = await this.databaseContext.AddAsync(appRole);
+        var createdRole = await this.databaseContext.AddAsync(appRole, cancellationToken);
 
-        await this.databaseContext.SaveChangesAsync();
+        await this.databaseContext.SaveChangesAsync(cancellationToken);
 
         return createdRole.Entity;
     }

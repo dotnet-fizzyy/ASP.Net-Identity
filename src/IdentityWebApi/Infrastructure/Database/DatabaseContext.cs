@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Infrastructure.Database;
@@ -43,21 +44,27 @@ public sealed class DatabaseContext : IdentityDbContext<
     /// Checks whether entity with provided ID exists in DB and not softly removed.
     /// </summary>
     /// <param name="id">Given entity ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <typeparam name="T">Inheritor of <see cref="IBaseEntity"/>.</typeparam>
     /// <returns>Boolean result indicating whether entity exists or not.</returns>
-    public Task<bool> ExistsByIdAsync<T>(Guid id)
+    public Task<bool> ExistsByIdAsync<T>(Guid id, CancellationToken cancellationToken = default)
         where T : class, IBaseEntity =>
-            this.Set<T>().AnyAsync(entity => entity.Id == id && !entity.IsDeleted);
+            this.Set<T>().AnyAsync(
+                entity => entity.Id == id && !entity.IsDeleted,
+                cancellationToken);
 
     /// <summary>
     /// Searches for entity by id.
     /// </summary>
     /// <typeparam name="T">Inheritor of <see cref="IBaseEntity"/>.</typeparam>
     /// <param name="id">Entity id.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Entity by search criteria.</returns>
-    public Task<T> SearchByIdAsync<T>(Guid id)
+    public Task<T> SearchByIdAsync<T>(Guid id, CancellationToken cancellationToken = default)
         where T : class, IBaseEntity =>
-            this.Set<T>().SingleOrDefaultAsync(entity => entity.Id == id && !entity.IsDeleted);
+            this.Set<T>().SingleOrDefaultAsync(
+                entity => entity.Id == id && !entity.IsDeleted,
+                cancellationToken);
 
     /// <summary>
     /// Searches for entity by id with including properties.
@@ -65,9 +72,14 @@ public sealed class DatabaseContext : IdentityDbContext<
     /// <typeparam name="T">Inheritor of <see cref="IBaseEntity"/>.</typeparam>
     /// <param name="id">Entity id.</param>
     /// <param name="includeTracking">Flag indicating whether entities tracking should be enabled.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <param name="includes">Collection of related entities to include.</param>
     /// <returns>Entity by search criteria.</returns>
-    public Task<T> SearchByIdAsync<T>(Guid id, bool includeTracking, params Expression<Func<T, object>>[] includes)
+    public Task<T> SearchByIdAsync<T>(
+        Guid id,
+        bool includeTracking,
+        CancellationToken cancellationToken = default,
+        params Expression<Func<T, object>>[] includes)
         where T : class, IBaseEntity
     {
         var query = includeTracking
@@ -82,7 +94,7 @@ public sealed class DatabaseContext : IdentityDbContext<
                     (current, includeProperty) => current.Include(includeProperty));
         }
 
-        return query.SingleOrDefaultAsync();
+        return query.SingleOrDefaultAsync(cancellationToken);
     }
 
     /// <summary>

@@ -144,7 +144,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
     private async Task<ServiceResult> ProcessUserEmailConfirmationAsync(AppUser user, bool shouldConfirmImmediately)
     {
-        var confirmationToken = await this.GenerateEmailConfirmationTokenAsync(user);
+        var confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
 
         if (shouldConfirmImmediately)
         {
@@ -176,9 +176,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
         return new ServiceResult<string>(ServiceResultType.Success, confirmationToken);
     }
-
-    private async Task<string> GenerateEmailConfirmationTokenAsync(AppUser user) =>
-        await this.userManager.GenerateEmailConfirmationTokenAsync(user);
 
     private void SendConfirmationEmail(string email, string confirmationToken)
     {

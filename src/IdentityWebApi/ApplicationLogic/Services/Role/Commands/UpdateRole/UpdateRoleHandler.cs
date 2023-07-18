@@ -35,7 +35,7 @@ public class UpdateRoleHandler : IRequestHandler<UpdateRoleCommand, ServiceResul
     /// <inheritdoc />.
     public async Task<ServiceResult<RoleResult>> Handle(UpdateRoleCommand command, CancellationToken cancellationToken)
     {
-        var isRoleExists = await this.databaseContext.ExistsByIdAsync<AppRole>(command.Id);
+        var isRoleExists = await this.databaseContext.ExistsByIdAsync<AppRole>(command.Id, cancellationToken);
 
         if (!isRoleExists)
         {
@@ -44,20 +44,20 @@ public class UpdateRoleHandler : IRequestHandler<UpdateRoleCommand, ServiceResul
 
         var roleToUpdate = this.mapper.Map<AppRole>(command);
 
-        var updatedRole = await this.UpdateRoleAsync(roleToUpdate);
+        var updatedRole = await this.UpdateRoleAsync(roleToUpdate, cancellationToken);
 
         var roleUpdateResult = this.mapper.Map<RoleResult>(updatedRole);
 
         return new ServiceResult<RoleResult>(ServiceResultType.Success, roleUpdateResult);
     }
 
-    private async Task<AppRole> UpdateRoleAsync(AppRole appRole)
+    private async Task<AppRole> UpdateRoleAsync(AppRole appRole, CancellationToken cancellationToken)
     {
         var appRoleEntry = this.databaseContext.Entry(appRole);
         appRoleEntry.Property(role => role.Name).IsModified = true;
         appRoleEntry.Property(role => role.ConcurrencyStamp).IsModified = true;
 
-        await this.databaseContext.SaveChangesAsync();
+        await this.databaseContext.SaveChangesAsync(cancellationToken);
 
         return appRole;
     }

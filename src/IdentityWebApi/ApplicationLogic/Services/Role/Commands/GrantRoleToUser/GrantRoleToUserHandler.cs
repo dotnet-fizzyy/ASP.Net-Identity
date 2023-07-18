@@ -30,7 +30,7 @@ public class GrantRoleToUserHandler : IRequestHandler<GrantRoleToUserCommand, Se
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(GrantRoleToUserCommand request, CancellationToken cancellationToken)
     {
-        var appRole = await this.databaseContext.SearchByIdAsync<AppRole>(request.RoleId);
+        var appRole = await this.databaseContext.SearchByIdAsync<AppRole>(request.RoleId, cancellationToken);
 
         if (appRole is null)
         {
@@ -41,6 +41,7 @@ public class GrantRoleToUserHandler : IRequestHandler<GrantRoleToUserCommand, Se
               await this.databaseContext.SearchByIdAsync<AppUser>(
                   request.UserId,
                   includeTracking: true,
+                  cancellationToken,
                   include => include.UserRoles);
 
         if (appUser is null)

@@ -30,29 +30,30 @@ public class HardRemoveRoleByIdHandler : IRequestHandler<HardRemoveRoleByIdComma
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(HardRemoveRoleByIdCommand command, CancellationToken cancellationToken)
     {
-        var appRole = await this.GetAppRoleAsync(command.Id);
+        var appRole = await this.GetAppRoleAsync(command.Id, cancellationToken);
 
         if (appRole is null)
         {
             return new ServiceResult(ServiceResultType.NotFound);
         }
 
-        await this.RemoveRoleAsync(appRole);
+        await this.RemoveRoleAsync(appRole, cancellationToken);
 
         return new ServiceResult(ServiceResultType.Success);
     }
 
-    private async Task<AppRole> GetAppRoleAsync(Guid id) =>
+    private async Task<AppRole> GetAppRoleAsync(Guid id, CancellationToken cancellationToken) =>
         await this.databaseContext.SearchByIdAsync<AppRole>(
             id,
             includeTracking: true,
+            cancellationToken,
             includedEntity => includedEntity.UserRoles);
 
-    private async Task RemoveRoleAsync(AppRole appRole)
+    private async Task RemoveRoleAsync(AppRole appRole, CancellationToken cancellationToken)
     {
         this.databaseContext.UserRoles.RemoveRange(appRole.UserRoles);
         this.databaseContext.Roles.Remove(appRole);
 
-        await this.databaseContext.SaveChangesAsync();
+        await this.databaseContext.SaveChangesAsync(cancellationToken);
     }
 }

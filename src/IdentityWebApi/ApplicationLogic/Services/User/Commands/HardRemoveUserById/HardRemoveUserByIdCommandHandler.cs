@@ -30,29 +30,30 @@ public class HardRemoveUserByIdCommandHandler : IRequestHandler<HardRemoveUserBy
     /// <inheritdoc/>
     public async Task<ServiceResult> Handle(HardRemoveUserByIdCommand request, CancellationToken cancellationToken)
     {
-        var appUser = await this.GetAppUserAsync(request.Id);
+        var appUser = await this.GetAppUserAsync(request.Id, cancellationToken);
 
         if (appUser == null)
         {
             return new ServiceResult(ServiceResultType.NotFound);
         }
 
-        await this.RemoveUserAsync(appUser);
+        await this.RemoveUserAsync(appUser, cancellationToken);
 
         return new ServiceResult(ServiceResultType.Success);
     }
 
-    private async Task<AppUser> GetAppUserAsync(Guid id) =>
+    private async Task<AppUser> GetAppUserAsync(Guid id, CancellationToken cancellationToken) =>
         await this.databaseContext.SearchByIdAsync<AppUser>(
             id,
             includeTracking: true,
+            cancellationToken,
             includedEntity => includedEntity.UserRoles);
 
-    private async Task RemoveUserAsync(AppUser appUser)
+    private async Task RemoveUserAsync(AppUser appUser, CancellationToken cancellationToken)
     {
         this.databaseContext.UserRoles.RemoveRange(appUser.UserRoles);
         this.databaseContext.Users.Remove(appUser);
 
-        await this.databaseContext.SaveChangesAsync();
+        await this.databaseContext.SaveChangesAsync(cancellationToken);
     }
 }

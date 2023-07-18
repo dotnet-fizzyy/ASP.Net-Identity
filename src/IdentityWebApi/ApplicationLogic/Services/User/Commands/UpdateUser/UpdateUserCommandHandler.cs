@@ -38,7 +38,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Servi
     /// <inheritdoc/>
     public async Task<ServiceResult<UserResult>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
-        var isUserExist = await this.CheckIfUserExistsAsync(command.Id);
+        var isUserExist = await this.CheckIfUserExistsAsync(command.Id, cancellationToken);
 
         if (!isUserExist)
         {
@@ -47,17 +47,17 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Servi
 
         var userToUpdate = this.mapper.Map<AppUser>(command);
 
-        var updatedUser = await this.UpdateUserDetailsAsync(userToUpdate);
+        var updatedUser = await this.UpdateUserDetailsAsync(userToUpdate, cancellationToken);
 
         var updatedUserResult = this.mapper.Map<UserResult>(updatedUser);
 
         return new ServiceResult<UserResult>(ServiceResultType.Success, updatedUserResult);
     }
 
-    private Task<bool> CheckIfUserExistsAsync(Guid id) =>
-        this.databaseContext.ExistsByIdAsync<AppUser>(id);
+    private Task<bool> CheckIfUserExistsAsync(Guid id, CancellationToken cancellationToken) =>
+        this.databaseContext.ExistsByIdAsync<AppUser>(id, cancellationToken);
 
-    private async Task<AppUser> UpdateUserDetailsAsync(AppUser user)
+    private async Task<AppUser> UpdateUserDetailsAsync(AppUser user, CancellationToken cancellationToken)
     {
         var userEntry = this.databaseContext.Entry(user);
 
@@ -65,8 +65,8 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Servi
         userEntry.Property(prop => prop.PhoneNumber).IsModified = true;
         userEntry.Property(prop => prop.Email).IsModified = true;
 
-        await this.databaseContext.SaveChangesAsync();
-        await userEntry.ReloadAsync();
+        await this.databaseContext.SaveChangesAsync(cancellationToken);
+        await userEntry.ReloadAsync(cancellationToken);
 
         userEntry.State = EntityState.Detached;
 
