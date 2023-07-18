@@ -47,10 +47,7 @@ public class RegionVerificationFilter : IAsyncActionFilter
             var ipAddressDetails = await this.netService.GetIpAddressDetails(userIpV4);
 
             var isCountryCodeMissing = string.IsNullOrEmpty(ipAddressDetails.CountryCode);
-            var isRequestRegionProhibited =
-                this.appSettings.RegionsVerificationSettings.ProhibitedRegions
-                    .Any(reg =>
-                        string.Equals(reg, ipAddressDetails.CountryCode, StringComparison.OrdinalIgnoreCase));
+            var isRequestRegionProhibited = this.IsRegionProhibitedInSettings(ipAddressDetails.CountryCode);
 
             if (isCountryCodeMissing || isRequestRegionProhibited)
             {
@@ -62,6 +59,10 @@ public class RegionVerificationFilter : IAsyncActionFilter
 
         await next();
     }
+
+    private bool IsRegionProhibitedInSettings(string regionCode) =>
+        this.appSettings.RegionsVerificationSettings.ProhibitedRegions.Any(region =>
+            string.Equals(region, regionCode, StringComparison.OrdinalIgnoreCase));
 
     private static string GetIpV4AddressFromExecutingContext(ActionExecutingContext context) =>
         context.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
