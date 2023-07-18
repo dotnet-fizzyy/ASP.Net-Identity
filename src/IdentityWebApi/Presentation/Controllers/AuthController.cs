@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,8 +39,8 @@ public class AuthController : ControllerBase
         IMapper mapper)
             : base(mediator)
     {
-        this.httpContextService = httpContextService;
-        this.mapper = mapper;
+        this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     /// <summary>

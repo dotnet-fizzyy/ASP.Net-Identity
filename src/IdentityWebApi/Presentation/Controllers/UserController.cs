@@ -45,8 +45,8 @@ public class UserController : ControllerBase
         IMapper mapper)
             : base(mediator)
     {
-        this.httpContextService = httpContextService;
-        this.mapper = mapper;
+        this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     /// <summary>

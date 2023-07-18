@@ -24,8 +24,8 @@ public class HttpContextService : IHttpContextService
     /// <param name="linkGenerator"><see cref="LinkGenerator"/>.</param>
     public HttpContextService(IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
     {
-        this.httpContext = httpContextAccessor.HttpContext;
-        this.linkGenerator = linkGenerator;
+        this.httpContext = httpContextAccessor?.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        this.linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
     }
 
     /// <inheritdoc/>

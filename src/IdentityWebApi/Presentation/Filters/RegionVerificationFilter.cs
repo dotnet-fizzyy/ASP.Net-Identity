@@ -26,8 +26,8 @@ public class RegionVerificationFilter : IAsyncActionFilter
     /// <param name="appSettings">AppSettings.</param>
     public RegionVerificationFilter(INetService netService, AppSettings appSettings)
     {
-        this.appSettings = appSettings;
-        this.netService = netService;
+        this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+        this.netService = netService ?? throw new ArgumentNullException(nameof(netService));
     }
 
     /// <inheritdoc/>
