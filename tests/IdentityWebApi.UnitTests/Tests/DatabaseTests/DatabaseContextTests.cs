@@ -11,6 +11,10 @@ public class DatabaseContextTests : SqliteConfiguration
     [Test]
     public async Task ShouldConnectToDbSuccessfully()
     {
-        Assert.True(await this.DatabaseContext.Database.CanConnectAsync());
+        // Arrange & Act
+        var result = await this.DatabaseContext.Database.CanConnectAsync();
+
+        // Assert
+        Assert.True(result);
     }
 }

@@ -17,7 +17,7 @@ public class DefaultValueAttribute : ValidationAttribute
         value switch
         {
             Guid guid => guid != default,
-            string @string => !string.IsNullOrEmpty(@string),
+            string @string => !string.IsNullOrWhiteSpace(@string),
             int @int => @int != default,
             var _ => true
         };

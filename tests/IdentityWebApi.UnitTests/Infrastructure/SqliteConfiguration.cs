@@ -25,6 +25,9 @@ public class SqliteConfiguration : IDisposable
             .Options;
 
         this.DatabaseContext = new DatabaseContext(options);
+
+        this.DatabaseContext.Database.EnsureDeleted();
+        this.DatabaseContext.Database.EnsureCreated();
     }
 
     public void Dispose()
