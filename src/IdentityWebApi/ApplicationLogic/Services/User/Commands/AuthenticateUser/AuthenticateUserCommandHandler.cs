@@ -52,11 +52,11 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
         IHttpContextService httpContextService,
         IMapper mapper)
     {
-        this.databaseContext = databaseContext;
-        this.signInManager = signInManager;
-        this.appSettings = appSettings;
-        this.httpContextService = httpContextService;
-        this.mapper = mapper;
+        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+        this.signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+        this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+        this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     /// <inheritdoc/>

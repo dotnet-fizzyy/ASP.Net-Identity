@@ -24,7 +24,7 @@ public class HardRemoveUserByIdCommandHandler : IRequestHandler<HardRemoveUserBy
     /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
     public HardRemoveUserByIdCommandHandler(DatabaseContext databaseContext)
     {
-        this.databaseContext = databaseContext;
+        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
     }
 
     /// <inheritdoc/>

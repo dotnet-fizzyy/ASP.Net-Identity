@@ -5,6 +5,7 @@ using IdentityWebApi.Infrastructure.Database;
 
 using MediatR;
 
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ public class RevokeRoleFromUserCommandHandler : IRequestHandler<RevokeRoleFromUs
     /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
     public RevokeRoleFromUserCommandHandler(DatabaseContext databaseContext)
     {
-        this.databaseContext = databaseContext;
+        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
     }
 
     /// <inheritdoc />

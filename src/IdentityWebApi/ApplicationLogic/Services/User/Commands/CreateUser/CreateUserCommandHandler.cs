@@ -16,6 +16,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Identity;
 
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,13 +55,13 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         IHttpContextService httpContextService,
         IMapper mapper)
     {
-        this.userManager = userManager;
-        this.roleManager = roleManager;
-        this.databaseContext = databaseContext;
-        this.appSettings = appSettings;
-        this.emailService = emailService;
-        this.httpContextService = httpContextService;
-        this.mapper = mapper;
+        this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        this.roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
+        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+        this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+        this.emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+        this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     /// <inheritdoc/>

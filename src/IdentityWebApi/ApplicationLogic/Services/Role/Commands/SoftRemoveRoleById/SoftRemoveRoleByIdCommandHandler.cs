@@ -5,6 +5,7 @@ using IdentityWebApi.Infrastructure.Database;
 
 using MediatR;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ public class SoftRemoveRoleByIdCommandHandler : IRequestHandler<SoftRemoveRoleBy
     /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
     public SoftRemoveRoleByIdCommandHandler(DatabaseContext databaseContext)
     {
-        this.databaseContext = databaseContext;
+        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
     }
 
     /// <inheritdoc />

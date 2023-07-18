@@ -7,6 +7,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Identity;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, S
     /// <param name="userManager"><see cref="UserManager{T}"/>.</param>
     public ConfirmEmailCommandHandler(UserManager<AppUser> userManager)
     {
-        this.userManager = userManager;
+        this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
     /// <inheritdoc />

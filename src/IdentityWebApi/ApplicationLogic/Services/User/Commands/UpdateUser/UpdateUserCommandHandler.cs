@@ -31,8 +31,8 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Servi
     /// <param name="mapper"><see cref="IMapper"/>.</param>
     public UpdateUserCommandHandler(DatabaseContext databaseContext, IMapper mapper)
     {
-        this.databaseContext = databaseContext;
-        this.mapper = mapper;
+        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     /// <inheritdoc/>

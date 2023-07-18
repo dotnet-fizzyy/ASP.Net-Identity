@@ -10,6 +10,7 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,8 +31,8 @@ public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, Servi
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
     public CreateRoleCommandHandler(DatabaseContext databaseContext, IMapper mapper)
     {
-        this.databaseContext = databaseContext;
-        this.mapper = mapper;
+        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     /// <inheritdoc />.

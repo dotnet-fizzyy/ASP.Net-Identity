@@ -8,6 +8,7 @@ using IdentityWebApi.Infrastructure.Database;
 
 using MediatR;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,8 +29,8 @@ public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommand, Servi
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
     public UpdateRoleCommandHandler(DatabaseContext databaseContext, IMapper mapper)
     {
-        this.databaseContext = databaseContext;
-        this.mapper = mapper;
+        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     /// <inheritdoc />.
