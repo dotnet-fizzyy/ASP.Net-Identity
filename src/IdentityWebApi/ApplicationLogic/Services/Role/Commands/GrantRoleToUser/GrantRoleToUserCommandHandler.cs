@@ -14,15 +14,15 @@ namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.GrantRoleToUser
 /// <summary>
 /// Grant role to user CQRS handler.
 /// </summary>
-public class GrantRoleToUserHandler : IRequestHandler<GrantRoleToUserCommand, ServiceResult>
+public class GrantRoleToUserCommandHandler : IRequestHandler<GrantRoleToUserCommand, ServiceResult>
 {
     private readonly DatabaseContext databaseContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GrantRoleToUserHandler"/> class.
+    /// Initializes a new instance of the <see cref="GrantRoleToUserCommandHandler"/> class.
     /// </summary>
     /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    public GrantRoleToUserHandler(DatabaseContext databaseContext)
+    public GrantRoleToUserCommandHandler(DatabaseContext databaseContext)
     {
         this.databaseContext = databaseContext;
     }

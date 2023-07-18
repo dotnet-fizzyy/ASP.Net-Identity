@@ -14,15 +14,15 @@ namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.RevokeRoleFromU
 /// <summary>
 /// Revoke role from user CQRS handler.
 /// </summary>
-public class RevokeRoleFromUserHandler : IRequestHandler<RevokeRoleFromUserCommand, ServiceResult>
+public class RevokeRoleFromUserCommandHandler : IRequestHandler<RevokeRoleFromUserCommand, ServiceResult>
 {
     private readonly DatabaseContext databaseContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RevokeRoleFromUserHandler"/> class.
+    /// Initializes a new instance of the <see cref="RevokeRoleFromUserCommandHandler"/> class.
     /// </summary>
     /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    public RevokeRoleFromUserHandler(DatabaseContext databaseContext)
+    public RevokeRoleFromUserCommandHandler(DatabaseContext databaseContext)
     {
         this.databaseContext = databaseContext;
     }

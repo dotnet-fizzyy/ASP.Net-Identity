@@ -14,15 +14,15 @@ namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.HardRemoveRoleB
 /// <summary>
 /// Hard remove role by id CQRS handler.
 /// </summary>
-public class HardRemoveRoleByIdHandler : IRequestHandler<HardRemoveRoleByIdCommand, ServiceResult>
+public class HardRemoveRoleByIdCommandHandler : IRequestHandler<HardRemoveRoleByIdCommand, ServiceResult>
 {
     private readonly DatabaseContext databaseContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HardRemoveRoleByIdHandler"/> class.
+    /// Initializes a new instance of the <see cref="HardRemoveRoleByIdCommandHandler"/> class.
     /// </summary>
     /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    public HardRemoveRoleByIdHandler(DatabaseContext databaseContext)
+    public HardRemoveRoleByIdCommandHandler(DatabaseContext databaseContext)
     {
         this.databaseContext = databaseContext;
     }

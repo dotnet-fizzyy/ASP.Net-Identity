@@ -7,12 +7,12 @@ namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.HardRemoveRoleB
 /// <summary>
 /// <see cref="HardRemoveRoleByIdCommand"/> validator.
 /// </summary>
-public class HardRemoveRoleByIdValidator : AbstractValidator<HardRemoveRoleByIdCommand>
+public class HardRemoveRoleByIdCommandValidator : AbstractValidator<HardRemoveRoleByIdCommand>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="HardRemoveRoleByIdValidator"/> class.
+    /// Initializes a new instance of the <see cref="HardRemoveRoleByIdCommandValidator"/> class.
     /// </summary>
-    public HardRemoveRoleByIdValidator()
+    public HardRemoveRoleByIdCommandValidator()
     {
         this.Include(new BaseIdValidator());
     }

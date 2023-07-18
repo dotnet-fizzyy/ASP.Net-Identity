@@ -16,17 +16,17 @@ namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.UpdateRole;
 /// <summary>
 /// Update role CQRS handler.
 /// </summary>
-public class UpdateRoleHandler : IRequestHandler<UpdateRoleCommand, ServiceResult<RoleResult>>
+public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommand, ServiceResult<RoleResult>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UpdateRoleHandler"/> class.
+    /// Initializes a new instance of the <see cref="UpdateRoleCommandHandler"/> class.
     /// </summary>
     /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public UpdateRoleHandler(DatabaseContext databaseContext, IMapper mapper)
+    public UpdateRoleCommandHandler(DatabaseContext databaseContext, IMapper mapper)
     {
         this.databaseContext = databaseContext;
         this.mapper = mapper;

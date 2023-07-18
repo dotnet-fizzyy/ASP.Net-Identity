@@ -13,15 +13,15 @@ namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.SoftRemoveRoleB
 /// <summary>
 /// Soft remove role by id CQRS handler.
 /// </summary>
-public class SoftRemoveRoleByIdHandler : IRequestHandler<SoftRemoveRoleByIdCommand, ServiceResult>
+public class SoftRemoveRoleByIdCommandHandler : IRequestHandler<SoftRemoveRoleByIdCommand, ServiceResult>
 {
     private readonly DatabaseContext databaseContext;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SoftRemoveRoleByIdHandler"/> class.
+    /// Initializes a new instance of the <see cref="SoftRemoveRoleByIdCommandHandler"/> class.
     /// </summary>
     /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    public SoftRemoveRoleByIdHandler(DatabaseContext databaseContext)
+    public SoftRemoveRoleByIdCommandHandler(DatabaseContext databaseContext)
     {
         this.databaseContext = databaseContext;
     }

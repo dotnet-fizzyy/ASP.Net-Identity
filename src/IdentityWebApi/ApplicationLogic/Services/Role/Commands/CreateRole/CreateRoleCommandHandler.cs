@@ -18,17 +18,17 @@ namespace IdentityWebApi.ApplicationLogic.Services.Role.Commands.CreateRole;
 /// <summary>
 /// Create role CQRS handler.
 /// </summary>
-public class CreateRoleHandler : IRequestHandler<CreateRoleCommand, ServiceResult<RoleResult>>
+public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, ServiceResult<RoleResult>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateRoleHandler"/> class.
+    /// Initializes a new instance of the <see cref="CreateRoleCommandHandler"/> class.
     /// </summary>
     /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public CreateRoleHandler(DatabaseContext databaseContext, IMapper mapper)
+    public CreateRoleCommandHandler(DatabaseContext databaseContext, IMapper mapper)
     {
         this.databaseContext = databaseContext;
         this.mapper = mapper;
