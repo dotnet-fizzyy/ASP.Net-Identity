@@ -37,7 +37,7 @@ internal static class ExceptionHandlerExtensions
                     {
                         case ModelValidationException modelValidationException:
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                            errorMessage = modelValidationException.Errors.Aggregate((acc, x) => acc + $", {x}");
+                            errorMessage = modelValidationException.Errors.Aggregate((acc, message) => acc + $", {message}");
 
                             break;
                         default:
