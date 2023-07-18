@@ -41,8 +41,9 @@ public class ValidationPipelineBehaviour<TRequest, TResponse> : IPipelineBehavio
         {
             var context = new ValidationContext<TRequest>(request);
 
-            var validationResults = await Task.WhenAll(
-                this.validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+            var validationResults =
+                    await Task.WhenAll(
+                        this.validators.Select(validator => validator.ValidateAsync(context, cancellationToken)));
 
             var failures = validationResults
                 .SelectMany(result => result.Errors)
@@ -53,7 +54,7 @@ public class ValidationPipelineBehaviour<TRequest, TResponse> : IPipelineBehavio
             {
                 throw new ModelValidationException(
                     typeof(TRequest).Name,
-                    failures.Select(x => x.ErrorMessage));
+                    failures.Select(error => error.ErrorMessage));
             }
         }
 
