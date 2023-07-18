@@ -10,6 +10,7 @@ using IdentityWebApi.ApplicationLogic.Services.Role.Commands.SoftRemoveRoleById;
 using IdentityWebApi.ApplicationLogic.Services.Role.Commands.UpdateRole;
 using IdentityWebApi.ApplicationLogic.Services.Role.Queries.GetRoleById;
 using IdentityWebApi.Core.Constants;
+using IdentityWebApi.Core.Interfaces.Presentation;
 
 using MediatR;
 
@@ -30,16 +31,22 @@ namespace IdentityWebApi.Presentation.Controllers;
 [Authorize(Roles = UserRoleConstants.Admin)]
 public class RoleController : ControllerBase
 {
+    private readonly IHttpContextService httpContextService;
     private readonly IMapper mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RoleController"/> class.
     /// </summary>
     /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
+    /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public RoleController(IMediator mediator, IMapper mapper)
-        : base(mediator)
+    public RoleController(
+        IMediator mediator,
+        IHttpContextService httpContextService,
+        IMapper mapper)
+            : base(mediator)
     {
+        this.httpContextService = httpContextService;
         this.mapper = mapper;
     }
 
@@ -132,7 +139,9 @@ public class RoleController : ControllerBase
             return this.CreateResponseByServiceResult(roleCreationResult);
         }
 
-        return this.CreatedAtAction(nameof(this.CreateRole), roleCreationResult.Data);
+        var getRoleLink = this.httpContextService.GenerateGetRoleLink(roleCreationResult.Data.Id);
+
+        return this.Created(getRoleLink, roleCreationResult.Data);
     }
 
     /// <summary>

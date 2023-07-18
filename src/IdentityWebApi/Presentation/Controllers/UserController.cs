@@ -8,6 +8,7 @@ using IdentityWebApi.ApplicationLogic.Services.User.Commands.SoftRemoveUserById;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.UpdateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Queries.GetUserById;
 using IdentityWebApi.Core.Constants;
+using IdentityWebApi.Core.Interfaces.Presentation;
 using IdentityWebApi.Presentation.Services;
 
 using MediatR;
@@ -28,16 +29,22 @@ namespace IdentityWebApi.Presentation.Controllers;
 [Authorize]
 public class UserController : ControllerBase
 {
+    private readonly IHttpContextService httpContextService;
     private readonly IMapper mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserController"/> class.
     /// </summary>
     /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
+    /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public UserController(IMediator mediator, IMapper mapper)
-        : base(mediator)
+    public UserController(
+        IMediator mediator,
+        IHttpContextService httpContextService,
+        IMapper mapper)
+            : base(mediator)
     {
+        this.httpContextService = httpContextService;
         this.mapper = mapper;
     }
 
@@ -82,7 +89,7 @@ public class UserController : ControllerBase
     [HttpGet("id/{id:guid}")]
     [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserResult>> GetUser(Guid id)
+    public async Task<ActionResult<UserResult>> GetUserById(Guid id)
     {
         var query = new GetUserByIdQuery(id);
         var userResult = await this.Mediator.Send(query);
@@ -117,7 +124,9 @@ public class UserController : ControllerBase
             return this.CreateResponseByServiceResult(userCreationResult);
         }
 
-        return this.CreatedAtAction(nameof(this.CreateUser), userCreationResult.Data);
+        var getUserLink = this.httpContextService.GenerateGetUserLink(userCreationResult.Data.Id);
+
+        return this.Created(getUserLink, userCreationResult.Data);
     }
 
     /// <summary>

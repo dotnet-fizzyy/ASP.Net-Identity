@@ -47,8 +47,17 @@ public class HttpContextService : IHttpContextService
     public string GenerateGetUserLink(Guid id) =>
         this.linkGenerator.GetUriByAction(
             this.httpContext,
-            "GetUser",
+            "GetUserById",
             "User",
+            new { id },
+            this.httpContext.Request.Scheme);
+
+    /// <inheritdoc/>
+    public string GenerateGetRoleLink(Guid id) =>
+        this.linkGenerator.GetUriByAction(
+            this.httpContext,
+            "GetRoleById",
+            "Role",
             new { id },
             this.httpContext.Request.Scheme);
 }

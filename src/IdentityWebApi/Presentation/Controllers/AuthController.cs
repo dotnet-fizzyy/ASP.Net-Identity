@@ -28,12 +28,12 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthController"/> class.
     /// </summary>
-    /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
     /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
+    /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
     public AuthController(
-        IHttpContextService httpContextService,
         IMediator mediator,
+        IHttpContextService httpContextService,
         IMapper mapper)
             : base(mediator)
     {

@@ -30,4 +30,11 @@ public interface IHttpContextService
     /// <param name="id">User identifier.</param>
     /// <returns>Link to to get user profile action.</returns>
     string GenerateGetUserLink(Guid id);
+
+    /// <summary>
+    /// Generates link to get role action.
+    /// </summary>
+    /// <param name="id">Role identifier</param>
+    /// <returns>Link to to get role action.</returns>
+    string GenerateGetRoleLink(Guid id);
 }
