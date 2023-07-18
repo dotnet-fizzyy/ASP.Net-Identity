@@ -1,8 +1,9 @@
-using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.Core.Results;
 
 using MediatR;
+
+using System;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.UpdateUser;
 
@@ -12,16 +13,27 @@ namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.UpdateUser;
 public record UpdateUserCommand : IRequest<ServiceResult<UserResult>>
 {
     /// <summary>
-    /// Gets user.
+    /// Gets or sets user id.
     /// </summary>
-    public Models.Action.UserDto UserDto { get; }
+    public Guid Id { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UpdateUserCommand"/> class.
+    /// Gets or sets user name.
     /// </summary>
-    /// <param name="userDto"><see cref="UserDto"/>.</param>
-    public UpdateUserCommand(Models.Action.UserDto userDto)
-    {
-        this.UserDto = userDto;
-    }
+    public string UserName { get; set; }
+
+    /// <summary>
+    /// Gets or sets concurrency stamp.
+    /// </summary>
+    public string ConcurrencyStamp { get; set; }
+
+    /// <summary>
+    /// Gets or sets email.
+    /// </summary>
+    public string Email { get; set; }
+
+    /// <summary>
+    /// Gets or sets phone number.
+    /// </summary>
+    public string PhoneNumber { get; set; }
 }

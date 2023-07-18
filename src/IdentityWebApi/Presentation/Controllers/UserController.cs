@@ -1,3 +1,5 @@
+using AutoMapper;
+
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
@@ -23,15 +25,20 @@ namespace IdentityWebApi.Presentation.Controllers;
 /// <summary>
 /// User controller.
 /// </summary>
+[Authorize]
 public class UserController : ControllerBase
 {
+    private readonly IMapper mapper;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="UserController"/> class.
     /// </summary>
-    /// <param name="mediator"><see cref="IMediator"/>.</param>
-    public UserController(IMediator mediator)
+    /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
+    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
+    public UserController(IMediator mediator, IMapper mapper)
         : base(mediator)
     {
+        this.mapper = mapper;
     }
 
     /// <summary>
@@ -39,10 +46,7 @@ public class UserController : ControllerBase
     /// </summary>
     /// <response code="200">User has been found.</response>
     /// <response code="404">Unable to find user.</response>
-    /// <returns>
-    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
-    /// </returns>
-    [Authorize]
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
@@ -74,10 +78,7 @@ public class UserController : ControllerBase
     /// <param name="id">User identifier.</param>
     /// <response code="200">User has been found.</response>
     /// <response code="404">Unable to find user.</response>
-    /// <returns>
-    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
-    /// </returns>
-    [Authorize]
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpGet("id/{id:guid}")]
     [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
@@ -101,27 +102,14 @@ public class UserController : ControllerBase
     /// <response code="201">User has been created.</response>
     /// <response code="404">Role to assign to user is not found.</response>
     /// <response code="500">Unable to create user due to internal issues.</response>
-    /// <returns>
-    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
-    /// </returns>
-    [Authorize]
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(UserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<UserResult>> CreateUser([FromBody, BindRequired] UserDto userDto)
     {
-        var command = new CreateUserCommand
-        {
-            Id = userDto.Id,
-            Email = userDto.Email,
-            UserRole = userDto.UserRole,
-            UserName = userDto.UserName,
-            Password = userDto.Password,
-            PhoneNumber = userDto.PhoneNumber,
-            ConcurrencyStamp = userDto.ConcurrencyStamp,
-            ConfirmEmailImmediately = true,
-        };
+        var command = this.mapper.Map<CreateUserCommand>(userDto);
         var userCreationResult = await this.Mediator.Send(command);
 
         if (userCreationResult.IsResultFailed)
@@ -138,16 +126,14 @@ public class UserController : ControllerBase
     /// <param name="userDto"><see cref="UserDto"/>.</param>
     /// <response code="200">User details have been updated.</response>
     /// <response code="404">Unable to find user.</response>
-    /// <returns>
-    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpPut]
     [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserResult>> UpdateUser([FromBody, BindRequired] UserDto userDto)
     {
-        var command = new UpdateUserCommand(userDto);
+        var command = this.mapper.Map<UpdateUserCommand>(userDto);
         var userUpdateResult = await this.Mediator.Send(command);
 
         if (userUpdateResult.IsResultFailed)
@@ -164,9 +150,7 @@ public class UserController : ControllerBase
     /// <param name="id">User identifier.</param>
     /// <response code="204">User status "IsDeleted" has been set to true.</response>
     /// <response code="404">Unable to find user.</response>
-    /// <returns>
-    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/soft-remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
@@ -190,9 +174,7 @@ public class UserController : ControllerBase
     /// <param name="id">User identifier.</param>
     /// <response code="204">User has been removed from DB.</response>
     /// <response code="404">Unable to find user.</response>
-    /// <returns>
-    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/hard-remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]

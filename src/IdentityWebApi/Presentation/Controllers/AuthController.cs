@@ -1,9 +1,10 @@
+using AutoMapper;
+
 using IdentityWebApi.ApplicationLogic.Models.Action;
 using IdentityWebApi.ApplicationLogic.Models.Output;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.ConfirmEmail;
 using IdentityWebApi.ApplicationLogic.Services.User.Commands.CreateUser;
-using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.Presentation;
 
 using MediatR;
@@ -22,16 +23,22 @@ namespace IdentityWebApi.Presentation.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IHttpContextService httpContextService;
+    private readonly IMapper mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthController"/> class.
     /// </summary>
-    /// <param name="httpContextService"><see cref="IHttpContextService"/>.</param>
-    /// <param name="mediator"><see cref="IMediator"/>.</param>
-    public AuthController(IHttpContextService httpContextService, IMediator mediator)
-        : base(mediator)
+    /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
+    /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
+    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
+    public AuthController(
+        IHttpContextService httpContextService,
+        IMediator mediator,
+        IMapper mapper)
+            : base(mediator)
     {
         this.httpContextService = httpContextService;
+        this.mapper = mapper;
     }
 
     /// <summary>
@@ -46,15 +53,8 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> SignUpUser([FromBody, BindRequired] UserRegistrationDto userRegistrationDto)
     {
-        var createUserCommand = new CreateUserCommand
-        {
-            Email = userRegistrationDto.Email,
-            UserName = userRegistrationDto.UserName,
-            Password = userRegistrationDto.Password,
-            UserRole = UserRoleConstants.User,
-        };
-
-        var creationResult = await this.Mediator.Send(createUserCommand);
+        var command = this.mapper.Map<CreateUserCommand>(userRegistrationDto);
+        var creationResult = await this.Mediator.Send(command);
 
         if (creationResult.IsResultFailed)
         {
@@ -78,8 +78,8 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AuthUserResult>> SignIn([FromBody, BindRequired] UserSignInDto userModel)
     {
-        var authUserCommand = new AuthenticateUserCommand(userModel.Email, userModel.Password);
-        var authUserResult = await this.Mediator.Send(authUserCommand);
+        var command = new AuthenticateUserCommand(userModel.Email, userModel.Password);
+        var authUserResult = await this.Mediator.Send(command);
 
         if (authUserResult.IsResultFailed)
         {

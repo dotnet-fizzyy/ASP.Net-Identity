@@ -8,6 +8,8 @@ using IdentityWebApi.Infrastructure.Database;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,27 +38,38 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Servi
     /// <inheritdoc/>
     public async Task<ServiceResult<UserResult>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
-        var existingAppUser = await this.GetUser(command.UserDto.Id);
-        if (existingAppUser == null)
+        var isUserExist = await this.CheckIfUserExistsAsync(command.Id);
+
+        if (!isUserExist)
         {
             return new ServiceResult<UserResult>(ServiceResultType.NotFound);
         }
 
-        UpdateUserDetails(existingAppUser, command.UserDto);
+        var userToUpdate = this.mapper.Map<AppUser>(command);
 
-        await this.databaseContext.SaveChangesAsync();
+        var updatedUser = await this.UpdateUserDetailsAsync(userToUpdate);
 
-        var updatedUserDto = this.mapper.Map<AppUser, UserResult>(existingAppUser);
+        var updatedUserResult = this.mapper.Map<UserResult>(updatedUser);
 
-        return new ServiceResult<UserResult>(ServiceResultType.Success, updatedUserDto);
+        return new ServiceResult<UserResult>(ServiceResultType.Success, updatedUserResult);
     }
 
-    private async Task<AppUser> GetUser(Guid id) =>
-        await this.databaseContext.SearchByIdAsync<AppUser>(id);
+    private Task<bool> CheckIfUserExistsAsync(Guid id) =>
+        this.databaseContext.ExistsByIdAsync<AppUser>(id);
 
-    private static void UpdateUserDetails(AppUser appUser, Models.Action.UserDto userDto)
+    private async Task<AppUser> UpdateUserDetailsAsync(AppUser user)
     {
-        appUser.UserName = userDto.UserName;
-        appUser.PhoneNumber = userDto.PhoneNumber;
+        var userEntry = this.databaseContext.Entry(user);
+
+        userEntry.Property(prop => prop.UserName).IsModified = true;
+        userEntry.Property(prop => prop.PhoneNumber).IsModified = true;
+        userEntry.Property(prop => prop.Email).IsModified = true;
+
+        await this.databaseContext.SaveChangesAsync();
+        await userEntry.ReloadAsync();
+
+        userEntry.State = EntityState.Detached;
+
+        return user;
     }
 }

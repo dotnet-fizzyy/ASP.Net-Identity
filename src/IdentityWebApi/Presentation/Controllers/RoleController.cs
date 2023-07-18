@@ -35,8 +35,8 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="RoleController"/> class.
     /// </summary>
-    /// <param name="mediator">Instance of <see cref="IMediator"/>.</param>
-    /// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
+    /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
+    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
     public RoleController(IMediator mediator, IMapper mapper)
         : base(mediator)
     {
@@ -49,9 +49,7 @@ public class RoleController : ControllerBase
     /// <param name="id">Role identifier.</param>
     /// <response code="200">Role has been found.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation with <see cref="RoleResult"/> Role.
-    /// </returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation with <see cref="RoleResult"/> Role.</returns>
     [HttpGet("id/{id:guid}")]
     [ProducesResponseType(typeof(RoleResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
@@ -74,13 +72,11 @@ public class RoleController : ControllerBase
     /// <param name="userRoleDto"><see cref="UserRoleDto"/>.</param>
     /// <response code="204">Role has been granted.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("grant")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleDto userRoleDto)
+    public async Task<ActionResult> GrantRoleToUser([FromBody, BindRequired] UserRoleDto userRoleDto)
     {
         var command = new GrantRoleToUserCommand(userRoleDto.UserId, userRoleDto.RoleId);
         var roleGrantResult = await this.Mediator.Send(command);
@@ -99,13 +95,11 @@ public class RoleController : ControllerBase
     /// <param name="userRoleDto"><see cref="UserRoleDto"/>.</param>
     /// <response code="204">Role has been revoked.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("revoke")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> RevokeRoleFromUser([FromBody, BindRequired] UserRoleDto userRoleDto)
+    public async Task<ActionResult> RevokeRoleFromUser([FromBody, BindRequired] UserRoleDto userRoleDto)
     {
         var command = new RevokeRoleFromUserCommand(userRoleDto.UserId, userRoleDto.RoleId);
         var roleRevokeResult = await this.Mediator.Send(command);
@@ -147,9 +141,7 @@ public class RoleController : ControllerBase
     /// <param name="roleDto"><see cref="RoleDto"/>.</param>
     /// <response code="200">Role details have been updated.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPut]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
@@ -173,7 +165,6 @@ public class RoleController : ControllerBase
     /// <response code="204">Role status "IsDeleted" has been set to true.</response>
     /// <response code="404">Unable to find role.</response>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-    [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/soft-remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -198,7 +189,6 @@ public class RoleController : ControllerBase
     /// <response code="204">Role has been removed from DB.</response>
     /// <response code="404">Unable to find role.</response>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpDelete("id/{id:guid}/hard-remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]

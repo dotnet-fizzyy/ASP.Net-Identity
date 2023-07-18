@@ -23,7 +23,7 @@ public class EmailTemplateController : ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="EmailTemplateController"/> class.
     /// </summary>
-    /// <param name="mediator"><see cref="IMediator"/>.</param>
+    /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
     public EmailTemplateController(IMediator mediator)
         : base(mediator)
     {
@@ -35,9 +35,7 @@ public class EmailTemplateController : ControllerBase
     /// <param name="id">Email template identifier.</param>
     /// <response code="200">Email template has been found.</response>
     /// <response code="404">Unable to find email template.</response>
-    /// <returns>
-    /// A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.
-    /// </returns>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpGet("id/{id:guid}")]
     [ProducesResponseType(typeof(EmailTemplateDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
