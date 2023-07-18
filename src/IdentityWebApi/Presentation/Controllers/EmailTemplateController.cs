@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IdentityWebApi.Presentation.Controllers;
@@ -33,16 +34,17 @@ public class EmailTemplateController : ControllerBase
     /// Returns email template.
     /// </summary>
     /// <param name="id">Email template identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="200">Email template has been found.</response>
     /// <response code="404">Unable to find email template.</response>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpGet("id/{id:guid}")]
     [ProducesResponseType(typeof(EmailTemplateDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<EmailTemplateDto>> GetEmailTemplate(Guid id)
+    public async Task<ActionResult<EmailTemplateDto>> GetEmailTemplate(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetEmailTemplateByIdQuery(id);
-        var emailTemplateResult = await this.Mediator.Send(query);
+        var emailTemplateResult = await this.Mediator.Send(query, cancellationToken);
 
         if (emailTemplateResult.IsResultFailed)
         {
