@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 
+using System;
 using System.Linq;
 
 namespace IdentityWebApi.Startup.Configuration;
@@ -38,6 +39,11 @@ internal static class ExceptionHandlerExtensions
                         case ModelValidationException modelValidationException:
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
                             errorMessage = modelValidationException.Errors.Aggregate((acc, message) => acc + $", {message}");
+
+                            break;
+                        case OperationCanceledException canceledException:
+                            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                            errorMessage = canceledException.Message;
 
                             break;
                         default:
