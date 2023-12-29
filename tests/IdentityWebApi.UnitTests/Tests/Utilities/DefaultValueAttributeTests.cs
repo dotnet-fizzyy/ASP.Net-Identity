@@ -1,6 +1,7 @@
 using IdentityWebApi.Core.Utilities;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using System;
 
@@ -21,7 +22,7 @@ public class DefaultValueAttributeTests
         var result = defaultValueAttribute.IsValid(value);
 
         // Assert
-        Assert.False(result);
+        ClassicAssert.False(result);
     }
 
     [Test]
@@ -36,7 +37,7 @@ public class DefaultValueAttributeTests
         var result = defaultValueAttribute.IsValid(value);
 
         // Assert
-        Assert.False(result);
+        ClassicAssert.False(result);
     }
 
     [TestCase("")]
@@ -50,7 +51,7 @@ public class DefaultValueAttributeTests
         var result = defaultValueAttribute.IsValid(value);
 
         // Assert
-        Assert.False(result);
+        ClassicAssert.False(result);
     }
 
     [Test]
@@ -65,6 +66,6 @@ public class DefaultValueAttributeTests
         var result = defaultValueAttribute.IsValid(value);
 
         // Assert
-        Assert.True(result);
+        ClassicAssert.True(result);
     }
 }

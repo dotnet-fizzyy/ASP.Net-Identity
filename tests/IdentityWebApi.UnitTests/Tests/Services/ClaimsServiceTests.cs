@@ -4,6 +4,7 @@ using IdentityWebApi.UnitTests.Shared.Constants;
 using IdentityWebApi.UnitTests.Shared.Controllers;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using System;
 
@@ -22,8 +23,8 @@ public class ClaimsServiceTests
         var userIdResult = ClaimsService.GetUserIdFromIdentityUser(identityUser);
 
         //Assert
-        Assert.AreEqual(ServiceResultType.Success, userIdResult.Result);
-        Assert.AreEqual(new Guid(UserConstants.UserId), userIdResult.Data);
+        ClassicAssert.AreEqual(ServiceResultType.Success, userIdResult.Result);
+        ClassicAssert.AreEqual(new Guid(UserConstants.UserId), userIdResult.Data);
     }
 
     [TestCase(null)]
@@ -38,6 +39,6 @@ public class ClaimsServiceTests
         var userIdResult = ClaimsService.GetUserIdFromIdentityUser(identityUser);
 
         //Assert
-        Assert.AreEqual(ServiceResultType.InvalidData, userIdResult.Result);
+        ClassicAssert.AreEqual(ServiceResultType.InvalidData, userIdResult.Result);
     }
 }

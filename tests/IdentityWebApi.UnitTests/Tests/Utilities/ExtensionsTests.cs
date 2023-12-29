@@ -1,6 +1,7 @@
 using IdentityWebApi.Core.Utilities;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ public class ExtensionsTests
     public void ShouldReturnTrueIfCollectionIsNullOrEmpty(IEnumerable<int> collection)
     {
         // Arrange & Act & Assert
-        Assert.True(collection.IsNullOrEmpty());
+        ClassicAssert.True(collection.IsNullOrEmpty());
     }
 
     [Test]
@@ -24,7 +25,7 @@ public class ExtensionsTests
         var collection = new List<int> { 1 };
 
         // Act & Assert
-        Assert.False(collection.IsNullOrEmpty());
+        ClassicAssert.False(collection.IsNullOrEmpty());
     }
 
     public static object[] EmptyCollections = { null, Enumerable.Empty<int>() };
