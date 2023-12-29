@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Routing;
 using Moq;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 using System.Collections.Generic;
 using System.Net;
@@ -80,7 +81,7 @@ public class RegionVerificationFilterTests
         await regionVerificationFilter.OnActionExecutionAsync(actExecutingContext, actionExecutionDelegate);
 
         // Assert
-        Assert.Null(actExecutingContext.Result);
+        ClassicAssert.Null(actExecutingContext.Result);
 
         Mock.Get(netService)
             .Verify(service => service.GetIpAddressDetails(It.IsAny<string>()), Times.Once);
@@ -124,7 +125,7 @@ public class RegionVerificationFilterTests
         await regionVerificationFilter.OnActionExecutionAsync(actExecutingContext, actionExecutionDelegate);
 
         // Assert
-        Assert.AreEqual(typeof(BadRequestObjectResult), actExecutingContext.Result.GetType());
+        ClassicAssert.AreEqual(typeof(BadRequestObjectResult), actExecutingContext.Result.GetType());
     }
 
     [Test]
@@ -183,7 +184,7 @@ public class RegionVerificationFilterTests
         await regionVerificationFilter.OnActionExecutionAsync(actExecutingContext, actionExecutionDelegate);
 
         // Assert
-        Assert.AreEqual(typeof(ForbiddenObjectResult), actExecutingContext.Result.GetType());
+        ClassicAssert.AreEqual(typeof(ForbiddenObjectResult), actExecutingContext.Result.GetType());
 
         Mock.Get(netService)
             .Verify(service => service.GetIpAddressDetails(It.IsAny<string>()), Times.Once);

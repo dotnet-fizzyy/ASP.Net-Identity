@@ -15,6 +15,6 @@ public class DatabaseContextTests : SqliteConfiguration
         var result = await this.DatabaseContext.Database.CanConnectAsync();
 
         // Assert
-        Assert.True(result);
+        Assert.That(result);
     }
 }
