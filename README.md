@@ -6,10 +6,10 @@ This project represents application that is responsible for handling users and r
 
 ### Built With
 
-* [C# 11](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-11);
-* [ASP.Net 7.0 WebAPI](https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-7.0?view=aspnetcore-7.0);
+* [C# 12](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-12);
+* [ASP.Net 8.0 WebAPI](https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-8.0?view=aspnetcore-8.0);
 * [Entity Framework](https://entityframeworkcore.com);
-* [Identity Server Core](https://docs.identityserver.io/en/latest/quickstarts/6_aspnet_identity.html);
+* [Identity Server Core](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0);
 * [Handlebars](https://handlebarsjs.com/);
 * [Automapper](https://automapper.org/);
 * [MailKit](https://github.com/jstedfast/MailKit);
@@ -22,10 +22,10 @@ Before launching this application make sure you have prepared the following comp
 
 * Windows | macOS | Linux;
 * [MSSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2019?rtc=1);
-* [.Net 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0);
+* [.Net 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0);
 * [Visual Studio](https://visualstudio.microsoft.com/) | [Visual Studio Code](https://code.visualstudio.com/) | [Rider](https://www.jetbrains.com/rider/);
 * [SSMS](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15) | [DBeaver](https://dbeaver.io/) | [DataGrip](https://www.jetbrains.com/datagrip/);
-* [Docker](https://www.docker.com) - Optional;
+* [Docker](https://www.docker.com) | [Rancher Desktop](https://rancherdesktop.io/) | [Podman](https://podman.io/) - Optional;
 
 ### Installation and launch
 
@@ -35,10 +35,10 @@ Before launching this application make sure you have prepared the following comp
    ```
 2. Execute the following command to configure git hooks for repository: `git config --local core.hooksPath .githooks/`. If you use Linux/MacOS, make sure you have enough permissions to run hooks, execute the following command: `sudo chmod +x .githooks/*`.
 3. Run **IdentityWebApi.sln** in the root directory;
-4. Depending on your OS, choose IIS or Kestrel as hosting webservices;
+4. Depending on your OS, choose IIS or Kestrel as hosting webserver;
 5. Make sure your MSSQL database instance is running. Otherwise you will not be able to launch app;
 6. Start the application;
-7. Visit the following URL: https://localhost:{port}/swagger. You should be able to see Swagger description;
+7. Visit the following URL: `https://localhost:{port}/swagger`. You should be able to see Swagger description;
 
 ### Docker launch
 
