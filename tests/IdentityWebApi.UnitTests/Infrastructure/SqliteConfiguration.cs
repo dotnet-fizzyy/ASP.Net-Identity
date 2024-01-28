@@ -30,6 +30,11 @@ public class SqliteConfiguration : IDisposable
         this.DatabaseContext.Database.EnsureCreated();
     }
 
+    ~SqliteConfiguration()
+    {
+        this.connection?.Close();
+    }
+
     public void Dispose()
     {
         this.connection?.Close();
