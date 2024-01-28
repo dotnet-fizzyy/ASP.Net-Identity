@@ -58,7 +58,7 @@ public class DefaultValueAttributeTests
     public void ShouldReturnTrueIfTypeHasNoSupport()
     {
         // Arrange
-        decimal value = 100;
+        const decimal value = 100;
 
         var defaultValueAttribute = new DefaultValueAttribute();
 

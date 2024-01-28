@@ -28,5 +28,5 @@ public class ExtensionsTests
         ClassicAssert.False(collection.IsNullOrEmpty());
     }
 
-    public static object[] EmptyCollections = { null, Enumerable.Empty<int>() };
+    public static object[] EmptyCollections = [null, Enumerable.Empty<int>()];
 }

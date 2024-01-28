@@ -1,5 +1,6 @@
+using IdentityWebApi.Core.Utilities;
+
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 
 namespace IdentityWebApi.UnitTests.Shared.Controllers;
@@ -23,7 +24,7 @@ public static class UserControllerTestsDataFactory
             userClaims.Add(new Claim(ClaimTypes.Email, email));
         }
 
-        if (roles != null && roles.Any())
+        if (!roles.IsNullOrEmpty())
         {
             userClaims.Add(new Claim(ClaimTypes.Role, string.Join(",", roles)));
         }
