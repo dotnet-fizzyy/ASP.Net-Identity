@@ -8,7 +8,7 @@ using MimeKit.Text;
 
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.Infrastructure.Net.Services;
+namespace IdentityWebApi.Infrastructure.Network.Services;
 
 /// <inheritdoc cref="IEmailService" />
 public class EmailService : IEmailService

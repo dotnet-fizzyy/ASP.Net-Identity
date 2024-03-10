@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace IdentityWebApi.Infrastructure.Net.Models;
+namespace IdentityWebApi.Infrastructure.Network.Models;
 
 /// <summary>
 /// Response model from IpStack service.

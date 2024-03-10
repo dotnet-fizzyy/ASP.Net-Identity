@@ -1,6 +1,6 @@
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;
-using IdentityWebApi.Infrastructure.Net.Services;
+using IdentityWebApi.Infrastructure.Network.Services;
 using IdentityWebApi.Presentation.Services;
 using IdentityWebApi.Startup.ApplicationSettings;
 

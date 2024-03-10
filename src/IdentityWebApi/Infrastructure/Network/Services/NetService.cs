@@ -2,7 +2,7 @@ using AutoMapper;
 
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Models;
-using IdentityWebApi.Infrastructure.Net.Models;
+using IdentityWebApi.Infrastructure.Network.Models;
 using IdentityWebApi.Startup.ApplicationSettings;
 
 using Newtonsoft.Json;
@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.Infrastructure.Net.Services;
+namespace IdentityWebApi.Infrastructure.Network.Services;
 
 /// <inheritdoc />
 public class NetService : INetService
