@@ -1,11 +1,13 @@
 using IdentityWebApi.Core.Entities;
 using IdentityWebApi.Core.Utilities;
 using IdentityWebApi.Infrastructure.Database;
+using IdentityWebApi.Infrastructure.Database.Interceptors;
 using IdentityWebApi.Startup.ApplicationSettings;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 using System;
 using System.Collections.Generic;
@@ -23,14 +25,19 @@ internal static class IdentityServerExtensions
     /// </summary>
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
     /// <param name="identitySettings"><see cref="IdentitySettings"/>.</param>
-    /// <param name="dbConnectionString">Database connection link.</param>
+    /// <param name="dbSettings">The instance of <see cref="dbSettings"/>.</param>
     public static void RegisterIdentityServer(
         this IServiceCollection services,
         IdentitySettings identitySettings,
-        string dbConnectionString)
+        DbSettings dbSettings)
     {
         services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer(dbConnectionString));
+            options
+                .UseSqlServer(dbSettings.ConnectionString)
+                .AddInterceptors(
+                    new ExecutionThresholdExceedSqlInterceptor(
+                        logger: services.BuildServiceProvider().GetRequiredService<ILogger<ExecutionThresholdExceedSqlInterceptor>>(),
+                        sqlQueryExecutionThresholdInMilliseconds: dbSettings.SqlQueryExecutionThresholdInMilliseconds)));
 
         services.AddIdentity<AppUser, AppRole>(options =>
             {

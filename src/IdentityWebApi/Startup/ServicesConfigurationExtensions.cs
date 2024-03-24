@@ -24,7 +24,7 @@ public static class ServicesConfigurationExtensions
         services.RegisterServices(appSettings);
 
         // Identity server setup should go before Auth setup
-        services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings.ConnectionString);
+        services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings);
         services.RegisterAuthSettings(appSettings.IdentitySettings);
 
         services.RegisterMediatr();
@@ -38,6 +38,8 @@ public static class ServicesConfigurationExtensions
             appSettings.Api.EnableHealthCheckUi);
 
         services.AddHttpContextAccessor();
+
+        services.RegisterOpenTelemetry();
 
         services.AddRouting(opts =>
         {

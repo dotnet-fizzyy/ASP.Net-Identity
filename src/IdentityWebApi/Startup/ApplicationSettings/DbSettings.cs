@@ -42,6 +42,12 @@ public class DbSettings : IValidatable
     public string Password { get; set; }
 
     /// <summary>
+    /// Gets or sets DB threshold in seconds to identify long-time running queries.
+    /// </summary>
+    [DefaultValue]
+    public int SqlQueryExecutionThresholdInMilliseconds { get; set; }
+
+    /// <summary>
     /// Gets computed DB connection string.
     /// </summary>
     public string ConnectionString =>
