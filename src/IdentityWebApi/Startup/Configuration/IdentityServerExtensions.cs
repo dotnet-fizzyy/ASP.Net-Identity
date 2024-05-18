@@ -96,12 +96,12 @@ internal static class IdentityServerExtensions
         ICollection<DefaultUserSettings> defaultUsers,
         bool requireConfirmation)
     {
-        using var scope = serviceProvider.CreateScope();
-
         if (defaultUsers.IsNullOrEmpty())
         {
             return;
         }
+
+        using var scope = serviceProvider.CreateScope();
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
@@ -114,36 +114,31 @@ internal static class IdentityServerExtensions
 
             if (isRequiredUserInformationMissing)
             {
-                return;
+                continue;
             }
 
-            var existingAdmin = await userManager.FindByEmailAsync(defaultUser.Email);
+            var existingUser = await userManager.FindByEmailAsync(defaultUser.Email);
 
-            if (existingAdmin != null)
+            if (existingUser != null)
             {
-                await ConfirmDefaultAdminEmail(userManager, existingAdmin, requireConfirmation);
+                await ConfirmDefaultUserEmail(userManager, existingUser, requireConfirmation);
 
-                return;
+                continue;
             }
 
-            var appUserAdmin = new AppUser
+            var appUser = new AppUser
             {
                 UserName = defaultUser.Name,
                 Email = defaultUser.Email,
             };
 
-            await userManager
-                .CreateAsync(appUserAdmin, defaultUser.Password)
-                .ContinueWith(
-                    _ => userManager.AddToRoleAsync(appUserAdmin, defaultUser.Role),
-                    TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.NotOnCanceled)
-                .ContinueWith(
-                    _ => ConfirmDefaultAdminEmail(userManager, appUserAdmin, requireConfirmation),
-                    TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.NotOnCanceled);
+            await userManager.CreateAsync(appUser, defaultUser.Password);
+            await userManager.AddToRoleAsync(appUser, defaultUser.Role);
+            await ConfirmDefaultUserEmail(userManager, appUser, requireConfirmation);
         }
     }
 
-    private static async Task ConfirmDefaultAdminEmail(
+    private static async Task ConfirmDefaultUserEmail(
         UserManager<AppUser> userManager,
         AppUser appUserAdmin,
         bool requireConfirmation)
