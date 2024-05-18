@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace IdentityWebApi.Startup.Configuration;
 
@@ -34,6 +36,11 @@ internal static class SwaggerExtensions
                     Email = "ezzyfizzy27@gmail.com",
                 },
             });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+            options.IncludeXmlComments(xmlPath);
 
             if (identitySettings.AuthType != AuthType.Jwt)
             {
