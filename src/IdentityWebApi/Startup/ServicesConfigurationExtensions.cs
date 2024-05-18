@@ -39,8 +39,6 @@ public static class ServicesConfigurationExtensions
 
         services.AddHttpContextAccessor();
 
-        services.RegisterOpenTelemetry();
-
         services.AddRouting(opts =>
         {
             opts.LowercaseUrls = true;
