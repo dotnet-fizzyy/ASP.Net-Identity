@@ -11,7 +11,7 @@ using System.Reflection;
 namespace IdentityWebApi.Startup.Configuration;
 
 /// <summary>
-/// Validation of appsettings.json parameters.
+/// Validation settings registrations.
 /// </summary>
 internal static class ValidationSettingsExtensions
 {

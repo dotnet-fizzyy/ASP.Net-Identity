@@ -17,6 +17,7 @@ public static class MediatrExtensions
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
     public static void RegisterMediatr(this IServiceCollection services)
     {
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(serviceConfiguration =>
+            serviceConfiguration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
     }
 }
