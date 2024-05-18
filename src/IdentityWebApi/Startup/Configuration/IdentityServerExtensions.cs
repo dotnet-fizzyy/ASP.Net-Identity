@@ -25,7 +25,7 @@ internal static class IdentityServerExtensions
     /// </summary>
     /// <param name="services"><see cref="IServiceCollection"/>.</param>
     /// <param name="identitySettings"><see cref="IdentitySettings"/>.</param>
-    /// <param name="dbSettings">The instance of <see cref="dbSettings"/>.</param>
+    /// <param name="dbSettings">The instance of <see cref="DbSettings"/>.</param>
     public static void RegisterIdentityServer(
         this IServiceCollection services,
         IdentitySettings identitySettings,

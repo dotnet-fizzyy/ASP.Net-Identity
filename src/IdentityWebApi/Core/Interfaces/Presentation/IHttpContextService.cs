@@ -34,7 +34,7 @@ public interface IHttpContextService
     /// <summary>
     /// Generates link to get role action.
     /// </summary>
-    /// <param name="id">Role identifier</param>
-    /// <returns>Link to to get role action.</returns>
+    /// <param name="id">Role identifier.</param>
+    /// <returns>Link to get role action.</returns>
     string GenerateGetRoleLink(Guid id);
 }

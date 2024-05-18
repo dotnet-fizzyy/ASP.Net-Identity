@@ -6,6 +6,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace IdentityWebApi.Startup;
 
+// Disable UseEndpoints() non-root registration.
+#pragma warning disable ASP0014
+
 /// <summary>
 /// Request pipeline configuration layer (<c>Configure</c> in past).
 /// </summary>
