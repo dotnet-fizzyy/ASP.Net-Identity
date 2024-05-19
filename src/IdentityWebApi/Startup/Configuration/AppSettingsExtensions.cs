@@ -21,7 +21,7 @@ public static class AppSettingsExtensions
     public static AppSettings ReadAppSettings(this IConfiguration configuration)
     {
         var apiSettings = configuration
-            .GetSection(nameof(AppSettings.Api))
+            .GetSection(nameof(AppSettings.ApiSettings))
             .Get<ApiSettings>();
         var dbSettings = configuration
             .GetSection(nameof(AppSettings.DbSettings))
@@ -41,7 +41,7 @@ public static class AppSettingsExtensions
 
         return new AppSettings
         {
-            Api = apiSettings,
+            ApiSettings = apiSettings,
             DbSettings = dbSettings,
             SmtpClientSettings = smtpClientSettings,
             IpStackSettings = ipStackSettings,

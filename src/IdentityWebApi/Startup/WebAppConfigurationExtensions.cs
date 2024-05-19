@@ -17,17 +17,17 @@ public static class WebAppConfigurationExtensions
     /// <summary>
     /// Configures application HTTP request middleware.
     /// </summary>
-    /// <param name="app">
-    /// Instance of <see cref="WebApplication"/>.
-    /// </param>
-    /// <param name="appSettings">
-    /// Application settings from "appsettings.json" file.
-    /// </param>
+    /// <param name="app">Instance of <see cref="WebApplication"/>.</param>
+    /// <param name="appSettings">Application settings from JSON file.</param>
     public static void Configure(this WebApplication app, AppSettings appSettings)
     {
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+        }
+
+        if (appSettings.ApiSettings.EnableSwagger)
+        {
             app.UseSwaggerApp();
         }
 
@@ -55,7 +55,7 @@ public static class WebAppConfigurationExtensions
         {
             endpoints.MapControllers();
 
-            endpoints.RegisterHealthCheckEndpoint(appSettings.Api.EnableHealthCheckUi);
+            endpoints.RegisterHealthCheckEndpoint(appSettings.ApiSettings.EnableHealthCheckUi);
         });
 
         app.Services
