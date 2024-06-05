@@ -3,11 +3,14 @@ using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Results;
 using IdentityWebApi.Infrastructure.Database;
 
+using MediatR;
+
+using Microsoft.EntityFrameworkCore;
+
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-using MediatR;
 
 namespace IdentityWebApi.ApplicationLogic.Services.User.Commands.HardRemoveUserById;
 
@@ -28,32 +31,27 @@ public class HardRemoveUserByIdCommandHandler : IRequestHandler<HardRemoveUserBy
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult> Handle(HardRemoveUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<ServiceResult> Handle(HardRemoveUserByIdCommand command, CancellationToken cancellationToken)
     {
-        var appUser = await this.GetAppUserAsync(request.Id, cancellationToken);
+        var isUserExisting = await this.databaseContext.ExistsByIdAsync<AppUser>(command.Id, cancellationToken);
 
-        if (appUser == null)
+        if (!isUserExisting)
         {
             return new ServiceResult(ServiceResultType.NotFound);
         }
 
-        await this.RemoveUserAsync(appUser, cancellationToken);
+        await this.RemoveUserAsync(command.Id, cancellationToken);
 
         return new ServiceResult(ServiceResultType.Success);
     }
 
-    private async Task<AppUser> GetAppUserAsync(Guid id, CancellationToken cancellationToken) =>
-        await this.databaseContext.SearchByIdAsync<AppUser>(
-            id,
-            includeTracking: true,
-            cancellationToken,
-            includedEntity => includedEntity.UserRoles);
-
-    private async Task RemoveUserAsync(AppUser appUser, CancellationToken cancellationToken)
+    private async Task RemoveUserAsync(Guid id, CancellationToken cancellationToken)
     {
-        this.databaseContext.UserRoles.RemoveRange(appUser.UserRoles);
-        this.databaseContext.Users.Remove(appUser);
+        await using var transaction = await this.databaseContext.Database.BeginTransactionAsync(cancellationToken);
 
-        await this.databaseContext.SaveChangesAsync(cancellationToken);
+        await this.databaseContext.UserRoles.Where(userRole => userRole.UserId == id).ExecuteDeleteAsync(cancellationToken);
+        await this.databaseContext.Users.Where(user => user.Id == id).ExecuteDeleteAsync(cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
     }
 }

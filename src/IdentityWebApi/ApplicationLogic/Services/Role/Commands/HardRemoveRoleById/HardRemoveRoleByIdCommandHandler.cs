@@ -5,7 +5,10 @@ using IdentityWebApi.Infrastructure.Database;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
+
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,30 +33,25 @@ public class HardRemoveRoleByIdCommandHandler : IRequestHandler<HardRemoveRoleBy
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(HardRemoveRoleByIdCommand command, CancellationToken cancellationToken)
     {
-        var appRole = await this.GetAppRoleAsync(command.Id, cancellationToken);
+        var isRoleExisting = await this.databaseContext.ExistsByIdAsync<AppRole>(command.Id, cancellationToken);
 
-        if (appRole is null)
+        if (!isRoleExisting)
         {
             return new ServiceResult(ServiceResultType.NotFound);
         }
 
-        await this.RemoveRoleAsync(appRole, cancellationToken);
+        await this.RemoveRoleAsync(command.Id, cancellationToken);
 
-        return new ServiceResult(ServiceResultType.Success);
+        return new ServiceResult(ServiceResultType.NoContent);
     }
 
-    private async Task<AppRole> GetAppRoleAsync(Guid id, CancellationToken cancellationToken) =>
-        await this.databaseContext.SearchByIdAsync<AppRole>(
-            id,
-            includeTracking: true,
-            cancellationToken,
-            includedEntity => includedEntity.UserRoles);
-
-    private async Task RemoveRoleAsync(AppRole appRole, CancellationToken cancellationToken)
+    private async Task RemoveRoleAsync(Guid id, CancellationToken cancellationToken)
     {
-        this.databaseContext.UserRoles.RemoveRange(appRole.UserRoles);
-        this.databaseContext.Roles.Remove(appRole);
+        await using var transaction = await this.databaseContext.Database.BeginTransactionAsync(cancellationToken);
 
-        await this.databaseContext.SaveChangesAsync(cancellationToken);
+        await this.databaseContext.UserRoles.Where(userRole => userRole.RoleId == id).ExecuteDeleteAsync(cancellationToken);
+        await this.databaseContext.Roles.Where(role => role.Id == id).ExecuteDeleteAsync(cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
     }
 }
