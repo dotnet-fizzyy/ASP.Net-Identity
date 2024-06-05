@@ -86,7 +86,7 @@ public sealed class DatabaseContext : IdentityDbContext<
             ? this.Set<T>().Where(entity => entity.Id == id && !entity.IsDeleted)
             : this.Set<T>().Where(entity => entity.Id == id && !entity.IsDeleted).AsNoTracking();
 
-        if (includes.Any())
+        if (includes.Length != 0)
         {
             query = includes
                 .Aggregate(
