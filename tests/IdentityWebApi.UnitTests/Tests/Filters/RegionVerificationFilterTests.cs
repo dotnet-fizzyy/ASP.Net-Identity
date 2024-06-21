@@ -29,6 +29,7 @@ public class RegionVerificationFilterTests
     private const string ProhibitedRegion = "testrg";
 
     [Test]
+    [Category("Positive")]
     public async Task ShouldValidateRegionAndContinueIfItIsNotProhibited()
     {
         // Arrange
@@ -88,6 +89,7 @@ public class RegionVerificationFilterTests
     }
 
     [Test]
+    [Category("Negative")]
     public async Task ShouldReturnBadRequestIfIpAddressIsNotRecognized()
     {
         // Arrange
@@ -129,6 +131,7 @@ public class RegionVerificationFilterTests
     }
 
     [Test]
+    [Category("Negative")]
     [TestCase(null)]
     [TestCase("")]
     [TestCase(ProhibitedRegion)]

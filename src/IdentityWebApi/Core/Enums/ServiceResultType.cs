@@ -11,6 +11,11 @@ public enum ServiceResultType
     Success = 200,
 
     /// <summary>
+    /// Gets No Content HTTP response status.
+    /// </summary>
+    NoContent = 204,
+
+    /// <summary>
     /// Gets Bad Request HTTP response status.
     /// </summary>
     InvalidData = 400,

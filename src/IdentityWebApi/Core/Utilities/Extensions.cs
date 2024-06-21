@@ -12,9 +12,18 @@ public static class Extensions
     /// </summary>
     /// <param name="collection">Instance of <see cref="IEnumerable{T}"/>.</param>
     /// <typeparam name="T">Collection type.</typeparam>
-    /// <returns>Boolean value indicating whether <see cref="IEnumerable{T}" /> collection is null or empty.</returns>
-    public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection) =>
-        collection == null || !collection.GetEnumerator().MoveNext();
+    /// <returns>Boolean value indicating whether collection is null or empty.</returns>
+    public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection)
+    {
+        if (collection is null)
+        {
+            return true;
+        }
+
+        using var enumerator = collection.GetEnumerator();
+
+        return !enumerator.MoveNext();
+    }
 
     /// <summary>
     /// Checks whether <see cref="ICollection{T}" /> collection is null or empty.

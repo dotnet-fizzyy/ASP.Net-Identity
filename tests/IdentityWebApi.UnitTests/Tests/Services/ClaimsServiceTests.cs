@@ -14,6 +14,7 @@ namespace IdentityWebApi.UnitTests.Tests.Services;
 public class ClaimsServiceTests
 {
     [Test]
+    [Category("Positive")]
     public void ShouldReturnUserIdFromIdentitySuccessfully()
     {
         //Arrange
@@ -27,6 +28,7 @@ public class ClaimsServiceTests
         ClassicAssert.AreEqual(new Guid(UserConstants.UserId), userIdResult.Data);
     }
 
+    [Category("Negative")]
     [TestCase(null)]
     [TestCase("")]
     [TestCase("123")]
