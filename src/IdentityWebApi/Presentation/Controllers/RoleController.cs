@@ -68,7 +68,7 @@ public class RoleController : ControllerBase
 
         if (roleResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(roleResult);
+            return this.CreateBadResponseByServiceResult(roleResult);
         }
 
         return roleResult.Data;
@@ -94,7 +94,7 @@ public class RoleController : ControllerBase
 
         if (roleGrantResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(roleGrantResult);
+            return this.CreateBadResponseByServiceResult(roleGrantResult);
         }
 
         return this.NoContent();
@@ -120,7 +120,7 @@ public class RoleController : ControllerBase
 
         if (roleRevokeResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(roleRevokeResult);
+            return this.CreateBadResponseByServiceResult(roleRevokeResult);
         }
 
         return this.NoContent();
@@ -146,7 +146,7 @@ public class RoleController : ControllerBase
 
         if (roleCreationResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(roleCreationResult);
+            return this.CreateBadResponseByServiceResult(roleCreationResult);
         }
 
         var getRoleLink = this.httpContextService.GenerateGetRoleLink(roleCreationResult.Data.Id);
@@ -174,7 +174,7 @@ public class RoleController : ControllerBase
 
         if (roleUpdateResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(roleUpdateResult);
+            return this.CreateBadResponseByServiceResult(roleUpdateResult);
         }
 
         return roleUpdateResult.Data;
@@ -198,7 +198,7 @@ public class RoleController : ControllerBase
 
         if (roleRemoveResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(roleRemoveResult);
+            return this.CreateBadResponseByServiceResult(roleRemoveResult);
         }
 
         return this.NoContent();
@@ -222,7 +222,7 @@ public class RoleController : ControllerBase
 
         if (roleRemoveResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(roleRemoveResult);
+            return this.CreateBadResponseByServiceResult(roleRemoveResult);
         }
 
         return this.NoContent();

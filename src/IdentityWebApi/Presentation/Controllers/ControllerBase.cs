@@ -1,6 +1,9 @@
+using IdentityWebApi.Core.Enums;
 using IdentityWebApi.Core.Results;
 
 using MediatR;
+
+using Microsoft.AspNetCore.Http;
 
 using System;
 
@@ -19,7 +22,7 @@ namespace IdentityWebApi.Presentation.Controllers;
 public abstract class ControllerBase : AspControllerBase
 {
     /// <summary>
-    /// <see cref="IMediator"/>.
+    /// The instance of <see cref="IMediator"/>.
     /// </summary>
     protected readonly IMediator Mediator;
 
@@ -35,8 +38,16 @@ public abstract class ControllerBase : AspControllerBase
     /// <summary>
     /// Generates response with status based on code in <see cref="ServiceResult"/>.
     /// </summary>
-    /// <param name="serviceResult">Result of operation.</param>
+    /// <param name="serviceResult">Operation result.</param>
     /// <returns>Response object with status code matching in result.</returns>
-    protected ObjectResult CreateResponseByServiceResult(ServiceResult serviceResult) =>
-        this.StatusCode((int)serviceResult.Result, serviceResult.Message);
+    protected ObjectResult CreateBadResponseByServiceResult(ServiceResult serviceResult) =>
+        serviceResult.Result switch
+        {
+            ServiceResultType.InvalidData => this.StatusCode(StatusCodes.Status400BadRequest, serviceResult.Message),
+            ServiceResultType.Unauthenticated => this.StatusCode(StatusCodes.Status401Unauthorized, serviceResult.Message),
+            ServiceResultType.Unauthorized => this.StatusCode(StatusCodes.Status403Forbidden, serviceResult.Message),
+            ServiceResultType.NotFound => this.StatusCode(StatusCodes.Status404NotFound, serviceResult.Message),
+            ServiceResultType.InternalError => this.StatusCode(StatusCodes.Status500InternalServerError, serviceResult.Message),
+            var _ => throw new NotImplementedException($"Not-supported {serviceResult.Result} operation result type to generate response."),
+        };
 }

@@ -1,32 +1,37 @@
 namespace IdentityWebApi.Core.Enums;
 
 /// <summary>
-/// ServiceResult status codes.
+/// Operation service result statuses.
 /// </summary>
 public enum ServiceResultType
 {
     /// <summary>
-    /// Gets OK HTTP response status.
+    /// Gets success result.
     /// </summary>
-    Success = 200,
+    Success = 1,
 
     /// <summary>
-    /// Gets No Content HTTP response status.
+    /// Gets unauthenticated (undefined identity) result.
     /// </summary>
-    NoContent = 204,
+    Unauthenticated,
 
     /// <summary>
-    /// Gets Bad Request HTTP response status.
+    /// Gets unauthorized (lack of permissions) result.
     /// </summary>
-    InvalidData = 400,
+    Unauthorized,
 
     /// <summary>
-    /// Gets Not Found HTTP response status.
+    /// Gets invalid data result.
     /// </summary>
-    NotFound = 404,
+    InvalidData,
 
     /// <summary>
-    /// Gets Internal Server Error HTTP response status.
+    /// Gets not found result.
     /// </summary>
-    InternalError = 500,
+    NotFound,
+
+    /// <summary>
+    /// Gets internal error result.
+    /// </summary>
+    InternalError,
 }

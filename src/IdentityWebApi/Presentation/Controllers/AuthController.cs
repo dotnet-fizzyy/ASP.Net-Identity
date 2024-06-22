@@ -63,7 +63,7 @@ public class AuthController : ControllerBase
 
         if (creationResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(creationResult);
+            return this.CreateBadResponseByServiceResult(creationResult);
         }
 
         var getUserLink = this.httpContextService.GenerateGetUserLink(creationResult.Data.Id);
@@ -91,7 +91,7 @@ public class AuthController : ControllerBase
 
         if (authUserResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(authUserResult);
+            return this.CreateBadResponseByServiceResult(authUserResult);
         }
 
         return authUserResult.Data;
@@ -119,7 +119,7 @@ public class AuthController : ControllerBase
 
         if (confirmationResult.IsResultFailed)
         {
-            return this.CreateResponseByServiceResult(confirmationResult);
+            return this.CreateBadResponseByServiceResult(confirmationResult);
         }
 
         return this.NoContent();

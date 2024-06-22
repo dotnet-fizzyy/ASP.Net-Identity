@@ -42,7 +42,7 @@ public class HardRemoveRoleByIdCommandHandler : IRequestHandler<HardRemoveRoleBy
 
         await this.RemoveRoleAsync(command.Id, cancellationToken);
 
-        return new ServiceResult(ServiceResultType.NoContent);
+        return new ServiceResult(ServiceResultType.Success);
     }
 
     private async Task RemoveRoleAsync(Guid id, CancellationToken cancellationToken)

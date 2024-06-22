@@ -43,7 +43,7 @@ public class HardRemoveEmailTemplateByIdHandler : IRequestHandler<HardRemoveEmai
 
         await this.RemoveEmailTemplateAsync(command.Id, cancellationToken);
 
-        return new ServiceResult(ServiceResultType.NoContent);
+        return new ServiceResult(ServiceResultType.Success);
     }
 
     private async Task RemoveEmailTemplateAsync(Guid id, CancellationToken cancellationToken)
