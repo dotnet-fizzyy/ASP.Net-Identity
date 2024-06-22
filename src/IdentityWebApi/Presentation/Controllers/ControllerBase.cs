@@ -43,11 +43,11 @@ public abstract class ControllerBase : AspControllerBase
     protected ObjectResult CreateBadResponseByServiceResult(ServiceResult serviceResult) =>
         serviceResult.Result switch
         {
-            ServiceResultType.InvalidData => this.StatusCode(StatusCodes.Status400BadRequest, serviceResult.Message),
-            ServiceResultType.Unauthenticated => this.StatusCode(StatusCodes.Status401Unauthorized, serviceResult.Message),
-            ServiceResultType.Unauthorized => this.StatusCode(StatusCodes.Status403Forbidden, serviceResult.Message),
-            ServiceResultType.NotFound => this.StatusCode(StatusCodes.Status404NotFound, serviceResult.Message),
-            ServiceResultType.InternalError => this.StatusCode(StatusCodes.Status500InternalServerError, serviceResult.Message),
+            ServiceResultType.InvalidData => this.StatusCode(StatusCodes.Status400BadRequest, serviceResult.ErrorMessage),
+            ServiceResultType.Unauthenticated => this.StatusCode(StatusCodes.Status401Unauthorized, serviceResult.ErrorMessage),
+            ServiceResultType.Unauthorized => this.StatusCode(StatusCodes.Status403Forbidden, serviceResult.ErrorMessage),
+            ServiceResultType.NotFound => this.StatusCode(StatusCodes.Status404NotFound, serviceResult.ErrorMessage),
+            ServiceResultType.InternalError => this.StatusCode(StatusCodes.Status500InternalServerError, serviceResult.ErrorMessage),
             var _ => throw new NotImplementedException($"Not-supported {serviceResult.Result} operation result type to generate response."),
         };
 }

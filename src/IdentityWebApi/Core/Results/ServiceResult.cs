@@ -15,7 +15,7 @@ public class ServiceResult
     /// <summary>
     /// Gets or sets operation error message.
     /// </summary>
-    public string Message { get; set; }
+    public string ErrorMessage { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether operation result is not successful.
@@ -35,11 +35,11 @@ public class ServiceResult
     /// Initializes a new instance of the <see cref="ServiceResult"/> class.
     /// </summary>
     /// <param name="result">Operation status indicator.</param>
-    /// <param name="message">Error description message.</param>
-    public ServiceResult(ServiceResultType result, string message)
+    /// <param name="errorMessage">Error description message.</param>
+    public ServiceResult(ServiceResultType result, string errorMessage)
         : this(result)
     {
-        this.Message = message;
+        this.ErrorMessage = errorMessage;
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ public class ServiceResult
     /// <typeparam name="TReturnType">Type for conversion.</typeparam>
     /// <returns><see cref="ServiceResult"/>.</returns>
     public ServiceResult<TReturnType> GenerateErrorResult<TReturnType>() =>
-        new ServiceResult<TReturnType>(this.Result, this.Message);
+        new ServiceResult<TReturnType>(this.Result, this.ErrorMessage);
 }
 
 /// <summary>
@@ -99,11 +99,11 @@ public class ServiceResult<T> : ServiceResult
     /// Initializes a new instance of the <see cref="ServiceResult{T}"/> class.
     /// </summary>
     /// <param name="result">Operation status indicator.</param>
-    /// <param name="message">Error description message.</param>
-    public ServiceResult(ServiceResultType result, string message)
+    /// <param name="errorMessage">Error description message.</param>
+    public ServiceResult(ServiceResultType result, string errorMessage)
         : this(result)
     {
-        this.Message = message;
+        this.ErrorMessage = errorMessage;
     }
 
     /// <summary>
