@@ -23,15 +23,15 @@
         <PackageReference Include="Handlebars.Net" Version="2.1.1" />
         <PackageReference Include="MailKit" Version="3.2.0" />
         <PackageReference Include="MediatR" Version="12.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.5">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.5" />
-        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.5" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.6" />
+        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.6" />
         <PackageReference Include="NetEscapades.Configuration.Validation" Version="2.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
