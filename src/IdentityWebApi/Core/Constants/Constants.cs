@@ -69,3 +69,14 @@ public static class ValidationConstants
     /// </summary>
     public const string NullOrEmptyValue = "{PropertyName} could not be null or empty. Provided value: {PropertyValue}";
 }
+
+/// <summary>
+/// Environment variable constants.
+/// </summary>
+public static class EnvironmentVariablesConstants
+{
+    /// <summary>
+    /// Gets application name environment variable key.
+    /// </summary>
+    public const string AppNameKey = "APP_NAME";
+}

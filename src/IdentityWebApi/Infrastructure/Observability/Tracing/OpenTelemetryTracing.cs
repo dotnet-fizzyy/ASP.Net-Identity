@@ -1,3 +1,4 @@
+using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 
 using System;
@@ -14,5 +15,6 @@ public class OpenTelemetryTracing : IActivityTracing
     /// <summary>
     /// Gets application name for telemetry.
     /// </summary>
-    private static string AppName => Environment.GetEnvironmentVariable("APP_NAME") ?? nameof(IdentityWebApi);
+    private static string AppName =>
+        Environment.GetEnvironmentVariable(EnvironmentVariablesConstants.AppNameKey) ?? nameof(IdentityWebApi);
 }

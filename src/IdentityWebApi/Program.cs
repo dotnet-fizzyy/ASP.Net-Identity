@@ -1,8 +1,10 @@
+using IdentityWebApi.Core.Constants;
 using IdentityWebApi.Startup;
 using IdentityWebApi.Startup.Configuration;
 
 using Microsoft.AspNetCore.Builder;
 
+using System;
 using System.Diagnostics;
 
 Activity.DefaultIdFormat = ActivityIdFormat.W3C;
@@ -11,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var appSettings = builder.Configuration.ReadAppSettings();
 appSettings.Validate();
+
+Environment.SetEnvironmentVariable(EnvironmentVariablesConstants.AppNameKey, appSettings.TelemetrySettings.AppName);
 
 builder.Services.Configure(appSettings);
 
