@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 
+using OpenTelemetry.Trace;
+
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace IdentityWebApi.Startup.Configuration;
@@ -52,10 +55,19 @@ internal static class ExceptionHandlerExtensions
                             break;
                     }
 
+                    AddTelemetryTags(contextFeature);
+
                     await context.Response.WriteAsJsonAsync(
                         new ErrorResponse(contextFeature.Error.Source, errorMessage));
                 }
             });
         });
+    }
+
+    private static void AddTelemetryTags(IExceptionHandlerFeature contextFeature)
+    {
+        var parent = Activity.Current;
+
+        parent?.RecordException(contextFeature.Error);
     }
 }
