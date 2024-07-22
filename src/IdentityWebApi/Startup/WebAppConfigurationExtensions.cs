@@ -57,14 +57,5 @@ public static class WebAppConfigurationExtensions
 
             endpoints.RegisterHealthCheckEndpoint(appSettings.ApiSettings.EnableHealthCheckUi);
         });
-
-        app.Services
-            .InitializeUserRoles(appSettings.IdentitySettings.Roles)
-            .Wait();
-        app.Services
-            .InitializeDefaultUsers(
-                appSettings.IdentitySettings.DefaultUsers,
-                appSettings.IdentitySettings.Email.RequireConfirmation)
-            .Wait();
     }
 }

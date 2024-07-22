@@ -62,12 +62,12 @@ internal static class IdentityServerExtensions
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task InitializeUserRoles(this IServiceProvider serviceProvider, ICollection<string> roles)
     {
-        using var scope = serviceProvider.CreateScope();
-
         if (roles.IsNullOrEmpty())
         {
             return;
         }
+
+        using var scope = serviceProvider.CreateScope();
 
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
 
@@ -89,12 +89,8 @@ internal static class IdentityServerExtensions
     /// </summary>
     /// <param name="serviceProvider"><see cref="IServiceProvider"/>.</param>
     /// <param name="defaultUsers">Collection of users to create.</param>
-    /// <param name="requireConfirmation">Whether confirm immediately user emails.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public static async Task InitializeDefaultUsers(
-        this IServiceProvider serviceProvider,
-        ICollection<DefaultUserSettings> defaultUsers,
-        bool requireConfirmation)
+    public static async Task InitializeDefaultUsers(this IServiceProvider serviceProvider, ICollection<DefaultUserSettings> defaultUsers)
     {
         if (defaultUsers.IsNullOrEmpty())
         {
@@ -121,7 +117,7 @@ internal static class IdentityServerExtensions
 
             if (existingUser != null)
             {
-                await ConfirmDefaultUserEmail(userManager, existingUser, requireConfirmation);
+                await ConfirmDefaultUserEmail(userManager, existingUser);
 
                 continue;
             }
@@ -134,22 +130,22 @@ internal static class IdentityServerExtensions
 
             await userManager.CreateAsync(appUser, defaultUser.Password);
             await userManager.AddToRoleAsync(appUser, defaultUser.Role);
-            await ConfirmDefaultUserEmail(userManager, appUser, requireConfirmation);
+
+            await ConfirmDefaultUserEmail(userManager, appUser);
         }
     }
 
-    private static async Task ConfirmDefaultUserEmail(
-        UserManager<AppUser> userManager,
-        AppUser appUserAdmin,
-        bool requireConfirmation)
+    private static async Task ConfirmDefaultUserEmail(UserManager<AppUser> userManager, AppUser appUserAdmin)
     {
         var isEmailAlreadyConfirmed = await userManager.IsEmailConfirmedAsync(appUserAdmin);
 
-        if (requireConfirmation && !isEmailAlreadyConfirmed)
+        if (isEmailAlreadyConfirmed)
         {
-            var token = await userManager.GenerateEmailConfirmationTokenAsync(appUserAdmin);
-
-            await userManager.ConfirmEmailAsync(appUserAdmin, token);
+            return;
         }
+
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(appUserAdmin);
+
+        await userManager.ConfirmEmailAsync(appUserAdmin, token);
     }
 }
