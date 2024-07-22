@@ -38,6 +38,9 @@ public static class AppSettingsExtensions
         var identitySettings = configuration
             .GetSection(nameof(AppSettings.IdentitySettings))
             .Get<IdentitySettings>();
+        var telemetrySettings = configuration
+            .GetSection(nameof(AppSettings.TelemetrySettings))
+            .Get<TelemetrySettings>();
 
         return new AppSettings
         {
@@ -47,6 +50,7 @@ public static class AppSettingsExtensions
             IpStackSettings = ipStackSettings,
             RegionsVerificationSettings = regionVerification,
             IdentitySettings = identitySettings,
+            TelemetrySettings = telemetrySettings,
         };
     }
 }

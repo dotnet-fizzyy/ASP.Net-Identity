@@ -38,12 +38,20 @@ public class AppSettings : IValidatable
     public IdentitySettings IdentitySettings { get; set; }
 
     /// <summary>
+    /// Gets or sets <see cref="ApplicationSettings.TelemetrySettings"/>.
+    /// </summary>
+    public TelemetrySettings TelemetrySettings { get; set; }
+
+    /// <summary>
     /// Validates settings of nested parameters.
     /// </summary>
     public void Validate()
     {
+        this.ApiSettings.Validate();
         this.DbSettings.Validate();
         this.SmtpClientSettings.Validate();
+        this.RegionsVerificationSettings.Validate();
         this.IdentitySettings.Validate();
+        this.TelemetrySettings.Validate();
     }
 }

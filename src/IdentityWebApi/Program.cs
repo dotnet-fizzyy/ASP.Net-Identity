@@ -3,6 +3,10 @@ using IdentityWebApi.Startup.Configuration;
 
 using Microsoft.AspNetCore.Builder;
 
+using System.Diagnostics;
+
+Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var appSettings = builder.Configuration.ReadAppSettings();

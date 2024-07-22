@@ -30,3 +30,11 @@ services:
             ACCEPT_EULA: Y
             SA_PASSWORD: Passw0rd123
             MSSQL_PID: Express
+
+    jaeger:
+        restart: always
+        image: jaegertracing/all-in-one:latest
+        ports:
+            - "6831:6831/udp"
+            - "16686:16686"
+            - "4317:4317"

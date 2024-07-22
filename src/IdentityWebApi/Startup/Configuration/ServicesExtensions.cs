@@ -1,6 +1,7 @@
 using IdentityWebApi.Core.Interfaces.Infrastructure;
 using IdentityWebApi.Core.Interfaces.Presentation;
 using IdentityWebApi.Infrastructure.Network.Services;
+using IdentityWebApi.Infrastructure.Observability.Tracing;
 using IdentityWebApi.Presentation.Services;
 using IdentityWebApi.Startup.ApplicationSettings;
 
@@ -26,6 +27,7 @@ internal static class ServicesExtensions
         // Services
         services.AddTransient<IEmailService, EmailService>();
         services.AddSingleton<INetService, NetService>();
+        services.AddSingleton<IActivityTracing, OpenTelemetryTracing>();
 
         services.AddScoped<IHttpContextService, HttpContextService>();
     }

@@ -47,5 +47,7 @@ public static class ServicesConfigurationExtensions
         services.RegisterControllers();
 
         services.RegisterSwagger(appSettings.IdentitySettings);
+
+        services.RegisterOpenTelemetry(appSettings.TelemetrySettings);
     }
 }
