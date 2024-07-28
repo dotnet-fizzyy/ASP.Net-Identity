@@ -3,6 +3,7 @@ using IdentityWebApi.Startup.ApplicationSettings;
 using Microsoft.Extensions.DependencyInjection;
 
 using OpenTelemetry.Exporter;
+using OpenTelemetry.Instrumentation.EntityFrameworkCore;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -58,7 +59,7 @@ public static class TelemetryExtensions
                     })
                     .AddConsoleExporter(ConfigureConsoleExporter)
                     .AddHttpClientInstrumentation()
-                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation(ConfigureEntityFramework)
                     .AddSource(telemetrySettings.AppName)
                     .AddOtlpExporter(otlpExporterOptions => ConfigureOtlpExplorer(otlpExporterOptions, telemetrySettings));
             });
@@ -74,6 +75,33 @@ public static class TelemetryExtensions
                     serviceName: serviceName,
                     serviceNamespace: serviceNamespace,
                     serviceVersion: serviceVersion);
+
+    private static void ConfigureEntityFramework(EntityFrameworkInstrumentationOptions options)
+    {
+        options.SetDbStatementForText = true;
+        options.SetDbStatementForStoredProcedure = true;
+
+        options.EnrichWithIDbCommand = (activity, command) =>
+        {
+            activity.DisplayName = command.Connection?.Database ?? string.Empty;
+
+            activity.SetTag("db.source", command.Connection?.ConnectionString);
+            activity.SetTag("db.name", command.Connection?.Database);
+            activity.SetTag("db.command.type", command.CommandType);
+            activity.SetTag("db.timeout", command.CommandTimeout);
+        };
+
+        options.Filter = (_, dbCommand) =>
+        {
+            const string pollingSqlQuery = "SELECT 1";
+            const string efMigrationSqlQuery = "__EFMigrationsHistory";
+
+            var isPollingQuery = string.Equals(dbCommand.CommandText, pollingSqlQuery, StringComparison.OrdinalIgnoreCase);
+            var isMigrationHistoryQuery = dbCommand.CommandText.Contains(efMigrationSqlQuery);
+
+            return !isPollingQuery && !isMigrationHistoryQuery;
+        };
+    }
 
     private static void ConfigureConsoleExporter(ConsoleExporterOptions options) =>
         options.Targets = ConsoleExporterOutputTargets.Debug;
