@@ -15,6 +15,7 @@ This project represents application that is responsible for handling users and r
 * [MailKit](https://github.com/jstedfast/MailKit);
 * [HealthChecks UI](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/monitor-app-health);
 * [NUnit](https://nunit.org/);
+* [Open Telemetry](https://opentelemetry.io/);
 
 ### Prerequisites
 
@@ -65,6 +66,9 @@ Docker is not necessary to launch application if you have prepared prerequisites
 Application doesn't writes logs to files, it display logs in terminal in the following ways:
 1. Local run via IDE;
 2. Docker;
+
+## Tracing
+Application supports tracing with help of Open Telemetry framework. In order to view traces you can use Jaeger UI tool provided in _docker-compose.yml_ or set up it on your host. To be able to view traces after running application and Jaeger UI enter `http://localhost:16686` URL in browser.
 
 ## Usage
 
