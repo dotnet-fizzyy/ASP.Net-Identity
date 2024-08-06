@@ -1,4 +1,4 @@
-using IdentityWebApi.Core.Utilities;
+using DY.Auth.Identity.Api.Core.Utilities;
 
 using System.Collections.Generic;
 using System.Security.Claims;

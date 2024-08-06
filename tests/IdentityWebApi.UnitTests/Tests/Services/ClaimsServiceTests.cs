@@ -1,5 +1,6 @@
-using IdentityWebApi.Core.Enums;
-using IdentityWebApi.Presentation.Services;
+using DY.Auth.Identity.Api.Core.Enums;
+using DY.Auth.Identity.Api.Presentation.Services;
+
 using IdentityWebApi.UnitTests.Shared.Constants;
 using IdentityWebApi.UnitTests.Shared.Controllers;
 

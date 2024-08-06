@@ -16,11 +16,19 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Content Include="..\..\src\DY.Auth.Identity.Api\wwwroot\Handlebars\EmailConfirmation.hbs">
+          <Link>wwwroot\Handlebars\EmailConfirmation.hbs</Link>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="..\..\src\DY.Auth.Identity.Api\wwwroot\index.html">
+          <Link>wwwroot\index.html</Link>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="..\..\src\IdentityWebApi\wwwroot\**" Link="wwwroot\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\IdentityWebApi\IdentityWebApi.csproj" />
+      <ProjectReference Include="..\..\src\DY.Auth.Identity.Api\DY.Auth.Identity.Api.csproj" />
     </ItemGroup>
 
 </Project>

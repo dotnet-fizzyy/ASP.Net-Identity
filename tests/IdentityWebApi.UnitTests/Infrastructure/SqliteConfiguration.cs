@@ -1,4 +1,4 @@
-using IdentityWebApi.Infrastructure.Database;
+using DY.Auth.Identity.Api.Infrastructure.Database;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;

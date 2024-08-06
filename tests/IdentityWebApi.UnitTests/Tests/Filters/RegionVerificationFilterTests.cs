@@ -1,8 +1,9 @@
-using IdentityWebApi.Core.Interfaces.Infrastructure;
-using IdentityWebApi.Core.Models;
-using IdentityWebApi.Presentation.Filters;
-using IdentityWebApi.Presentation.Models.Response;
-using IdentityWebApi.Startup.ApplicationSettings;
+using DY.Auth.Identity.Api.Core.Interfaces.Infrastructure;
+using DY.Auth.Identity.Api.Core.Models;
+using DY.Auth.Identity.Api.Presentation.Filters;
+using DY.Auth.Identity.Api.Presentation.Models.Response;
+using DY.Auth.Identity.Api.Startup.ApplicationSettings;
+
 using IdentityWebApi.UnitTests.Shared.Controllers;
 
 using Microsoft.AspNetCore.Http;
