@@ -5,7 +5,7 @@ using NUnit.Framework.Legacy;
 
 using System;
 
-namespace IdentityWebApi.UnitTests.Tests.Utilities;
+namespace DY.Auth.Identity.Api.UnitTests.Tests.Utilities;
 
 [TestFixture]
 public class DefaultValueAttributeTests

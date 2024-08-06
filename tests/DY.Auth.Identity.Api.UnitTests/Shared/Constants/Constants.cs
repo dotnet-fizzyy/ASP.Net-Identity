@@ -1,4 +1,4 @@
-namespace IdentityWebApi.UnitTests.Shared.Constants;
+namespace DY.Auth.Identity.Api.UnitTests.Shared.Constants;
 
 public static class UserConstants
 {

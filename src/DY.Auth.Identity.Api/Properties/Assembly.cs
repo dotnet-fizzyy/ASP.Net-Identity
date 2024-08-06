@@ -1,3 +1,3 @@
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("IdentityWebApi.UnitTests")]
+[assembly: InternalsVisibleTo("DY.Auth.Identity.Api.UnitTests")]

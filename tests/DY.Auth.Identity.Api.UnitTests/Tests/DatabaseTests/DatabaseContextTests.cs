@@ -1,11 +1,11 @@
-using IdentityWebApi.UnitTests.Infrastructure;
+using DY.Auth.Identity.Api.UnitTests.Infrastructure;
 
 using NUnit.Framework;
 using NUnit.Framework.Legacy;
 
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.UnitTests.Tests.DatabaseTests;
+namespace DY.Auth.Identity.Api.UnitTests.Tests.DatabaseTests;
 
 public class DatabaseContextTests : SqliteConfiguration
 {

@@ -3,7 +3,7 @@ using DY.Auth.Identity.Api.Core.Utilities;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace IdentityWebApi.UnitTests.Shared.Controllers;
+namespace DY.Auth.Identity.Api.UnitTests.Shared.Controllers;
 
 public static class UserControllerTestsDataFactory
 {

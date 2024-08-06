@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IdentityWebApi.UnitTests.Tests.Utilities;
+namespace DY.Auth.Identity.Api.UnitTests.Tests.Utilities;
 
 [TestFixture]
 public class ExtensionsTests

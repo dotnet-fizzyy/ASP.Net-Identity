@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.UnitTests.Shared.Controllers;
+namespace DY.Auth.Identity.Api.UnitTests.Shared.Controllers;
 
 /// <summary>
 /// Test class for mocking <see cref="ConnectionInfo"/>.

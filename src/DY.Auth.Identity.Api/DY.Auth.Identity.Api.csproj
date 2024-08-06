@@ -8,9 +8,8 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <RootNamespace>DY.Auth.Identity.Api</RootNamespace>
     </PropertyGroup>
-    
+
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DocumentationFile>bin\Debug\net7.0\IdentityWebApi.xml</DocumentationFile>
       <NoWarn>1591;1701;1702</NoWarn>
     </PropertyGroup>
 

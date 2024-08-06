@@ -1,11 +1,11 @@
 using DY.Auth.Identity.Api.Infrastructure.Database;
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 using System;
 
-namespace IdentityWebApi.UnitTests.Infrastructure;
+namespace DY.Auth.Identity.Api.UnitTests.Infrastructure;
 
 public class SqliteConfiguration : IDisposable
 {

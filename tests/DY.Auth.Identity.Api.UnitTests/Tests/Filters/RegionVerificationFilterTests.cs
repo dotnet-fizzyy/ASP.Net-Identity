@@ -3,8 +3,7 @@ using DY.Auth.Identity.Api.Core.Models;
 using DY.Auth.Identity.Api.Presentation.Filters;
 using DY.Auth.Identity.Api.Presentation.Models.Response;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
-
-using IdentityWebApi.UnitTests.Shared.Controllers;
+using DY.Auth.Identity.Api.UnitTests.Shared.Controllers;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +21,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace IdentityWebApi.UnitTests.Tests.Filters;
+namespace DY.Auth.Identity.Api.UnitTests.Tests.Filters;
 
 [TestFixture]
 public class RegionVerificationFilterTests

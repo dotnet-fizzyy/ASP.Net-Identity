@@ -1,15 +1,14 @@
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Presentation.Services;
-
-using IdentityWebApi.UnitTests.Shared.Constants;
-using IdentityWebApi.UnitTests.Shared.Controllers;
+using DY.Auth.Identity.Api.UnitTests.Shared.Constants;
+using DY.Auth.Identity.Api.UnitTests.Shared.Controllers;
 
 using NUnit.Framework;
 using NUnit.Framework.Legacy;
 
 using System;
 
-namespace IdentityWebApi.UnitTests.Tests.Services;
+namespace DY.Auth.Identity.Api.UnitTests.Tests.Services;
 
 [TestFixture]
 public class ClaimsServiceTests

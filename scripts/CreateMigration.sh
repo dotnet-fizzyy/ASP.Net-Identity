@@ -1,4 +1,4 @@
-cd ../src/IdentityWebApi/ || exit
+cd ../src/DY.Auth.Identity.Api/ || exit
 
 echo "Please, enter migration name:"
 read migrationName
