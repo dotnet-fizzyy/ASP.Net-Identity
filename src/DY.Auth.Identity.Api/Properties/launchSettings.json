@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "IIS Express": {
+    "DY.Auth.Identity.Api - IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "IdentityWebApi": {
+    "DY.Auth.Identity.Api - Kestrel": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,
