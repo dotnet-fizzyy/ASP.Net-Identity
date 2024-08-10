@@ -1,18 +1,10 @@
 namespace DY.Auth.Identity.Api.Presentation.Models.Response;
 
-#pragma warning disable SA1313
-
 /// <summary>
 /// Error response model.
 /// </summary>
-/// <param name="Message">Error message.</param>
-internal record ErrorResponse(string Message)
+internal record ErrorResponse
 {
-    /// <summary>
-    /// Gets qwe.
-    /// </summary>
-    public static string Code => "API_server_error";
-
     /// <summary>
     /// Gets or sets error source code occurence.
     /// </summary>
@@ -21,7 +13,16 @@ internal record ErrorResponse(string Message)
     /// <summary>
     /// Gets or sets error message.
     /// </summary>
-    public string Message { get; set; } = Message;
+    public string Message { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ErrorResponse"/> class.
+    /// </summary>
+    /// <param name="message">Error message.</param>
+    public ErrorResponse(string message)
+    {
+        this.Message = message;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ErrorResponse"/> class.

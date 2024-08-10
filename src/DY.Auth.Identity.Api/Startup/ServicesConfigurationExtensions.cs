@@ -1,3 +1,4 @@
+using DY.Auth.Identity.Api.Presentation.Middleware;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 using DY.Auth.Identity.Api.Startup.Configuration;
 
@@ -22,6 +23,8 @@ public static class ServicesConfigurationExtensions
     public static void Configure(this IServiceCollection services, AppSettings appSettings)
     {
         services.RegisterServices(appSettings);
+
+        services.RegisterExceptionHandler();
 
         // Identity server setup should go before Auth setup
         services.RegisterIdentityServer(appSettings.IdentitySettings, appSettings.DbSettings);

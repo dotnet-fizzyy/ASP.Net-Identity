@@ -1,3 +1,4 @@
+using DY.Auth.Identity.Api.Presentation.Middleware;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 using DY.Auth.Identity.Api.Startup.Configuration;
 
@@ -37,10 +38,10 @@ public static class WebAppConfigurationExtensions
               .AllowAnyMethod()
               .AllowCredentials());
 
+        app.UseExceptionHandler();
+
         app.UseDefaultFiles();
         app.UseStaticFiles();
-
-        app.RegisterExceptionHandler();
 
         app.UseHttpsRedirection();
 
