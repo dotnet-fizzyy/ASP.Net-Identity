@@ -6,7 +6,7 @@ csharp_style_namespace_declarations = file_scoped:error
 dotnet_diagnostic.IDE0161.severity = error
 
 # Code-style formatting rules
-dotnet_diagnostic.IDE0055.severity = error
+dotnet_diagnostic.IDE0055.severity = none
 
 # Avoid using out parameters
 dotnet_diagnostic.CA1021.severity = none
@@ -70,6 +70,9 @@ dotnet_diagnostic.SA1517.severity = error
 
 # A C# code file is missing a standard file header
 dotnet_diagnostic.SA1633.severity = none
+
+# Keywords must be spaced
+dotnet_diagnostic.SA1000.severity = error
 
 # Group namespaces by names and separate with blank line
 dotnet_separate_import_directive_groups = true
