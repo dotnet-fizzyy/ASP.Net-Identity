@@ -10,7 +10,7 @@ namespace DY.Auth.Identity.Api.Infrastructure.Observability.Tracing;
 public class OpenTelemetryTracing : IActivityTracing
 {
     /// <inheritdoc />
-    public ActivitySource ActivitySource => new ActivitySource(AppName);
+    public ActivitySource ActivitySource => new (AppName);
 
     /// <summary>
     /// Gets application name for telemetry.

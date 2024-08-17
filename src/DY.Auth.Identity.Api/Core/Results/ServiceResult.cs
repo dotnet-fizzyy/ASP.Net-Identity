@@ -55,7 +55,7 @@ public class ServiceResult
     /// <typeparam name="TReturnType">Type for conversion.</typeparam>
     /// <returns><see cref="ServiceResult"/>.</returns>
     public ServiceResult<TReturnType> GenerateErrorResult<TReturnType>() =>
-        new ServiceResult<TReturnType>(this.Result, this.ErrorMessage);
+        new (this.Result, this.ErrorMessage);
 }
 
 /// <summary>
