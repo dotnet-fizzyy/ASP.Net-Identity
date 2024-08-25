@@ -1,9 +1,9 @@
 using System;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
+namespace DY.Auth.Identity.Api.Presentation.Models.DTO.EmailTemplate;
 
 /// <summary>
-/// EmailTemplate DTO model.
+/// Email template DTO model.
 /// </summary>
 public class EmailTemplateDto
 {

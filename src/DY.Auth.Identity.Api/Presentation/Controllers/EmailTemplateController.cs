@@ -1,6 +1,9 @@
+using AutoMapper;
+
 using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Queries.GetEmailTemplateById;
 using DY.Auth.Identity.Api.Core.Constants;
+using DY.Auth.Identity.Api.Presentation.Models.DTO.EmailTemplate;
 
 using MediatR;
 
@@ -21,13 +24,17 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 [Route("api/email-template")]
 public class EmailTemplateController : ControllerBase
 {
+    private readonly IMapper mapper;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="EmailTemplateController"/> class.
     /// </summary>
     /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
-    public EmailTemplateController(IMediator mediator)
+    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
+    public EmailTemplateController(IMediator mediator, IMapper mapper)
         : base(mediator)
     {
+        this.mapper = mapper;
     }
 
     /// <summary>
@@ -51,6 +58,6 @@ public class EmailTemplateController : ControllerBase
             return this.CreateBadResponseByServiceResult(emailTemplateResult);
         }
 
-        return emailTemplateResult.Data;
+        return this.mapper.Map<EmailTemplateDto>(emailTemplateResult.Data);
     }
 }

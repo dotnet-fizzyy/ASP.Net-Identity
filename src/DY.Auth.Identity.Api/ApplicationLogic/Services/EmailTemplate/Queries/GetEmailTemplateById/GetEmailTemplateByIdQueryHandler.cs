@@ -1,6 +1,5 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Infrastructure.Database;
@@ -11,12 +10,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using EmailTemplateEntity = DY.Auth.Identity.Api.Core.Entities.EmailTemplate;
+
 namespace DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Queries.GetEmailTemplateById;
 
 /// <summary>
 /// Gets email template by id query CQRS handler.
 /// </summary>
-public class GetEmailTemplateByIdQueryHandler : IRequestHandler<GetEmailTemplateByIdQuery, ServiceResult<EmailTemplateDto>>
+public class GetEmailTemplateByIdQueryHandler : IRequestHandler<GetEmailTemplateByIdQuery, ServiceResult<GetEmailTemplateByIdResult>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
@@ -33,17 +34,17 @@ public class GetEmailTemplateByIdQueryHandler : IRequestHandler<GetEmailTemplate
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<EmailTemplateDto>> Handle(GetEmailTemplateByIdQuery query, CancellationToken cancellationToken)
+    public async Task<ServiceResult<GetEmailTemplateByIdResult>> Handle(GetEmailTemplateByIdQuery query, CancellationToken cancellationToken)
     {
-        var emailTemplateEntity = await this.databaseContext.SearchByIdAsync<DY.Auth.Identity.Api.Core.Entities.EmailTemplate>(query.Id, cancellationToken);
+        var emailTemplateEntity = await this.databaseContext.SearchByIdAsync<EmailTemplateEntity>(query.Id, cancellationToken);
 
         if (emailTemplateEntity == null)
         {
-            return new ServiceResult<EmailTemplateDto>(ServiceResultType.NotFound);
+            return new ServiceResult<GetEmailTemplateByIdResult>(ServiceResultType.NotFound);
         }
 
-        var emailTemplateDto = this.mapper.Map<EmailTemplateDto>(emailTemplateEntity);
+        var emailTemplateDto = this.mapper.Map<GetEmailTemplateByIdResult>(emailTemplateEntity);
 
-        return new ServiceResult<EmailTemplateDto>(emailTemplateDto);
+        return new ServiceResult<GetEmailTemplateByIdResult>(emailTemplateDto);
     }
 }

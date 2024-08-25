@@ -1,4 +1,3 @@
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.Common;
 using DY.Auth.Identity.Api.Core.Results;
 
@@ -11,7 +10,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Queries.G
 /// <summary>
 /// Get email template by id CQRS query.
 /// </summary>
-public record GetEmailTemplateByIdQuery : IBaseId, IRequest<ServiceResult<EmailTemplateDto>>
+public record GetEmailTemplateByIdQuery : IBaseId, IRequest<ServiceResult<GetEmailTemplateByIdResult>>
 {
     /// <summary>
     /// Gets email template id.
