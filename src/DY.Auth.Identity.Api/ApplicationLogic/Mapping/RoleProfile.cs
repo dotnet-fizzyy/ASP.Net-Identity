@@ -5,7 +5,7 @@ using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.CreateRole;
 using DY.Auth.Identity.Api.Core.Entities;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Mappers;
+namespace DY.Auth.Identity.Api.ApplicationLogic.Mapping;
 
 /// <summary>
 /// Configuration of Role models and entities mapping.

@@ -3,7 +3,7 @@ using AutoMapper;
 using DY.Auth.Identity.Api.Core.Models;
 using DY.Auth.Identity.Api.Infrastructure.Network.Models;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Mappers;
+namespace DY.Auth.Identity.Api.ApplicationLogic.Mapping;
 
 /// <summary>
 /// Configuration of Net models and entities mapping.

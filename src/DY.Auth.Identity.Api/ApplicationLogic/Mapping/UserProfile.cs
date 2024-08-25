@@ -10,7 +10,7 @@ using DY.Auth.Identity.Api.Core.Utilities;
 
 using System.Linq;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Mappers;
+namespace DY.Auth.Identity.Api.ApplicationLogic.Mapping;
 
 /// <summary>
 /// Configuration of User models and entities mapping.

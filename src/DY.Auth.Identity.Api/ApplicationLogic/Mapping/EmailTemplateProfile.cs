@@ -3,7 +3,7 @@ using AutoMapper;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Queries.GetEmailTemplateById;
 using DY.Auth.Identity.Api.Core.Entities;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Mappers;
+namespace DY.Auth.Identity.Api.ApplicationLogic.Mapping;
 
 /// <summary>
 /// Configuration of EmailTemplate models and entities mapping.
