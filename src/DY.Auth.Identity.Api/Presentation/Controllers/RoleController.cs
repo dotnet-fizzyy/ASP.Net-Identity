@@ -168,8 +168,8 @@ public class RoleController : ControllerBase
     [HttpPut]
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<RoleResult>> UpdateRole(
-        [FromBody, BindRequired] RoleDto roleDto,
+    public async Task<ActionResult<RoleDto>> UpdateRole(
+        [FromBody, BindRequired] UpdateRoleDto roleDto,
         CancellationToken cancellationToken)
     {
         var command = this.mapper.Map<UpdateRoleCommand>(roleDto);
@@ -180,7 +180,7 @@ public class RoleController : ControllerBase
             return this.CreateBadResponseByServiceResult(roleUpdateResult);
         }
 
-        return roleUpdateResult.Data;
+        return this.mapper.Map<RoleDto>(roleUpdateResult.Data);
     }
 
     /// <summary>
@@ -218,7 +218,7 @@ public class RoleController : ControllerBase
     [HttpDelete("id/{id:guid}/hard-remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> RemoveRole(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> RemoveRole(Guid id, CancellationToken cancellationToken)
     {
         var command = new HardRemoveRoleByIdCommand(id);
         var roleRemoveResult = await this.Mediator.Send(command, cancellationToken);

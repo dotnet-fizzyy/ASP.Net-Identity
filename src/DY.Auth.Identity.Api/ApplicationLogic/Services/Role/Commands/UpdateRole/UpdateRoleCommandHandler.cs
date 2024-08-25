@@ -1,6 +1,5 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Results;
@@ -17,7 +16,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.UpdateRol
 /// <summary>
 /// Update role CQRS handler.
 /// </summary>
-public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommand, ServiceResult<RoleResult>>
+public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommand, ServiceResult<UpdateRoleResult>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
@@ -34,27 +33,28 @@ public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommand, Servi
     }
 
     /// <inheritdoc />.
-    public async Task<ServiceResult<RoleResult>> Handle(UpdateRoleCommand command, CancellationToken cancellationToken)
+    public async Task<ServiceResult<UpdateRoleResult>> Handle(UpdateRoleCommand command, CancellationToken cancellationToken)
     {
         var isRoleExists = await this.databaseContext.ExistsByIdAsync<AppRole>(command.Id, cancellationToken);
 
         if (!isRoleExists)
         {
-            return new ServiceResult<RoleResult>(ServiceResultType.NotFound);
+            return new ServiceResult<UpdateRoleResult>(ServiceResultType.NotFound);
         }
 
         var roleToUpdate = this.mapper.Map<AppRole>(command);
 
         var updatedRole = await this.UpdateRoleAsync(roleToUpdate, cancellationToken);
 
-        var roleUpdateResult = this.mapper.Map<RoleResult>(updatedRole);
+        var roleUpdateResult = this.mapper.Map<UpdateRoleResult>(updatedRole);
 
-        return new ServiceResult<RoleResult>(ServiceResultType.Success, roleUpdateResult);
+        return new ServiceResult<UpdateRoleResult>(ServiceResultType.Success, roleUpdateResult);
     }
 
     private async Task<AppRole> UpdateRoleAsync(AppRole appRole, CancellationToken cancellationToken)
     {
         var appRoleEntry = this.databaseContext.Entry(appRole);
+
         appRoleEntry.Property(role => role.Name).IsModified = true;
         appRoleEntry.Property(role => role.ConcurrencyStamp).IsModified = true;
 

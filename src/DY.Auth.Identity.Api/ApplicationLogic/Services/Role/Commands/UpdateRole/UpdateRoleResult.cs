@@ -1,16 +1,16 @@
 using System;
 
-namespace DY.Auth.Identity.Api.Presentation.Models.DTO.Role;
+namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.UpdateRole;
 
 /// <summary>
-/// Role DTO model.
+/// Update role result model.
 /// </summary>
-public record RoleDto
+public class UpdateRoleResult
 {
     /// <summary>
     /// Gets or sets role id.
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid RoleId { get; set; }
 
     /// <summary>
     /// Gets or sets role name.

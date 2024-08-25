@@ -5,7 +5,7 @@ namespace DY.Auth.Identity.Api.Presentation.Models.DTO.EmailTemplate;
 /// <summary>
 /// Email template DTO model.
 /// </summary>
-public class EmailTemplateDto
+public record EmailTemplateDto
 {
     /// <summary>
     /// Gets or sets email template Id.

@@ -53,6 +53,7 @@
     <ItemGroup>
       <Folder Include="ApplicationLogic\Services\EmailTemplate\Queries" />
       <Folder Include="Infrastructure\Database\Migrations" />
+      <Folder Include="Presentation\Models\DTO\User\" />
     </ItemGroup>
 
     <ItemGroup>

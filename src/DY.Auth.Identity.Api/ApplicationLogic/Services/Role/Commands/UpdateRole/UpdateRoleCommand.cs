@@ -1,4 +1,3 @@
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.Core.Results;
 
 using MediatR;
@@ -10,7 +9,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.UpdateRol
 /// <summary>
 /// Update role CQRS command.
 /// </summary>
-public record UpdateRoleCommand : IRequest<ServiceResult<RoleResult>>
+public record UpdateRoleCommand : IBaseRequest, IRequest<ServiceResult<UpdateRoleResult>>
 {
     /// <summary>
     /// Gets or sets role id.
@@ -23,11 +22,18 @@ public record UpdateRoleCommand : IRequest<ServiceResult<RoleResult>>
     public string Name { get; }
 
     /// <summary>
+    /// Gets ro
+    /// </summary>
+    public string ConcurrencyStamp { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="UpdateRoleCommand"/> class.
     /// </summary>
     /// <param name="name">Role name.</param>
-    public UpdateRoleCommand(string name)
+    /// <param name="concurrencyStamp">Role entity concurrency stamp.</param>
+    public UpdateRoleCommand(string name, string concurrencyStamp)
     {
         this.Name = name;
+        this.ConcurrencyStamp = concurrencyStamp;
     }
 }
