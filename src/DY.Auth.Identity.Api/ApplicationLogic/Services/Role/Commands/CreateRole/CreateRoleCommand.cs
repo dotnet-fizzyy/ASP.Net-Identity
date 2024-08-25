@@ -1,4 +1,3 @@
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.Core.Results;
 
 using MediatR;
@@ -8,7 +7,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.CreateRol
 /// <summary>
 /// Create role CQRS command.
 /// </summary>
-public record CreateRoleCommand : IRequest<ServiceResult<RoleResult>>
+public record CreateRoleCommand : IRequest<ServiceResult<CreateRoleResult>>
 {
     /// <summary>
     /// Gets role name.

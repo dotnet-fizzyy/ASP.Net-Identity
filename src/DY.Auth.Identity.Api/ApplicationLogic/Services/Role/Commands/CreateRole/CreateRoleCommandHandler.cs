@@ -1,6 +1,5 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Results;
@@ -19,7 +18,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.CreateRol
 /// <summary>
 /// Create role CQRS handler.
 /// </summary>
-public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, ServiceResult<RoleResult>>
+public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, ServiceResult<CreateRoleResult>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
@@ -36,13 +35,13 @@ public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, Servi
     }
 
     /// <inheritdoc />.
-    public async Task<ServiceResult<RoleResult>> Handle(CreateRoleCommand command, CancellationToken cancellationToken)
+    public async Task<ServiceResult<CreateRoleResult>> Handle(CreateRoleCommand command, CancellationToken cancellationToken)
     {
         var isRoleWithSameNameExist = await this.SearchForExistingRoleNameAsync(command.Name, cancellationToken);
 
         if (isRoleWithSameNameExist)
         {
-            return new ServiceResult<RoleResult>(
+            return new ServiceResult<CreateRoleResult>(
                 ServiceResultType.InvalidData,
                 $"Role with name {command.Name} already exists");
         }
@@ -51,9 +50,9 @@ public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, Servi
 
         var createdRole = await this.CreateRoleAsync(roleToCreate, cancellationToken);
 
-        var roleResult = this.mapper.Map<RoleResult>(createdRole);
+        var roleResult = this.mapper.Map<CreateRoleResult>(createdRole);
 
-        return new ServiceResult<RoleResult>(ServiceResultType.Success, roleResult);
+        return new ServiceResult<CreateRoleResult>(ServiceResultType.Success, roleResult);
     }
 
     private Task<bool> SearchForExistingRoleNameAsync(string name, CancellationToken cancellationToken) =>

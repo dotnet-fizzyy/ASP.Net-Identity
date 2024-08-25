@@ -11,6 +11,7 @@ using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.UpdateRole;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Queries.GetRoleById;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
+using DY.Auth.Identity.Api.Presentation.Models.DTO.Role;
 
 using MediatR;
 
@@ -129,7 +130,7 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Creates role entity.
     /// </summary>
-    /// <param name="roleDto"><see cref="RoleCreationDto"/>.</param>
+    /// <param name="roleDto"><see cref="CreateRoleDto"/>.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="201">Role has been created.</response>
     /// <response code="400">Role already exists.</response>
@@ -138,7 +139,7 @@ public class RoleController : ControllerBase
     [ProducesResponseType(typeof(RoleDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<RoleDto>> CreateRole(
-        [FromBody, BindRequired] RoleCreationDto roleDto,
+        [FromBody, BindRequired] CreateRoleDto roleDto,
         CancellationToken cancellationToken)
     {
         var command = this.mapper.Map<CreateRoleCommand>(roleDto);
@@ -149,9 +150,11 @@ public class RoleController : ControllerBase
             return this.CreateBadResponseByServiceResult(roleCreationResult);
         }
 
-        var getRoleLink = this.httpContextService.GenerateGetRoleLink(roleCreationResult.Data.Id);
+        var createdRoleDto = this.mapper.Map<RoleDto>(roleCreationResult.Data);
 
-        return this.Created(getRoleLink, roleCreationResult.Data);
+        var getRoleLink = this.httpContextService.GenerateGetRoleLink(createdRoleDto.Id);
+
+        return this.Created(getRoleLink, createdRoleDto);
     }
 
     /// <summary>
