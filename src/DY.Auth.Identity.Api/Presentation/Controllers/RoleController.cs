@@ -58,11 +58,11 @@ public class RoleController : ControllerBase
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="200">Role has been found.</response>
     /// <response code="404">Unable to find role.</response>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation with <see cref="RoleResult"/> Role.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation with <see cref="RoleDto"/> Role.</returns>
     [HttpGet("id/{id:guid}")]
-    [ProducesResponseType(typeof(RoleResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<RoleResult>> GetRoleById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<RoleDto>> GetRoleById(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetRoleByIdQuery(id);
         var roleResult = await this.Mediator.Send(query, cancellationToken);
@@ -72,7 +72,7 @@ public class RoleController : ControllerBase
             return this.CreateBadResponseByServiceResult(roleResult);
         }
 
-        return roleResult.Data;
+        return this.mapper.Map<RoleDto>(roleResult.Data);
     }
 
     /// <summary>

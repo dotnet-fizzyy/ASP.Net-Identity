@@ -1,4 +1,3 @@
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.Common;
 using DY.Auth.Identity.Api.Core.Results;
 
@@ -11,7 +10,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Queries.GetRoleByI
 /// <summary>
 /// Get role by id CQRS query.
 /// </summary>
-public record GetRoleByIdQuery : IBaseId, IRequest<ServiceResult<RoleResult>>
+public record GetRoleByIdQuery : IBaseId, IRequest<ServiceResult<GetRoleByIdResult>>
 {
     /// <summary>
     /// Gets role id.
