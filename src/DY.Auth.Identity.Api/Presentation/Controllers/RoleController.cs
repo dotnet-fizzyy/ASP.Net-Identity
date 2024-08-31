@@ -1,7 +1,5 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.CreateRole;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.GrantRoleToUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.HardRemoveRoleById;
@@ -78,7 +76,7 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Grants role to user.
     /// </summary>
-    /// <param name="userRoleDto"><see cref="UserRoleDto"/>.</param>
+    /// <param name="requestBody"><see cref="UserRoleDto"/>.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="204">Role has been granted.</response>
     /// <response code="404">Unable to find role.</response>
@@ -87,10 +85,10 @@ public class RoleController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GrantRoleToUser(
-        [FromBody, BindRequired] UserRoleDto userRoleDto,
+        [FromBody, BindRequired] UserRoleDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = new GrantRoleToUserCommand(userRoleDto.UserId, userRoleDto.RoleId);
+        var command = this.mapper.Map<GrantRoleToUserCommand>(requestBody);
         var roleGrantResult = await this.Mediator.Send(command, cancellationToken);
 
         if (roleGrantResult.IsResultFailed)
@@ -104,7 +102,7 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Revokes role from user.
     /// </summary>
-    /// <param name="userRoleDto"><see cref="UserRoleDto"/>.</param>
+    /// <param name="requestBody"><see cref="UserRoleDto"/>.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="204">Role has been revoked.</response>
     /// <response code="404">Unable to find role.</response>
@@ -113,10 +111,10 @@ public class RoleController : ControllerBase
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> RevokeRoleFromUser(
-        [FromBody, BindRequired] UserRoleDto userRoleDto,
+        [FromBody, BindRequired] UserRoleDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = new RevokeRoleFromUserCommand(userRoleDto.UserId, userRoleDto.RoleId);
+        var command = this.mapper.Map<RevokeRoleFromUserCommand>(requestBody);
         var roleRevokeResult = await this.Mediator.Send(command, cancellationToken);
 
         if (roleRevokeResult.IsResultFailed)

@@ -1,6 +1,6 @@
 using System;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
+namespace DY.Auth.Identity.Api.Presentation.Models.DTO.Role;
 
 /// <summary>
 /// UserRole DTO model.
