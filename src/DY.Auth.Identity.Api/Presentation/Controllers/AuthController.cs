@@ -1,11 +1,11 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
 using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.ConfirmEmail;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
+using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using MediatR;
 
@@ -16,8 +16,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-
-using ControllerBase = DY.Auth.Identity.Api.Presentation.Controllers.ControllerBase;
 
 namespace DY.Auth.Identity.Api.Presentation.Controllers;
 
@@ -76,7 +74,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// User account authentication.
     /// </summary>
-    /// <param name="userModel"><see cref="UserSignInDto"/>.</param>
+    /// <param name="requestBody"><see cref="UserSignInDto"/>.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="200">User has authenticated.</response>
     /// <response code="400">Unable to authenticate with provided credentials.</response>
@@ -85,10 +83,10 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(AuthUserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AuthUserResult>> SignIn(
-        [FromBody, BindRequired] UserSignInDto userModel,
+        [FromBody, BindRequired] UserSignInDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = new AuthenticateUserCommand(userModel.Email, userModel.Password);
+        var command = this.mapper.Map<AuthenticateUserCommand>(requestBody);
         var authUserResult = await this.Mediator.Send(command, cancellationToken);
 
         if (authUserResult.IsResultFailed)

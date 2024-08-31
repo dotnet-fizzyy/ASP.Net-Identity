@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
+namespace DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 /// <summary>
 /// User sign in DTO model.
@@ -10,13 +8,10 @@ public class UserSignInDto
     /// <summary>
     /// Gets or sets email.
     /// </summary>
-    [Required]
-    [EmailAddress]
     public string Email { get; set; }
 
     /// <summary>
     /// Gets or sets password.
     /// </summary>
-    [Required]
     public string Password { get; set; }
 }
