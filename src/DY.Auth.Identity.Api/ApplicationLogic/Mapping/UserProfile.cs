@@ -1,10 +1,10 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.UpdateUser;
 using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Utilities;
+using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using System.Linq;
 

@@ -1,6 +1,5 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.ConfirmEmail;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
@@ -80,9 +79,9 @@ public class AuthController : ControllerBase
     /// <response code="400">Unable to authenticate with provided credentials.</response>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("sign-in")]
-    [ProducesResponseType(typeof(AuthUserResult), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(AuthResultDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<AuthUserResult>> SignIn(
+    public async Task<ActionResult<AuthResultDto>> SignIn(
         [FromBody, BindRequired] UserSignInDto requestBody,
         CancellationToken cancellationToken)
     {

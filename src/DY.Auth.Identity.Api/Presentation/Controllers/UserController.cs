@@ -1,7 +1,5 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.HardRemoveUserById;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.SoftRemoveUserById;
@@ -9,6 +7,7 @@ using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.UpdateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Queries.GetUserById;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
+using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 using DY.Auth.Identity.Api.Presentation.Services;
 
 using MediatR;

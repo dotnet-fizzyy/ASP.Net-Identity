@@ -1,6 +1,5 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Queries.GetEmailTemplateById;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.EmailTemplate;

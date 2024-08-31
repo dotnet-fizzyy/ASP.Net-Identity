@@ -1,6 +1,5 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.UpdateUser;

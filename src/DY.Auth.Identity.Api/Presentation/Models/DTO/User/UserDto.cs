@@ -1,11 +1,11 @@
 using System;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Models.Common;
+namespace DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 /// <summary>
-/// Base "User" model.
+/// User DTO model.
 /// </summary>
-public abstract class BaseUser
+public class UserDto
 {
     /// <summary>
     /// Gets or sets user id.
@@ -13,7 +13,7 @@ public abstract class BaseUser
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Gets or sets user name.
+    /// Gets or sets username.
     /// </summary>
     public string UserName { get; set; }
 
@@ -31,4 +31,14 @@ public abstract class BaseUser
     /// Gets or sets phone number.
     /// </summary>
     public string PhoneNumber { get; set; }
+
+    /// <summary>
+    /// Gets or sets password.
+    /// </summary>
+    public string Password { get; set; }
+
+    /// <summary>
+    /// Gets or sets user role.
+    /// </summary>
+    public string UserRole { get; set; }
 }

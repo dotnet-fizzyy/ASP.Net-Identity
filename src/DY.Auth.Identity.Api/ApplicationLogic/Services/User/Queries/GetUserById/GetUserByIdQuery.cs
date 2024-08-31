@@ -1,6 +1,6 @@
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.Common;
 using DY.Auth.Identity.Api.Core.Results;
+using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using MediatR;
 

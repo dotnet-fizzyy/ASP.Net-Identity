@@ -1,6 +1,5 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
 using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Interfaces.Infrastructure;
@@ -9,6 +8,7 @@ using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Core.Utilities;
 using DY.Auth.Identity.Api.Infrastructure.Database;
 using DY.Auth.Identity.Api.Infrastructure.Database.Constants;
+using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 
 using HandlebarsDotNet;

@@ -1,12 +1,12 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
 using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Infrastructure.Database;
+using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 using DY.Auth.Identity.Api.Presentation.Services;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 
@@ -27,7 +27,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.Authentic
 /// <summary>
 /// Authenticate user CQRS handler.
 /// </summary>
-public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, ServiceResult<AuthUserResult>>
+public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, ServiceResult<AuthResultDto>>
 {
     private const string FailedAuthenticationErrorMessage = "Cannot authenticate user with provided email and password";
 
@@ -60,7 +60,7 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<AuthUserResult>> Handle(
+    public async Task<ServiceResult<AuthResultDto>> Handle(
         AuthenticateUserCommand command,
         CancellationToken cancellationToken)
     {
@@ -102,16 +102,16 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
             await this.httpContextService.SignInUsingCookiesAsync(authUser);
         }
 
-        var authUserResponse = new AuthUserResult
+        var authUserResponse = new AuthResultDto
         {
             Token = token,
             User = this.mapper.Map<UserResult>(user),
         };
 
-        return new ServiceResult<AuthUserResult>(ServiceResultType.Success, authUserResponse);
+        return new ServiceResult<AuthResultDto>(ServiceResultType.Success, authUserResponse);
     }
 
-    private static ServiceResult<AuthUserResult> GenerateFailedAuthResult() =>
+    private static ServiceResult<AuthResultDto> GenerateFailedAuthResult() =>
         new (ServiceResultType.InvalidData, FailedAuthenticationErrorMessage);
 
     private static IReadOnlyCollection<string> GetUserRoleNames(AppUser user) =>

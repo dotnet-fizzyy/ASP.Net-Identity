@@ -1,9 +1,9 @@
-namespace DY.Auth.Identity.Api.ApplicationLogic.Models.Output;
+namespace DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 /// <summary>
-/// Success authentication user result.
+/// Success authentication user result model.
 /// </summary>
-public class AuthUserResult
+public class AuthResultDto
 {
     /// <summary>
     /// Gets or sets token.

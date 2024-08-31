@@ -1,5 +1,5 @@
-using DY.Auth.Identity.Api.ApplicationLogic.Models.Action;
 using DY.Auth.Identity.Api.Core.Results;
+using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using MediatR;
 

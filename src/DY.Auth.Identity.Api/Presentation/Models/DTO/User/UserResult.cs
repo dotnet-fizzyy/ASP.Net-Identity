@@ -1,16 +1,12 @@
-using DY.Auth.Identity.Api.Core.Results;
-using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
-
-using MediatR;
-
 using System;
+using System.Collections.Generic;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.UpdateUser;
+namespace DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 /// <summary>
-/// Update user CQRS command.
+/// Result "User" model.
 /// </summary>
-public record UpdateUserCommand : IRequest<ServiceResult<UserResult>>
+public class UserResult
 {
     /// <summary>
     /// Gets or sets user id.
@@ -36,4 +32,9 @@ public record UpdateUserCommand : IRequest<ServiceResult<UserResult>>
     /// Gets or sets phone number.
     /// </summary>
     public string PhoneNumber { get; set; }
+
+    /// <summary>
+    /// Gets or sets user roles names.
+    /// </summary>
+    public IEnumerable<string> Roles { get; set; }
 }
