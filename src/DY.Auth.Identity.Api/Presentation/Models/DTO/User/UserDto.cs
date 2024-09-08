@@ -1,5 +1,3 @@
-using DY.Auth.Identity.Api.Presentation.Models.DTO.Role;
-
 using System;
 using System.Collections.Generic;
 

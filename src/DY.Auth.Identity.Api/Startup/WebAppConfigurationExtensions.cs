@@ -1,4 +1,3 @@
-using DY.Auth.Identity.Api.Presentation.Middleware;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 using DY.Auth.Identity.Api.Startup.Configuration;
 

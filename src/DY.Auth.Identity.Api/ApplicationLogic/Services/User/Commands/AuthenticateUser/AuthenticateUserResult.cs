@@ -1,5 +1,3 @@
-using System;
-
 namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 
 /// <summary>

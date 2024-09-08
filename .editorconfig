@@ -74,6 +74,18 @@ dotnet_diagnostic.SA1633.severity = none
 # Keywords must be spaced
 dotnet_diagnostic.SA1000.severity = error
 
+# C# "using" directive is unnecessary
+dotnet_diagnostic.IDE0005.severity = error
+
+# Remove unnecessary value assignment
+dotnet_diagnostic.IDE0059.severity = error
+
+# Remove unused parameters
+dotnet_diagnostic.IDE0060.severity = error
+
+# Remove unread private member
+dotnet_diagnostic.IDE0052.severity = error
+
 # Group namespaces by names and separate with blank line
 dotnet_separate_import_directive_groups = true
 
