@@ -8,7 +8,6 @@ using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Core.Utilities;
 using DY.Auth.Identity.Api.Infrastructure.Database;
 using DY.Auth.Identity.Api.Infrastructure.Database.Constants;
-using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 
 using HandlebarsDotNet;
@@ -27,7 +26,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUse
 /// <summary>
 /// Create user CQRS handler.
 /// </summary>
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ServiceResult<UserDto>>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ServiceResult<CreateUserResult>>
 {
     private readonly UserManager<AppUser> userManager;
     private readonly RoleManager<AppRole> roleManager;
@@ -66,7 +65,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<UserDto>> Handle(
+    public async Task<ServiceResult<CreateUserResult>> Handle(
         CreateUserCommand command, CancellationToken cancellationToken)
     {
         var userCreationResult = await this.CreateUserAsync(command);
@@ -100,9 +99,9 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
             }
         }
 
-        var userDto = this.mapper.Map<UserDto>(createdUser);
+        var createUserResult = this.mapper.Map<CreateUserResult>(createdUser);
 
-        return new ServiceResult<UserDto>(ServiceResultType.Success, userDto);
+        return new ServiceResult<CreateUserResult>(ServiceResultType.Success, createUserResult);
     }
 
     private async Task<ServiceResult<AppUser>> CreateUserAsync(CreateUserCommand command)
@@ -197,8 +196,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         this.emailService.SendEmailAsync(email, emailTemplate.Subject, emailLayout);
     }
 
-    private static ServiceResult<UserDto> GenerateHandlerErrorResult(ServiceResult serviceResult) =>
-        serviceResult.GenerateErrorResult<UserDto>();
+    private static ServiceResult<CreateUserResult> GenerateHandlerErrorResult(ServiceResult serviceResult) =>
+        serviceResult.GenerateErrorResult<CreateUserResult>();
 
     private static string GenerateEmailLayout(string predefinedEmailLayout, string confirmationLink)
     {

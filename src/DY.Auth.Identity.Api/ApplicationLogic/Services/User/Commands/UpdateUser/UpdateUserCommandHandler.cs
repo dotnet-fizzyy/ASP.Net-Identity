@@ -4,7 +4,6 @@ using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Infrastructure.Database;
-using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using MediatR;
 
@@ -19,7 +18,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.UpdateUse
 /// <summary>
 /// Update user CQRS handler.
 /// </summary>
-public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ServiceResult<UserResult>>
+public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ServiceResult<UpdateUserResult>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
@@ -36,22 +35,22 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Servi
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<UserResult>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
+    public async Task<ServiceResult<UpdateUserResult>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
         var isUserExist = await this.CheckIfUserExistsAsync(command.Id, cancellationToken);
 
         if (!isUserExist)
         {
-            return new ServiceResult<UserResult>(ServiceResultType.NotFound);
+            return new ServiceResult<UpdateUserResult>(ServiceResultType.NotFound);
         }
 
         var userToUpdate = this.mapper.Map<AppUser>(command);
 
         var updatedUser = await this.UpdateUserDetailsAsync(userToUpdate, cancellationToken);
 
-        var updatedUserResult = this.mapper.Map<UserResult>(updatedUser);
+        var updatedUserResult = this.mapper.Map<UpdateUserResult>(updatedUser);
 
-        return new ServiceResult<UserResult>(ServiceResultType.Success, updatedUserResult);
+        return new ServiceResult<UpdateUserResult>(ServiceResultType.Success, updatedUserResult);
     }
 
     private Task<bool> CheckIfUserExistsAsync(Guid id, CancellationToken cancellationToken) =>

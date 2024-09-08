@@ -6,12 +6,12 @@ namespace DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 public class AuthResultDto
 {
     /// <summary>
-    /// Gets or sets token.
+    /// Gets or sets application. access token.
     /// </summary>
-    public string Token { get; set; }
+    public string AccessToken { get; set; }
 
     /// <summary>
     /// Gets or sets user data model.
     /// </summary>
-    public UserResult User { get; set; }
+    public UserDto User { get; set; }
 }

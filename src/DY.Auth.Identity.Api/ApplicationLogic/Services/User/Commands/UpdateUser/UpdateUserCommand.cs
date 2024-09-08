@@ -1,5 +1,4 @@
 using DY.Auth.Identity.Api.Core.Results;
-using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using MediatR;
 
@@ -10,7 +9,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.UpdateUse
 /// <summary>
 /// Update user CQRS command.
 /// </summary>
-public record UpdateUserCommand : IRequest<ServiceResult<UserResult>>
+public record UpdateUserCommand : IRequest<ServiceResult<UpdateUserResult>>
 {
     /// <summary>
     /// Gets or sets user id.
@@ -18,7 +17,7 @@ public record UpdateUserCommand : IRequest<ServiceResult<UserResult>>
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Gets or sets user name.
+    /// Gets or sets username.
     /// </summary>
     public string UserName { get; set; }
 

@@ -1,20 +1,16 @@
-using DY.Auth.Identity.Api.Core.Results;
-
-using MediatR;
-
 using System;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
+namespace DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 /// <summary>
-/// Create user CQRS command.
+/// Create user DTO model.
 /// </summary>
-public record CreateUserCommand : IRequest<ServiceResult<CreateUserResult>>
+public class CreateUserDto
 {
     /// <summary>
     /// Gets or sets user id.
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid UserId { get; set; }
 
     /// <summary>
     /// Gets or sets username.
@@ -45,9 +41,4 @@ public record CreateUserCommand : IRequest<ServiceResult<CreateUserResult>>
     /// Gets or sets user role.
     /// </summary>
     public string UserRole { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether email confirmation should be processed immediately.
-    /// </summary>
-    public bool ConfirmEmailImmediately { get; set; }
 }

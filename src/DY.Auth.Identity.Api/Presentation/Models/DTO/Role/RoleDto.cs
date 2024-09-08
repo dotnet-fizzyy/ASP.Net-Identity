@@ -5,7 +5,7 @@ namespace DY.Auth.Identity.Api.Presentation.Models.DTO.Role;
 /// <summary>
 /// Role DTO model.
 /// </summary>
-public record RoleDto
+public class RoleDto
 {
     /// <summary>
     /// Gets or sets role id.

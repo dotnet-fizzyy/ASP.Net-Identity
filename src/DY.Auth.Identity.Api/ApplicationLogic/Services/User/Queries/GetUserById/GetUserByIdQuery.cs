@@ -1,6 +1,5 @@
 using DY.Auth.Identity.Api.ApplicationLogic.Services.Common;
 using DY.Auth.Identity.Api.Core.Results;
-using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using MediatR;
 
@@ -11,7 +10,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Queries.GetUserByI
 /// <summary>
 /// Get user by id CQRS query.
 /// </summary>
-public record GetUserByIdQuery : IBaseId, IRequest<ServiceResult<UserResult>>
+public record GetUserByIdQuery : IBaseId, IRequest<ServiceResult<GetUserByIdResult>>
 {
     /// <summary>
     /// Gets user id.

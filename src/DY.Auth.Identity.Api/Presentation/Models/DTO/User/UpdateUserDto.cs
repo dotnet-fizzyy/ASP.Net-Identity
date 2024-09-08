@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 
 namespace DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 /// <summary>
-/// Result "User" model.
+/// Update user DTO model.
 /// </summary>
-public class UserResult
+public class UpdateUserDto
 {
     /// <summary>
     /// Gets or sets user id.
@@ -14,14 +13,9 @@ public class UserResult
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Gets or sets user name.
+    /// Gets or sets username.
     /// </summary>
     public string UserName { get; set; }
-
-    /// <summary>
-    /// Gets or sets concurrency stamp.
-    /// </summary>
-    public string ConcurrencyStamp { get; set; }
 
     /// <summary>
     /// Gets or sets email.
@@ -34,7 +28,7 @@ public class UserResult
     public string PhoneNumber { get; set; }
 
     /// <summary>
-    /// Gets or sets user roles names.
+    /// Gets or sets concurrency stamp.
     /// </summary>
-    public IEnumerable<string> Roles { get; set; }
+    public string ConcurrencyStamp { get; set; }
 }

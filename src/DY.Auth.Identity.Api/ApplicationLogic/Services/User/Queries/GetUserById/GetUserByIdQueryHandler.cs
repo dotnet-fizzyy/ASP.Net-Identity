@@ -1,12 +1,12 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Infrastructure.Database;
-using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using MediatR;
+
+using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Threading;
@@ -17,7 +17,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Queries.GetUserByI
 /// <summary>
 /// Gets user by id query CQRS handler.
 /// </summary>
-public class GetsUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, ServiceResult<UserResult>>
+public class GetsUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, ServiceResult<GetUserByIdResult>>
 {
     private readonly DatabaseContext databaseContext;
     private readonly IMapper mapper;
@@ -34,17 +34,22 @@ public class GetsUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, Servic
     }
 
     /// <inheritdoc/>
-    public async Task<ServiceResult<UserResult>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
+    public async Task<ServiceResult<GetUserByIdResult>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        var userEntity = await this.databaseContext.SearchByIdAsync<AppUser>(query.Id, cancellationToken);
+        var userEntity = await this.databaseContext.Users
+            .AsNoTracking()
+            .Include(user => user.UserRoles)
+            .ThenInclude(userRole => userRole.Role)
+            .AsSplitQuery()
+            .SingleOrDefaultAsync(user => user.Id == query.Id, cancellationToken);
 
         if (userEntity == null)
         {
-            return new ServiceResult<UserResult>(ServiceResultType.NotFound);
+            return new ServiceResult<GetUserByIdResult>(ServiceResultType.NotFound);
         }
 
-        var userDto = this.mapper.Map<UserResult>(userEntity);
+        var userDto = this.mapper.Map<GetUserByIdResult>(userEntity);
 
-        return new ServiceResult<UserResult>(userDto);
+        return new ServiceResult<GetUserByIdResult>(userDto);
     }
 }

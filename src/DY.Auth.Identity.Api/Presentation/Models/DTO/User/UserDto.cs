@@ -1,4 +1,7 @@
+using DY.Auth.Identity.Api.Presentation.Models.DTO.Role;
+
 using System;
+using System.Collections.Generic;
 
 namespace DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
@@ -40,5 +43,5 @@ public class UserDto
     /// <summary>
     /// Gets or sets user role.
     /// </summary>
-    public string UserRole { get; set; }
+    public ICollection<UserRoleDto> UserRoles { get; set; }
 }

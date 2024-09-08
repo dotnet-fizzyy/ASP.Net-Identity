@@ -7,6 +7,7 @@ using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.UpdateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Queries.GetUserById;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
+using DY.Auth.Identity.Api.Presentation.Mapping;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 using DY.Auth.Identity.Api.Presentation.Services;
 
@@ -56,9 +57,9 @@ public class UserController : ControllerBase
     /// <response code="404">Unable to find user.</response>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpGet]
-    [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserResult>> GetUserByIdentity(CancellationToken cancellationToken)
+    public async Task<ActionResult<UserDto>> GetUserByIdentity(CancellationToken cancellationToken)
     {
         var userIdResult = ClaimsService.GetUserIdFromIdentityUser(this.User);
 
@@ -77,7 +78,7 @@ public class UserController : ControllerBase
             return this.CreateBadResponseByServiceResult(userResult);
         }
 
-        return userResult.Data;
+        return this.mapper.Map<UserDto>(userResult.Data);
     }
 
     /// <summary>
@@ -89,9 +90,9 @@ public class UserController : ControllerBase
     /// <response code="404">Unable to find user.</response>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpGet("id/{id:guid}")]
-    [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserResult>> GetUserById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<UserDto>> GetUserById(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);
         var userResult = await this.Mediator.Send(query, cancellationToken);
@@ -101,27 +102,29 @@ public class UserController : ControllerBase
             return this.CreateBadResponseByServiceResult(userResult);
         }
 
-        return userResult.Data;
+        return this.mapper.Map<UserDto>(userResult.Data);
     }
 
     /// <summary>
     /// Creates user entity.
     /// </summary>
-    /// <param name="userDto"><see cref="UserDto"/>.</param>
+    /// <param name="requestBody"><see cref="CreateUserDto"/>.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="201">User has been created.</response>
     /// <response code="404">Role to assign to user is not found.</response>
     /// <response code="500">Unable to create user due to internal issues.</response>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpPost]
-    [ProducesResponseType(typeof(UserResult), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<UserResult>> CreateUser(
-        [FromBody, BindRequired] UserDto userDto,
+    public async Task<ActionResult<UserDto>> CreateUser(
+        [FromBody, BindRequired] CreateUserDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<CreateUserCommand>(userDto);
+        var command = this.mapper.Map<CreateUserCommand>(
+            requestBody,
+            opts => opts.Items[UserProfile.ConfirmUserEmailContextKey] = true);
         var userCreationResult = await this.Mediator.Send(command, cancellationToken);
 
         if (userCreationResult.IsResultFailed)
@@ -129,28 +132,30 @@ public class UserController : ControllerBase
             return this.CreateBadResponseByServiceResult(userCreationResult);
         }
 
-        var getUserLink = this.httpContextService.GenerateGetUserLink(userCreationResult.Data.Id);
+        var userDto = this.mapper.Map<UserDto>(userCreationResult.Data);
 
-        return this.Created(getUserLink, userCreationResult.Data);
+        var getUserLink = this.httpContextService.GenerateGetUserLink(userDto.Id);
+
+        return this.Created(getUserLink, userDto);
     }
 
     /// <summary>
     /// Updates user entity.
     /// </summary>
-    /// <param name="userDto"><see cref="UserDto"/>.</param>
+    /// <param name="requestBody"><see cref="UserDto"/>.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="200">User details have been updated.</response>
     /// <response code="404">Unable to find user.</response>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
     [HttpPut]
-    [ProducesResponseType(typeof(UserResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserResult>> UpdateUser(
-        [FromBody, BindRequired] UserDto userDto,
+    public async Task<ActionResult<UserDto>> UpdateUser(
+        [FromBody, BindRequired] UserDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<UpdateUserCommand>(userDto);
+        var command = this.mapper.Map<UpdateUserCommand>(requestBody);
         var userUpdateResult = await this.Mediator.Send(command, cancellationToken);
 
         if (userUpdateResult.IsResultFailed)
@@ -158,7 +163,7 @@ public class UserController : ControllerBase
             return this.CreateBadResponseByServiceResult(userUpdateResult);
         }
 
-        return userUpdateResult.Data;
+        return this.mapper.Map<UserDto>(userUpdateResult.Data);
     }
 
     /// <summary>

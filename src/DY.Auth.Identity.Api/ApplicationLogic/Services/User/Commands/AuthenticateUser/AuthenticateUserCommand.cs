@@ -1,5 +1,4 @@
 using DY.Auth.Identity.Api.Core.Results;
-using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using MediatR;
 
@@ -8,7 +7,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.Authentic
 /// <summary>
 /// Authenticate user CQRS command.
 /// </summary>
-public record AuthenticateUserCommand : IRequest<ServiceResult<AuthResultDto>>
+public record AuthenticateUserCommand : IRequest<ServiceResult<AuthenticateUserResult>>
 {
     /// <summary>
     /// Gets user email.

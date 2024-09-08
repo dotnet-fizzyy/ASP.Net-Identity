@@ -1,20 +1,17 @@
-using DY.Auth.Identity.Api.Core.Results;
-
-using MediatR;
-
 using System;
+using System.Collections.Generic;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
+namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Queries.GetUserById;
 
 /// <summary>
-/// Create user CQRS command.
+/// Get user by ID result model.
 /// </summary>
-public record CreateUserCommand : IRequest<ServiceResult<CreateUserResult>>
+public record GetUserByIdResult
 {
     /// <summary>
     /// Gets or sets user id.
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid UserId { get; set; }
 
     /// <summary>
     /// Gets or sets username.
@@ -37,17 +34,23 @@ public record CreateUserCommand : IRequest<ServiceResult<CreateUserResult>>
     public string PhoneNumber { get; set; }
 
     /// <summary>
-    /// Gets or sets password.
+    /// Gets assigned user roles.
     /// </summary>
-    public string Password { get; set; }
+    public ICollection<UserRoleResult> UserRoles { get; init; }
 
     /// <summary>
-    /// Gets or sets user role.
+    /// Assigned user role model.
     /// </summary>
-    public string UserRole { get; set; }
+    public record UserRoleResult
+    {
+        /// <summary>
+        /// Gets role ID.
+        /// </summary>
+        public Guid RoleId { get; init; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether email confirmation should be processed immediately.
-    /// </summary>
-    public bool ConfirmEmailImmediately { get; set; }
+        /// <summary>
+        /// Gets role name.
+        /// </summary>
+        public string Name { get; init; }
+    }
 }

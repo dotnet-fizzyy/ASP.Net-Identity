@@ -4,6 +4,7 @@ using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.AuthenticateU
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.ConfirmEmail;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
+using DY.Auth.Identity.Api.Presentation.Mapping;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 
 using MediatR;
@@ -45,19 +46,21 @@ public class AuthController : ControllerBase
     /// <summary>
     /// User account registration.
     /// </summary>
-    /// <param name="userRegistrationDto"><see cref="UserRegistrationDto"/>.</param>
+    /// <param name="requestBody"><see cref="UserRegistrationDto"/>.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <response code="201">Created user.</response>
     /// <response code="404">Unable to create user due to missing role.</response>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("sign-up")]
-    [ProducesResponseType(typeof(UserResult), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> SignUpUser(
-        [FromBody, BindRequired] UserRegistrationDto userRegistrationDto,
+    public async Task<ActionResult<UserDto>> SignUpUser(
+        [FromBody, BindRequired] UserRegistrationDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<CreateUserCommand>(userRegistrationDto);
+        var command = this.mapper.Map<CreateUserCommand>(
+            requestBody,
+            opts => opts.Items[UserProfile.ConfirmUserEmailContextKey] = false);
         var creationResult = await this.Mediator.Send(command, cancellationToken);
 
         if (creationResult.IsResultFailed)
@@ -65,9 +68,11 @@ public class AuthController : ControllerBase
             return this.CreateBadResponseByServiceResult(creationResult);
         }
 
-        var getUserLink = this.httpContextService.GenerateGetUserLink(creationResult.Data.Id);
+        var userDto = this.mapper.Map<UserDto>(creationResult.Data);
 
-        return this.Created(getUserLink, creationResult.Data);
+        var getUserLink = this.httpContextService.GenerateGetUserLink(userDto.Id);
+
+        return this.Created(getUserLink, userDto);
     }
 
     /// <summary>
@@ -79,7 +84,7 @@ public class AuthController : ControllerBase
     /// <response code="400">Unable to authenticate with provided credentials.</response>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost("sign-in")]
-    [ProducesResponseType(typeof(AuthResultDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(AuthResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AuthResultDto>> SignIn(
         [FromBody, BindRequired] UserSignInDto requestBody,
@@ -93,7 +98,7 @@ public class AuthController : ControllerBase
             return this.CreateBadResponseByServiceResult(authUserResult);
         }
 
-        return authUserResult.Data;
+        return this.mapper.Map<AuthResultDto>(authUserResult.Data);
     }
 
     /// <summary>
