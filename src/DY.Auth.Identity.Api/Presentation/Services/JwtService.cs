@@ -34,7 +34,7 @@ public static class JwtService
         string signingKey,
         string issuer,
         string audience,
-        TimeSpan expiration,
+        DateTime expiration,
         IEnumerable<Claim> claims)
     {
         var key = CreateSecuritySigningKey(signingKey);
@@ -43,7 +43,7 @@ public static class JwtService
         var jwtSecurityToken = new JwtSecurityToken(
             issuer: issuer,
             audience: audience,
-            expires: DateTime.UtcNow.Add(expiration),
+            expires: expiration,
             claims: claims,
             signingCredentials: credentials);
 

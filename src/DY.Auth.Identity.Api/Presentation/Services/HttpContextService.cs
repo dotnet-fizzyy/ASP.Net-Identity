@@ -20,8 +20,8 @@ public class HttpContextService : IHttpContextService
     /// <summary>
     /// Initializes a new instance of the <see cref="HttpContextService"/> class.
     /// </summary>
-    /// <param name="httpContextAccessor"><see cref="HttpContextAccessor"/>.</param>
-    /// <param name="linkGenerator"><see cref="LinkGenerator"/>.</param>
+    /// <param name="httpContextAccessor">The instance of <see cref="HttpContextAccessor"/>.</param>
+    /// <param name="linkGenerator">The instance of <see cref="LinkGenerator"/>.</param>
     public HttpContextService(IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
     {
         this.httpContext = httpContextAccessor?.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
@@ -29,10 +29,8 @@ public class HttpContextService : IHttpContextService
     }
 
     /// <inheritdoc/>
-    public async Task SignInUsingCookiesAsync(ClaimsPrincipal user)
-    {
-        await this.httpContext.SignInAsync(AuthConstants.CookiesAuthScheme, user);
-    }
+    public Task SignInUsingCookiesAsync(ClaimsPrincipal user) =>
+        this.httpContext.SignInAsync(AuthConstants.CookiesAuthScheme, user);
 
     /// <inheritdoc/>
     public string GenerateConfirmEmailLink(string email, string token) =>

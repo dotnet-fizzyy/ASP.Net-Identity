@@ -3,9 +3,13 @@ using AutoMapper;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.AuthenticateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.ConfirmEmail;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
+using DY.Auth.Identity.Api.Core.Constants;
+using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
 using DY.Auth.Identity.Api.Presentation.Mapping;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
+using DY.Auth.Identity.Api.Presentation.Services;
+using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 
 using MediatR;
 
@@ -14,6 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,6 +32,7 @@ public class AuthController : ControllerBase
 {
     private readonly IHttpContextService httpContextService;
     private readonly IMapper mapper;
+    private readonly AppSettings appSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthController"/> class.
@@ -33,14 +40,17 @@ public class AuthController : ControllerBase
     /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
     /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
+    /// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
     public AuthController(
         IMediator mediator,
         IHttpContextService httpContextService,
-        IMapper mapper)
+        IMapper mapper,
+        AppSettings appSettings)
             : base(mediator)
     {
         this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
     }
 
     /// <summary>
@@ -86,7 +96,7 @@ public class AuthController : ControllerBase
     [HttpPost("sign-in")]
     [ProducesResponseType(typeof(AuthResultDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<AuthResultDto>> SignIn(
+    public async Task<ActionResult> SignIn(
         [FromBody, BindRequired] UserSignInDto requestBody,
         CancellationToken cancellationToken)
     {
@@ -98,7 +108,7 @@ public class AuthController : ControllerBase
             return this.CreateBadResponseByServiceResult(authUserResult);
         }
 
-        return this.mapper.Map<AuthResultDto>(authUserResult.Data);
+        return await this.GetSuccessfulAuthenticationResponse(authUserResult.Data.AuthenticatedUser);
     }
 
     /// <summary>
@@ -127,5 +137,41 @@ public class AuthController : ControllerBase
         }
 
         return this.NoContent();
+    }
+
+    private async Task<ActionResult> GetSuccessfulAuthenticationResponse(ClaimsPrincipal userClaimsPrincipal)
+    {
+        if (this.appSettings.IdentitySettings.AuthType == AuthType.Jwt)
+        {
+            var authenticationResultDto = this.GenerateJwtAuthenticationResult(userClaimsPrincipal.Claims);
+
+            return this.Ok(authenticationResultDto);
+        }
+
+        await this.httpContextService.SignInUsingCookiesAsync(userClaimsPrincipal);
+
+        return this.Ok();
+    }
+
+    private AuthResultDto GenerateJwtAuthenticationResult(IEnumerable<Claim> claims)
+    {
+        var jwtSettings = this.appSettings.IdentitySettings.Jwt;
+
+        var tokenExpirationTime = TimeSpan.FromMinutes(jwtSettings.ExpirationMinutes);
+        var tokenExpirationDateTime = DateTime.UtcNow.Add(tokenExpirationTime);
+
+        var accessToken = JwtService.GenerateJwtToken(
+            jwtSettings.IssuerSigningKey,
+            jwtSettings.ValidIssuer,
+            jwtSettings.ValidAudience,
+            tokenExpirationDateTime,
+            claims);
+
+        return new AuthResultDto
+        {
+            AccessToken = accessToken,
+            Type = AuthConstants.JwtBearerAuthType,
+            Expires = ((DateTimeOffset)tokenExpirationDateTime).ToUnixTimeSeconds(),
+        };
     }
 }
