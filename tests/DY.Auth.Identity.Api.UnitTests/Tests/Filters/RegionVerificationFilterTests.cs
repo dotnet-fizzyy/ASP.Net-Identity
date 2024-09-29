@@ -28,6 +28,18 @@ public class RegionVerificationFilterTests
 {
     private const string ProhibitedRegion = "testrg";
 
+    private readonly Mock<ConnectionInfoMock> connectionInfoMock = new ();
+    private readonly Mock<HttpContext> httpContextMock = new ();
+    private readonly Mock<IRegionVerificationService> regionVerificationServiceMock = new ();
+
+    [TearDown]
+    public void TearDown()
+    {
+        this.connectionInfoMock.Reset();
+        this.httpContextMock.Reset();
+        this.regionVerificationServiceMock.Reset();
+    }
+
     [Test]
     [Category("Positive")]
     public async Task ShouldValidateRegionAndContinueIfItIsNotProhibited()
@@ -35,24 +47,20 @@ public class RegionVerificationFilterTests
         // Arrange
         const string ipAddress = "8.8.8.8";
 
-        var connectionInfoMock = Mock.Of<ConnectionInfoMock>();
-        Mock.Get(connectionInfoMock)
+        this.connectionInfoMock
             .Setup(connectionInfo => connectionInfo.RemoteIpAddress)
             .Returns(IPAddress.Parse(ipAddress))
             .Verifiable();
 
-        var httpContext = Mock.Of<HttpContext>();
-        Mock.Get(httpContext)
+        this.httpContextMock
             .Setup(context => context.Connection)
-            .Returns(connectionInfoMock)
+            .Returns(connectionInfoMock.Object)
             .Verifiable();
 
-        var actContext = GetActionContext(httpContext);
+        var actContext = GetActionContext(this.httpContextMock.Object);
         var actExecutingContext = GetActionExecutingContext(actContext);
 
         var actionExecutionDelegate = Mock.Of<ActionExecutionDelegate>();
-
-        var netService = Mock.Of<IRegionVerificationService>();
 
         var ipAddressDetails = new IpAddressDetails
         {
@@ -62,7 +70,7 @@ public class RegionVerificationFilterTests
             City = "City",
         };
 
-        Mock.Get(netService)
+        this.regionVerificationServiceMock
             .Setup(service => service.GetIpAddressDetails(It.IsAny<string>()))
             .ReturnsAsync(ipAddressDetails)
             .Verifiable();
@@ -76,7 +84,7 @@ public class RegionVerificationFilterTests
             }
         };
 
-        var regionVerificationFilter = new RegionVerificationFilter(netService, appSettings);
+        var regionVerificationFilter = new RegionVerificationFilter(this.regionVerificationServiceMock.Object, appSettings);
 
         // Act
         await regionVerificationFilter.OnActionExecutionAsync(actExecutingContext, actionExecutionDelegate);
@@ -84,33 +92,28 @@ public class RegionVerificationFilterTests
         // Assert
         ClassicAssert.Null(actExecutingContext.Result);
 
-        Mock.Get(netService)
-            .Verify(service => service.GetIpAddressDetails(It.IsAny<string>()), Times.Once);
+        this.regionVerificationServiceMock.Verify();
     }
 
     [Test]
     [Category("Negative")]
     public async Task ShouldReturnBadRequestIfIpAddressIsNotRecognized()
     {
-        // Arrange
-        var connectionInfoMock = Mock.Of<ConnectionInfoMock>();
-        Mock.Get(connectionInfoMock)
+        // Arrange;
+        this.connectionInfoMock
             .Setup(connectionInfo => connectionInfo.RemoteIpAddress)
             .Returns((IPAddress)null)
             .Verifiable();
 
-        var httpContext = Mock.Of<HttpContext>();
-        Mock.Get(httpContext)
+        this.httpContextMock
             .Setup(context => context.Connection)
-            .Returns(connectionInfoMock)
+            .Returns(this.connectionInfoMock.Object)
             .Verifiable();
 
-        var actContext = GetActionContext(httpContext);
+        var actContext = GetActionContext(this.httpContextMock.Object);
         var actExecutingContext = GetActionExecutingContext(actContext);
 
         var actionExecutionDelegate = Mock.Of<ActionExecutionDelegate>();
-
-        var netService = Mock.Of<IRegionVerificationService>();
 
         var appSettings = new AppSettings
         {
@@ -121,7 +124,7 @@ public class RegionVerificationFilterTests
             }
         };
 
-        var regionVerificationFilter = new RegionVerificationFilter(netService, appSettings);
+        var regionVerificationFilter = new RegionVerificationFilter(this.regionVerificationServiceMock.Object, appSettings);
 
         // Act
         await regionVerificationFilter.OnActionExecutionAsync(actExecutingContext, actionExecutionDelegate);
@@ -140,24 +143,20 @@ public class RegionVerificationFilterTests
         // Arrange
         const string ipAddress = "8.8.8.8";
 
-        var connectionInfoMock = Mock.Of<ConnectionInfoMock>();
-        Mock.Get(connectionInfoMock)
+        this.connectionInfoMock
             .Setup(connectionInfo => connectionInfo.RemoteIpAddress)
             .Returns(IPAddress.Parse(ipAddress))
             .Verifiable();
 
-        var httpContext = Mock.Of<HttpContext>();
-        Mock.Get(httpContext)
+        this.httpContextMock
             .Setup(context => context.Connection)
-            .Returns(connectionInfoMock)
+            .Returns(this.connectionInfoMock.Object)
             .Verifiable();
 
-        var actContext = GetActionContext(httpContext);
+        var actContext = GetActionContext(this.httpContextMock.Object);
         var actExecutingContext = GetActionExecutingContext(actContext);
 
         var actionExecutionDelegate = Mock.Of<ActionExecutionDelegate>();
-
-        var netService = Mock.Of<IRegionVerificationService>();
 
         var ipAddressDetails = new IpAddressDetails
         {
@@ -167,7 +166,7 @@ public class RegionVerificationFilterTests
             City = "City",
         };
 
-        Mock.Get(netService)
+        this.regionVerificationServiceMock
             .Setup(service => service.GetIpAddressDetails(It.IsAny<string>()))
             .ReturnsAsync(ipAddressDetails)
             .Verifiable();
@@ -181,7 +180,7 @@ public class RegionVerificationFilterTests
             }
         };
 
-        var regionVerificationFilter = new RegionVerificationFilter(netService, appSettings);
+        var regionVerificationFilter = new RegionVerificationFilter(this.regionVerificationServiceMock.Object, appSettings);
 
         // Act
         await regionVerificationFilter.OnActionExecutionAsync(actExecutingContext, actionExecutionDelegate);
@@ -189,8 +188,7 @@ public class RegionVerificationFilterTests
         // Assert
         ClassicAssert.AreEqual(typeof(ForbiddenObjectResult), actExecutingContext.Result.GetType());
 
-        Mock.Get(netService)
-            .Verify(service => service.GetIpAddressDetails(It.IsAny<string>()), Times.Once);
+        this.regionVerificationServiceMock.Verify();
     }
 
     private static ActionContext GetActionContext(HttpContext httpContext) =>
