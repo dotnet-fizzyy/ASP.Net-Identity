@@ -33,6 +33,7 @@ public static class ServicesConfigurationExtensions
         services.RegisterValidationPipeline();
 
         services.RegisterAutomapper();
+        services.RegisterHttpClients(appSettings);
 
         services.RegisterHealthChecks(
             appSettings.ApiSettings.Url,

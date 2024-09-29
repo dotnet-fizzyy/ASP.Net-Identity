@@ -1,7 +1,9 @@
 using AutoMapper;
 
+using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Interfaces.Infrastructure;
 using DY.Auth.Identity.Api.Core.Models;
+using DY.Auth.Identity.Api.Core.Utilities;
 using DY.Auth.Identity.Api.Infrastructure.Network.Models;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 
@@ -15,20 +17,24 @@ namespace DY.Auth.Identity.Api.Infrastructure.Network.Services;
 /// <inheritdoc />
 public class NetService : INetService
 {
-    private const string IpStackUrl = "http://api.ipstack.com";
+    private const string AccessKeyQueryParameter = "access_key";
 
-    private static readonly HttpClient HttpClient = new ();
-
+    private readonly IHttpClientFactory clientFactory;
     private readonly IMapper mapper;
     private readonly AppSettings appSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NetService"/> class.
     /// </summary>
-    /// <param name="mapper"><see cref="IMapper"/>.</param>
-    /// <param name="appSettings"><see cref="AppSettings"/>.</param>
-    public NetService(IMapper mapper, AppSettings appSettings)
+    /// <param name="clientFactory">The instance of <see cref="IHttpClientFactory"/>.</param>
+    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
+    /// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
+    public NetService(
+        IHttpClientFactory clientFactory,
+        IMapper mapper,
+        AppSettings appSettings)
     {
+        this.clientFactory = clientFactory;
         this.mapper = mapper;
         this.appSettings = appSettings;
     }
@@ -36,15 +42,23 @@ public class NetService : INetService
     /// <inheritdoc />
     public async Task<IpAddressDetails> GetIpAddressDetails(string ipv4)
     {
-        var httpResponse =
-              await HttpClient.GetAsync($"{IpStackUrl}/{ipv4}?access_key={this.appSettings.IpStackSettings.AccessKey}");
+        var httpClient = this.GetHttpClient();
+
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri: ipv4);
+        this.SetAccessKeyQueryParameter(httpRequestMessage);
+
+        var httpResponse = await httpClient.SendAsync(httpRequestMessage);
         var responseMessage = httpResponse.EnsureSuccessStatusCode();
 
         var jsonResponseMessage = await responseMessage.Content.ReadAsStringAsync();
         var ipStackResponse = JsonConvert.DeserializeObject<IpStackResponseModel>(jsonResponseMessage);
 
-        var ipAddressDetails = this.mapper.Map<IpAddressDetails>(ipStackResponse);
-
-        return ipAddressDetails;
+        return this.mapper.Map<IpAddressDetails>(ipStackResponse);
     }
+
+    private HttpClient GetHttpClient() =>
+        this.clientFactory.CreateClient(InternalApi.RegionVerification.ToString());
+
+    private void SetAccessKeyQueryParameter(HttpRequestMessage httpRequestMessage) =>
+        httpRequestMessage.AddQueryParameter(AccessKeyQueryParameter, this.appSettings.IpStackSettings.AccessKey);
 }
