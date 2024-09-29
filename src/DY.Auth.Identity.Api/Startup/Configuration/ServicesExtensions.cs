@@ -26,7 +26,7 @@ internal static class ServicesExtensions
 
         // Services
         services.AddTransient<IEmailService, EmailService>();
-        services.AddSingleton<INetService, NetService>();
+        services.AddSingleton<IRegionVerificationService, RegionVerificationService>();
         services.AddSingleton<IActivityTracing, OpenTelemetryTracing>();
 
         services.AddScoped<IHttpContextService, HttpContextService>();

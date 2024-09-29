@@ -52,7 +52,7 @@ public class RegionVerificationFilterTests
 
         var actionExecutionDelegate = Mock.Of<ActionExecutionDelegate>();
 
-        var netService = Mock.Of<INetService>();
+        var netService = Mock.Of<IRegionVerificationService>();
 
         var ipAddressDetails = new IpAddressDetails
         {
@@ -110,7 +110,7 @@ public class RegionVerificationFilterTests
 
         var actionExecutionDelegate = Mock.Of<ActionExecutionDelegate>();
 
-        var netService = Mock.Of<INetService>();
+        var netService = Mock.Of<IRegionVerificationService>();
 
         var appSettings = new AppSettings
         {
@@ -157,7 +157,7 @@ public class RegionVerificationFilterTests
 
         var actionExecutionDelegate = Mock.Of<ActionExecutionDelegate>();
 
-        var netService = Mock.Of<INetService>();
+        var netService = Mock.Of<IRegionVerificationService>();
 
         var ipAddressDetails = new IpAddressDetails
         {

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace DY.Auth.Identity.Api.Infrastructure.Network.Services;
 
 /// <inheritdoc />
-public class NetService : INetService
+public class RegionVerificationService : IRegionVerificationService
 {
     private const string AccessKeyQueryParameter = "access_key";
 
@@ -24,12 +24,12 @@ public class NetService : INetService
     private readonly AppSettings appSettings;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NetService"/> class.
+    /// Initializes a new instance of the <see cref="RegionVerificationService"/> class.
     /// </summary>
     /// <param name="clientFactory">The instance of <see cref="IHttpClientFactory"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
     /// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
-    public NetService(
+    public RegionVerificationService(
         IHttpClientFactory clientFactory,
         IMapper mapper,
         AppSettings appSettings)

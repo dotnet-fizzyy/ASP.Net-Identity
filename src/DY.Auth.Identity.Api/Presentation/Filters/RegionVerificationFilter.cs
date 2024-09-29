@@ -16,18 +16,18 @@ namespace DY.Auth.Identity.Api.Presentation.Filters;
 /// </summary>
 public class RegionVerificationFilter : IAsyncActionFilter
 {
-    private readonly INetService netService;
+    private readonly IRegionVerificationService regionVerificationService;
     private readonly AppSettings appSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RegionVerificationFilter"/> class.
     /// </summary>
-    /// <param name="netService">INetService.</param>
-    /// <param name="appSettings">AppSettings.</param>
-    public RegionVerificationFilter(INetService netService, AppSettings appSettings)
+    /// <param name="regionVerificationService">The instance of <see cref="IRegionVerificationService"/>.</param>
+    /// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
+    public RegionVerificationFilter(IRegionVerificationService regionVerificationService, AppSettings appSettings)
     {
         this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-        this.netService = netService ?? throw new ArgumentNullException(nameof(netService));
+        this.regionVerificationService = regionVerificationService ?? throw new ArgumentNullException(nameof(regionVerificationService));
     }
 
     /// <inheritdoc/>
@@ -44,7 +44,7 @@ public class RegionVerificationFilter : IAsyncActionFilter
                 return;
             }
 
-            var ipAddressDetails = await this.netService.GetIpAddressDetails(userIpV4);
+            var ipAddressDetails = await this.regionVerificationService.GetIpAddressDetails(userIpV4);
 
             var isCountryCodeMissing = string.IsNullOrEmpty(ipAddressDetails.CountryCode);
             var isRequestRegionProhibited = this.IsRegionProhibitedInSettings(ipAddressDetails.CountryCode);
