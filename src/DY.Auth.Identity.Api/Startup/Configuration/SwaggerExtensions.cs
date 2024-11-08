@@ -47,6 +47,7 @@ internal static class SwaggerExtensions
                 return;
             }
 
+            options.CustomSchemaIds(type => type.FullName);
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Description = "JWT Authorization via Bearer scheme: Bearer {token}",
