@@ -18,11 +18,14 @@ internal static class ControllersExtensions
     public static void RegisterControllers(this IServiceCollection services)
     {
         services
-            .AddControllers(options => { options.Filters.Add(typeof(RegionVerificationFilter)); })
+            .AddControllers(options =>
+            {
+                options.Filters.Add(typeof(RegionVerificationFilter));
+            })
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             });
     }
 }
