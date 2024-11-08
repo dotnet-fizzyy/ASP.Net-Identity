@@ -37,7 +37,7 @@ public static class WebAppConfigurationExtensions
               .AllowAnyMethod()
               .AllowCredentials());
 
-        app.UseExceptionHandler();
+        app.UseExceptionHandler(_ => { });
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
