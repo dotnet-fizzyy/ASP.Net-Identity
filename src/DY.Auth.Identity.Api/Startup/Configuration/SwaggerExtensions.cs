@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
+using Swashbuckle.AspNetCore.SwaggerGen;
+
 using System;
 using System.IO;
 using System.Reflection;
@@ -41,35 +43,12 @@ internal static class SwaggerExtensions
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 
             options.IncludeXmlComments(xmlPath);
-
-            if (identitySettings.AuthType != AuthType.Jwt)
-            {
-                return;
-            }
-
             options.CustomSchemaIds(type => type.FullName);
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+
+            if (identitySettings.AuthType == AuthType.Jwt)
             {
-                Description = "JWT Authorization via Bearer scheme: Bearer {token}",
-                Scheme = "JWT",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-            });
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer",
-                        },
-                    },
-                    Array.Empty<string>()
-                },
-            });
+                ConfigureJwtSecurityHeaders(options);
+            }
         });
     }
 
@@ -80,6 +59,34 @@ internal static class SwaggerExtensions
     public static void UseSwaggerApp(this IApplicationBuilder app)
     {
         app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DY.Auth.Identity.Api v1"));
+        app.UseSwaggerUI(options => options.SwaggerEndpoint(
+            "/swagger/v1/swagger.json",
+            $"{Assembly.GetExecutingAssembly().FullName} v1"));
+    }
+
+    private static void ConfigureJwtSecurityHeaders(SwaggerGenOptions options)
+    {
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Description = "JWT Authorization via Bearer scheme: Bearer {token}",
+            Scheme = "JWT",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+        });
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer",
+                    },
+                },
+                Array.Empty<string>()
+            },
+        });
     }
 }
