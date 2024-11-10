@@ -49,7 +49,7 @@ Docker is not necessary to launch application if you have prepared prerequisites
 2. Switch open project root directory via terminal;
 3. Run the following command:
     ```
-    docker-compose up --build
+    docker-compose -f docker-compose.app.yml -f docker-compose.infrastructure.yml up --build
     ```
 4. Wait until corresponding images will be downloaded, all steps from Dockerfile will pass and application will start;
 5. Visit the following URL: http://localhost:13501/swagger. You should be able to see Swagger description;

@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  identity-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "13502:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: docker
+    depends_on:
+      - mssql
