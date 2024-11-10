@@ -59,7 +59,7 @@ Docker is not necessary to launch application if you have prepared prerequisites
     ```
 7. To remove application images, enter the following command (or remove via Docker dashboard):
     ```
-    docker rmi mcr.microsoft.com/mssql/server identitywebapi
+    docker rmi mcr.microsoft.com/mssql/server identitywebapi nginx jaegertracing/all-in-one
     ```
 
 ## Logging
