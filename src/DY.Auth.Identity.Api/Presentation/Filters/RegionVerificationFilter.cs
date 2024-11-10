@@ -44,7 +44,7 @@ public class RegionVerificationFilter : IAsyncActionFilter
                 return;
             }
 
-            var ipAddressDetails = await this.regionVerificationService.GetIpAddressDetails(userIpV4);
+            var ipAddressDetails = await this.regionVerificationService.GetIpAddressDetailsAsync(userIpV4);
 
             var isCountryCodeMissing = string.IsNullOrEmpty(ipAddressDetails.CountryCode);
             var isRequestRegionProhibited = this.IsRegionProhibitedInSettings(ipAddressDetails.CountryCode);

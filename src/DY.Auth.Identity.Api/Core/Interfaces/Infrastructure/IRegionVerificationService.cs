@@ -14,5 +14,5 @@ public interface IRegionVerificationService
     /// </summary>
     /// <param name="ipv4">IP address with V4 format.</param>
     /// <returns>A <see cref="Task{IpAddressDetails}"/> representing the result of the asynchronous operation.</returns>
-    Task<IpAddressDetails> GetIpAddressDetails(string ipv4);
+    Task<IpAddressDetails> GetIpAddressDetailsAsync(string ipv4);
 }

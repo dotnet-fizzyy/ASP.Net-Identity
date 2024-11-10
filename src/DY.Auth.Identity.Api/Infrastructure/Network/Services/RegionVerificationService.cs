@@ -40,7 +40,7 @@ public class RegionVerificationService : IRegionVerificationService
     }
 
     /// <inheritdoc />
-    public async Task<IpAddressDetails> GetIpAddressDetails(string ipv4)
+    public async Task<IpAddressDetails> GetIpAddressDetailsAsync(string ipv4)
     {
         var httpClient = this.GetHttpClient();
 
