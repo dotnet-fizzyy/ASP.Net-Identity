@@ -24,14 +24,20 @@
 
     <ItemGroup>
         <Content Include="..\..\src\DY.Auth.Identity.Api\wwwroot\**" Link="wwwroot\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="ResponseContent\*.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="ResponseContent\**\*.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="ResponseContent\RegionVerificationService\GetIpAddressDetailsAsync.Success.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
-
+    
     <ItemGroup>
       <ProjectReference Include="..\..\src\DY.Auth.Identity.Api\DY.Auth.Identity.Api.csproj" />
     </ItemGroup>
