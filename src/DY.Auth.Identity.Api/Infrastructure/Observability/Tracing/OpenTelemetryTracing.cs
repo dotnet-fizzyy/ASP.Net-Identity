@@ -16,5 +16,5 @@ public class OpenTelemetryTracing : IActivityTracing
     /// Gets application name for telemetry.
     /// </summary>
     private static string AppName =>
-        Environment.GetEnvironmentVariable(EnvironmentVariablesConstants.AppNameKey) ?? nameof(DY.Auth.Identity.Api);
+        Environment.GetEnvironmentVariable(EnvironmentVariablesConstants.AppNameKey) ?? nameof(Api);
 }
