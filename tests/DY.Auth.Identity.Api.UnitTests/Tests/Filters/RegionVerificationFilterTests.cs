@@ -54,7 +54,7 @@ public class RegionVerificationFilterTests
 
         this.httpContextMock
             .Setup(context => context.Connection)
-            .Returns(connectionInfoMock.Object)
+            .Returns(this.connectionInfoMock.Object)
             .Verifiable();
 
         var actContext = GetActionContext(this.httpContextMock.Object);
@@ -71,7 +71,7 @@ public class RegionVerificationFilterTests
         };
 
         this.regionVerificationServiceMock
-            .Setup(service => service.GetIpAddressDetails(It.IsAny<string>()))
+            .Setup(service => service.GetIpAddressDetailsAsync(It.IsAny<string>()))
             .ReturnsAsync(ipAddressDetails)
             .Verifiable();
 
@@ -167,7 +167,7 @@ public class RegionVerificationFilterTests
         };
 
         this.regionVerificationServiceMock
-            .Setup(service => service.GetIpAddressDetails(It.IsAny<string>()))
+            .Setup(service => service.GetIpAddressDetailsAsync(It.IsAny<string>()))
             .ReturnsAsync(ipAddressDetails)
             .Verifiable();
 
@@ -177,7 +177,7 @@ public class RegionVerificationFilterTests
             {
                 EnableVerification = true,
                 ProhibitedRegions = new List<string> { ProhibitedRegion },
-            }
+            },
         };
 
         var regionVerificationFilter = new RegionVerificationFilter(this.regionVerificationServiceMock.Object, appSettings);
