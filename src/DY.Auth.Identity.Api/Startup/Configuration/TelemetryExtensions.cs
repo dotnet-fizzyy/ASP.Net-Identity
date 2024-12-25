@@ -50,7 +50,7 @@ public static class TelemetryExtensions
                     .AddAspNetCoreInstrumentation(instrumentationBuilder =>
                     {
                         instrumentationBuilder.EnrichWithException = (activity, exception) =>
-                            activity?.RecordException(exception);
+                            activity?.AddException(exception);
 
                         instrumentationBuilder.Filter = httpContext =>
                             !httpContext.Request.Path.StartsWithSegments(

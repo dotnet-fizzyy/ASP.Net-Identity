@@ -2,6 +2,7 @@ using DY.Auth.Identity.Api.Infrastructure.Database;
 
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 using System;
 
@@ -9,11 +10,13 @@ namespace DY.Auth.Identity.Api.UnitTests.Infrastructure;
 
 public class SqliteConfiguration : IDisposable
 {
-    private const string InMemoryConnectionString = "DataSource=:memory:";
-
     protected readonly DatabaseContext DatabaseContext;
 
+    private const string InMemoryConnectionString = "DataSource=:memory:";
+
     private readonly SqliteConnection connection;
+
+    private bool isDisposed;
 
     protected SqliteConfiguration()
     {
@@ -22,6 +25,7 @@ public class SqliteConfiguration : IDisposable
 
         var options = new DbContextOptionsBuilder<DatabaseContext>()
             .UseSqlite(this.connection)
+            .ConfigureWarnings(builder => builder.Ignore(RelationalEventId.PendingModelChangesWarning))
             .Options;
 
         this.DatabaseContext = new DatabaseContext(options);
@@ -32,12 +36,28 @@ public class SqliteConfiguration : IDisposable
 
     ~SqliteConfiguration()
     {
-        this.connection?.Close();
+        this.Dispose(disposing: false);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (this.isDisposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            this.connection?.Dispose();
+        }
+
+        this.isDisposed = true;
     }
 
     public void Dispose()
     {
-        this.connection?.Close();
+        this.Dispose(disposing: true);
+
         GC.SuppressFinalize(this);
     }
 }

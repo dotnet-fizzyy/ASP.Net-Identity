@@ -4,8 +4,6 @@ using DY.Auth.Identity.Api.Presentation.Models.Response;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 
-using OpenTelemetry.Trace;
-
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -88,6 +86,6 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         var parent = Activity.Current;
 
-        parent?.RecordException(exception);
+        parent?.AddException(exception);
     }
 }
