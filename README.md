@@ -6,8 +6,8 @@ This project represents application that is responsible for handling users and r
 
 ### Built With
 
-* [C# 12](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-12);
-* [ASP.Net 8.0 WebAPI](https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-8.0?view=aspnetcore-8.0);
+* [C# 13](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13);
+* [ASP.Net 9.0 WebAPI](https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-9.0);
 * [Entity Framework](https://entityframeworkcore.com);
 * [Identity Server Core](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0);
 * [Handlebars](https://handlebarsjs.com/);
@@ -23,7 +23,7 @@ Before launching this application make sure you have prepared the following comp
 
 * Windows | macOS | Linux;
 * [MSSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2019?rtc=1);
-* [.Net 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0);
+* [.Net 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0);
 * [Visual Studio](https://visualstudio.microsoft.com/) | [Visual Studio Code](https://code.visualstudio.com/) | [Rider](https://www.jetbrains.com/rider/);
 * [SSMS](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15) | [DBeaver](https://dbeaver.io/) | [DataGrip](https://www.jetbrains.com/datagrip/);
 * [Docker](https://www.docker.com) | [Rancher Desktop](https://rancherdesktop.io/) | [Podman](https://podman.io/) - Optional;
@@ -63,7 +63,7 @@ Docker is not necessary to launch application if you have prepared prerequisites
     ```
 
 ## Logging
-Application doesn't writes logs to files, it display logs in terminal in the following ways:
+Application does not write logs to files, it display logs in terminal in the following ways:
 1. Local run via IDE;
 2. Docker;
 
