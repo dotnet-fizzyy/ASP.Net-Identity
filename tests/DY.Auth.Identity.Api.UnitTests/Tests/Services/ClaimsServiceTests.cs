@@ -17,13 +17,13 @@ public class ClaimsServiceTests
     [Category("Positive")]
     public void ShouldReturnUserIdFromIdentitySuccessfully()
     {
-        //Arrange
+        // Arrange
         var identityUser = UserControllerTestsDataFactory.GetUserIdentity(UserConstants.UserId);
 
-        //Act
+        // Act
         var userIdResult = ClaimsService.GetUserIdFromIdentityUser(identityUser);
 
-        //Assert
+        // Assert
         ClassicAssert.AreEqual(ServiceResultType.Success, userIdResult.Result);
         ClassicAssert.AreEqual(new Guid(UserConstants.UserId), userIdResult.Data);
     }
@@ -34,13 +34,13 @@ public class ClaimsServiceTests
     [TestCase("123")]
     public void ShouldReturnInvalidDataFromIdentityOnAttemptToGetIncorrectUserId(string userId)
     {
-        //Arrange
+        // Arrange
         var identityUser = UserControllerTestsDataFactory.GetUserIdentity(userId);
 
-        //Act
+        // Act
         var userIdResult = ClaimsService.GetUserIdFromIdentityUser(identityUser);
 
-        //Assert
+        // Assert
         ClassicAssert.AreEqual(ServiceResultType.InvalidData, userIdResult.Result);
     }
 }

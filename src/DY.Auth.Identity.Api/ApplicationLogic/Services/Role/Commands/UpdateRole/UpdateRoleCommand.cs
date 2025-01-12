@@ -9,7 +9,7 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.UpdateRol
 /// <summary>
 /// Update role CQRS command.
 /// </summary>
-public record UpdateRoleCommand : IBaseRequest, IRequest<ServiceResult<UpdateRoleResult>>
+public record UpdateRoleCommand : IRequest<ServiceResult<UpdateRoleResult>>
 {
     /// <summary>
     /// Gets or sets role id.
@@ -22,7 +22,7 @@ public record UpdateRoleCommand : IBaseRequest, IRequest<ServiceResult<UpdateRol
     public string Name { get; }
 
     /// <summary>
-    /// Gets ro
+    /// Gets concurrency stamp.
     /// </summary>
     public string ConcurrencyStamp { get; }
 

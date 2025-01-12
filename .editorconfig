@@ -59,8 +59,14 @@ dotnet_diagnostic.SA1401.severity = none
 # Negative signs must be spaced correctly
 dotnet_diagnostic.SA1402.severity = none
 
+# Use trailing comma in multi-line initializers
+dotnet_diagnostic.SA1413.severity = error
+
 # Opening braces must not be followed by blank line
 dotnet_diagnostic.SA1505.severity = none
+
+# Code should not contain multiple blank lines in a row
+dotnet_diagnostic.SA1507.severity = error
 
 # Closing braces must not be preceded by blank line
 dotnet_diagnostic.SA1508.severity = error

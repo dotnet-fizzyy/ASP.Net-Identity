@@ -39,6 +39,13 @@ public class SqliteConfiguration : IDisposable
         this.Dispose(disposing: false);
     }
 
+    public void Dispose()
+    {
+        this.Dispose(disposing: true);
+
+        GC.SuppressFinalize(this);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (this.isDisposed)
@@ -52,12 +59,5 @@ public class SqliteConfiguration : IDisposable
         }
 
         this.isDisposed = true;
-    }
-
-    public void Dispose()
-    {
-        this.Dispose(disposing: true);
-
-        GC.SuppressFinalize(this);
     }
 }

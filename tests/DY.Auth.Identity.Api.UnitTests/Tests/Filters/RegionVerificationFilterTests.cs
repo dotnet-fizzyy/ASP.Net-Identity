@@ -81,7 +81,7 @@ public class RegionVerificationFilterTests
             {
                 EnableVerification = true,
                 ProhibitedRegions = new List<string> { ProhibitedRegion },
-            }
+            },
         };
 
         var regionVerificationFilter = new RegionVerificationFilter(this.regionVerificationServiceMock.Object, appSettings);
@@ -121,7 +121,7 @@ public class RegionVerificationFilterTests
             {
                 EnableVerification = true,
                 ProhibitedRegions = new List<string> { "test" },
-            }
+            },
         };
 
         var regionVerificationFilter = new RegionVerificationFilter(this.regionVerificationServiceMock.Object, appSettings);
