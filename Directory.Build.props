@@ -1,13 +1,13 @@
 <Project>
     <PropertyGroup>
+        <Authors>DY</Authors>
+        <Description>Custom Identity API based on "ASP.Net Web API" template with usage of latest .Net and C#</Description>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
-        <IntermediateOutputPath>$(SolutionDir)obj\$(Configuration)\</IntermediateOutputPath>
     </PropertyGroup>
 </Project>
