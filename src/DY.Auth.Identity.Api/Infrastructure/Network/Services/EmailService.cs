@@ -27,7 +27,7 @@ public class EmailService : IEmailService
     /// <inheritdoc/>
     public async Task SendEmailAsync(string emailToSend, string subject, string message)
     {
-        var email = new MimeMessage();
+        using var email = new MimeMessage();
 
         email.From.Add(
             new MailboxAddress(

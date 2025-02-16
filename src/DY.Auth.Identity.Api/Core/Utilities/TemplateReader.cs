@@ -23,7 +23,9 @@ public static class TemplateReader
             templateRootFolder,
             fullTemplateName);
 
-        var template = new StreamReader(pathToFile).ReadToEnd();
+        using var streamReader = new StreamReader(pathToFile);
+
+        var template = streamReader.ReadToEnd();
 
         return template;
     }

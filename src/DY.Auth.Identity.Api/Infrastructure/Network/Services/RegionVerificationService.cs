@@ -44,7 +44,7 @@ public class RegionVerificationService : IRegionVerificationService
     {
         var httpClient = this.GetHttpClient();
 
-        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri: ipv4);
+        using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri: ipv4);
         this.SetAccessKeyQueryParameter(httpRequestMessage);
 
         var httpResponse = await httpClient.SendAsync(httpRequestMessage);

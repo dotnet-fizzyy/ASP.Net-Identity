@@ -76,10 +76,8 @@ public class HttpClientFactoryBuilder
 
     private void BuildHttpClient(string clientName)
     {
-        var httpClient = new HttpClient(this.httpMessageHandlerMock.Object)
-        {
-            BaseAddress = new Uri("https://test.com"),
-        };
+        using var httpClient = new HttpClient(this.httpMessageHandlerMock.Object);
+        httpClient.BaseAddress = new Uri("https://test.com");
 
         this.clientFactoryMock
             .Setup(factory => factory.CreateClient(clientName))
@@ -91,17 +89,17 @@ public class HttpClientFactoryBuilder
     {
         const string methodName = "SendAsync";
 
+        using var responseMessage = new HttpResponseMessage();
+        responseMessage.StatusCode = statusCode;
+        responseMessage.Content = content;
+
         this.httpMessageHandlerMock
             .Protected()
             .Setup<Task<HttpResponseMessage>>(
                 methodName,
                 ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(new HttpResponseMessage
-            {
-                StatusCode = statusCode,
-                Content = content,
-            })
+            .ReturnsAsync(responseMessage)
             .Verifiable();
     }
 

@@ -11,6 +11,9 @@ dotnet_diagnostic.IDE0055.severity = none
 # Avoid using out parameters
 dotnet_diagnostic.CA1021.severity = none
 
+# Dispose objects before losing scope
+dotnet_diagnostic.CA2000.severity = error
+
 # Closing parenthesis must be spaced correctly
 dotnet_diagnostic.SA1009.severity = error
 
