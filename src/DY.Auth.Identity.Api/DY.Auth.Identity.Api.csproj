@@ -2,8 +2,6 @@
 
     <PropertyGroup>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <RootNamespace>DY.Auth.Identity.Api</RootNamespace>
     </PropertyGroup>
 
