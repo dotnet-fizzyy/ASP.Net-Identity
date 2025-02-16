@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable CA2000
+
 namespace DY.Auth.Identity.Api.UnitTests.Shared.Mocks;
 
 /// <summary>
@@ -70,14 +72,16 @@ public class HttpClientFactoryBuilder
     /// <summary>
     /// Gets configured mock of <see cref="IHttpClientFactory"/>.
     /// </summary>
-    /// <returns>The mock of <see cref="IHttpClientFactory"/>.</returns>
+    /// <returns>Mock of <see cref="IHttpClientFactory"/>.</returns>
     public Mock<IHttpClientFactory> GetResult() =>
         this.clientFactoryMock;
 
     private void BuildHttpClient(string clientName)
     {
-        using var httpClient = new HttpClient(this.httpMessageHandlerMock.Object);
-        httpClient.BaseAddress = new Uri("https://test.com");
+        var httpClient = new HttpClient(this.httpMessageHandlerMock.Object)
+        {
+            BaseAddress = new Uri("https://test.com"),
+        };
 
         this.clientFactoryMock
             .Setup(factory => factory.CreateClient(clientName))
@@ -89,9 +93,11 @@ public class HttpClientFactoryBuilder
     {
         const string methodName = "SendAsync";
 
-        using var responseMessage = new HttpResponseMessage();
-        responseMessage.StatusCode = statusCode;
-        responseMessage.Content = content;
+        var responseMessage = new HttpResponseMessage
+        {
+            StatusCode = statusCode,
+            Content = content,
+        };
 
         this.httpMessageHandlerMock
             .Protected()
@@ -111,7 +117,7 @@ public class HttpClientFactoryBuilder
         using var stream = new FileStream(pathToFile, FileMode.Open, FileAccess.Read, FileShare.Read);
         var buffer = new byte[stream.Length];
 
-        stream.Read(buffer, offset: 0, count: buffer.Length);
+        stream.ReadExactly(buffer);
 
         return Encoding.Default.GetString(buffer);
     }
