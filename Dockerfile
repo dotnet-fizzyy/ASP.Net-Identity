@@ -11,4 +11,5 @@ RUN groupadd -r nonrootgroup && useradd -r -g nonrootgroup nonrootuser
 WORKDIR /app
 COPY --from=build /publish ./
 USER nonrootuser
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "DY.Auth.Identity.Api.dll"]

@@ -1,0 +1,6 @@
+global:
+  scrape_interval: 10s
+scrape_configs:
+  - job_name: "identity-api-read-prometheus"
+    static_configs:
+      - targets: ["identity-api:8080"]
