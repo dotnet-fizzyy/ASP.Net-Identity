@@ -1,3 +1,5 @@
+using System;
+
 namespace DY.Auth.Identity.Api.Presentation.Models.Response;
 
 /// <summary>
@@ -5,6 +7,16 @@ namespace DY.Auth.Identity.Api.Presentation.Models.Response;
 /// </summary>
 internal record ErrorResponse
 {
+    /// <summary>
+    /// Gets or sets unique error ID.
+    /// </summary>
+    public Guid ErrorId { get; set; }
+
+    /// <summary>
+    /// Gets or sets error code.
+    /// </summary>
+    public string ErrorCode { get; set; }
+
     /// <summary>
     /// Gets or sets error source code occurence.
     /// </summary>
@@ -16,22 +28,7 @@ internal record ErrorResponse
     public string Message { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ErrorResponse"/> class.
+    /// Gets or sets UNIX timestamp.
     /// </summary>
-    /// <param name="message">Error message.</param>
-    public ErrorResponse(string message)
-    {
-        this.Message = message;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ErrorResponse"/> class.
-    /// </summary>
-    /// <param name="source">Error source code occurence.</param>
-    /// <param name="message">Error message.</param>
-    public ErrorResponse(string source, string message)
-        : this(message)
-    {
-        this.Source = source;
-    }
+    public long Timestamp { get; set; }
 }

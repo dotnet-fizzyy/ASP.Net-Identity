@@ -3,10 +3,12 @@ using DY.Auth.Identity.Api.Presentation.Models.Response;
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,67 +21,86 @@ public class GlobalExceptionHandler : IExceptionHandler
 {
     private const string JsonContentType = "application/json";
 
+    private readonly ILogger<GlobalExceptionHandler> logger;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GlobalExceptionHandler"/> class.
+    /// </summary>
+    /// <param name="logger">The instance of <see cref="ILogger{T}"/>.</param>
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
+    {
+        this.logger = logger;
+    }
+
     /// <inheritdoc />
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,
         CancellationToken cancellationToken)
     {
-        string errorMessage;
-
-        switch (exception)
-        {
-            case ModelValidationException modelValidationException:
-                HandleModelValidationException(httpContext, modelValidationException, out errorMessage);
-                break;
-            case OperationCanceledException canceledException:
-                HandleOperationCancelledException(httpContext, canceledException, out errorMessage);
-                break;
-            default:
-                HandleUnknownException(httpContext, exception, out errorMessage);
-                break;
-        }
+        var exceptionDetails = ConstructExceptionDetails(httpContext, exception);
 
         AddTelemetryTags(exception);
 
-        await httpContext.Response.WriteAsJsonAsync(
-            new ErrorResponse(exception.Source, errorMessage),
-            cancellationToken);
+        this.LogError(exceptionDetails);
+
+        await HandleErrorResponseAsync(httpContext, exceptionDetails, cancellationToken);
 
         return true;
     }
 
-    private static void HandleModelValidationException(
+    private static ExceptionDetails ConstructExceptionDetails(
         HttpContext httpContext,
-        ModelValidationException modelValidationException,
-        out string errorMessage)
+        Exception exception)
     {
-        httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-        httpContext.Response.ContentType = JsonContentType;
-
-        errorMessage = modelValidationException.Errors.Aggregate((acc, message) => acc + $", {message}");
+        return exception switch
+        {
+            ModelValidationException modelValidationException =>
+                HandleModelValidationException(httpContext, modelValidationException),
+            OperationCanceledException canceledException =>
+                HandleOperationCancelledException(httpContext, canceledException),
+            _ =>
+                HandleUnknownException(httpContext, exception),
+        };
     }
 
-    private static void HandleOperationCancelledException(
+    private static ExceptionDetails HandleModelValidationException(
         HttpContext httpContext,
-        OperationCanceledException canceledException,
-        out string errorMessage)
+        ModelValidationException modelValidationException)
     {
-        httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-        httpContext.Response.ContentType = JsonContentType;
+        var exceptionDetails = CreateGeneralExceptionDetails(httpContext, modelValidationException);
 
-        errorMessage = canceledException.Message;
+        exceptionDetails.ErrorCode = "VALIDATION_ERROR";
+        exceptionDetails.ResponseStatusCode = StatusCodes.Status400BadRequest;
+        exceptionDetails.Message = modelValidationException.Errors.Aggregate((acc, message) => acc + $", {message}");
+
+        return exceptionDetails;
     }
 
-    private static void HandleUnknownException(
+    private static ExceptionDetails HandleOperationCancelledException(
         HttpContext httpContext,
-        Exception exception,
-        out string errorMessage)
+        OperationCanceledException canceledException)
     {
-        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        httpContext.Response.ContentType = JsonContentType;
+        var exceptionDetails = CreateGeneralExceptionDetails(httpContext, canceledException);
 
-        errorMessage = exception.Message;
+        exceptionDetails.ErrorCode = "OPERATION_CANCELLED";
+        exceptionDetails.ResponseStatusCode = StatusCodes.Status499ClientClosedRequest;
+        exceptionDetails.Message = GetErrorMessages(canceledException);
+
+        return exceptionDetails;
+    }
+
+    private static ExceptionDetails HandleUnknownException(
+        HttpContext httpContext,
+        Exception exception)
+    {
+        var exceptionDetails = CreateGeneralExceptionDetails(httpContext, exception);
+
+        exceptionDetails.ErrorCode = "INTERNAL_SERVER_ERROR";
+        exceptionDetails.ResponseStatusCode = StatusCodes.Status500InternalServerError;
+        exceptionDetails.Message = GetErrorMessages(exception);
+
+        return exceptionDetails;
     }
 
     private static void AddTelemetryTags(Exception exception)
@@ -87,5 +108,97 @@ public class GlobalExceptionHandler : IExceptionHandler
         var parent = Activity.Current;
 
         parent?.AddException(exception);
+    }
+
+    private static Guid GenerateErrorId()
+    {
+        return Guid.CreateVersion7();
+    }
+
+    private static long GetTimestamp()
+    {
+        return ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+    }
+
+    private static string GetErrorMessages(Exception exception)
+    {
+        var messageBuilder = new StringBuilder(exception.Message);
+
+        var currentException = exception;
+
+        while (currentException?.InnerException != null)
+        {
+            messageBuilder.Append(';' + currentException.InnerException.Message);
+
+            currentException = exception.InnerException;
+        }
+
+        return messageBuilder.ToString();
+    }
+
+    private static Task HandleErrorResponseAsync(
+        HttpContext httpContext,
+        ExceptionDetails exceptionDetails,
+        CancellationToken cancellationToken)
+    {
+        httpContext.Response.StatusCode = exceptionDetails.ResponseStatusCode;
+        httpContext.Response.ContentType = JsonContentType;
+
+        var errorResponse = new ErrorResponse
+        {
+            ErrorId = exceptionDetails.ErrorId,
+            ErrorCode = exceptionDetails.ErrorCode,
+            Source = exceptionDetails.Source,
+            Message = exceptionDetails.Message,
+            Timestamp = exceptionDetails.Timestamp,
+        };
+
+        return httpContext.Response.WriteAsJsonAsync(errorResponse, cancellationToken);
+    }
+
+    private static ExceptionDetails CreateGeneralExceptionDetails(HttpContext httpContext, Exception exception)
+    {
+        return new ExceptionDetails
+        {
+            ErrorId = GenerateErrorId(),
+            Timestamp = GetTimestamp(),
+            RequestPath = httpContext.Request.Path.ToString(),
+            Source = exception.Source,
+            StackTrace = exception.StackTrace,
+        };
+    }
+
+    private void LogError(ExceptionDetails exceptionDetails)
+    {
+        var errorMessage =
+            $"""
+            Error ID: {exceptionDetails.ErrorId};
+            Timestamp: {exceptionDetails.Timestamp};
+            Path: {exceptionDetails.RequestPath};
+            Message: {exceptionDetails.Message};
+            Source: {exceptionDetails.Source};
+            Stacktrace: {exceptionDetails.StackTrace};
+            """;
+
+        this.logger.LogError(errorMessage);
+    }
+
+    private record ExceptionDetails
+    {
+        public Guid ErrorId { get; set; }
+
+        public string ErrorCode { get; set; }
+
+        public long Timestamp { get; set; }
+
+        public string Message { get; set; }
+
+        public string Source { get; set; }
+
+        public string StackTrace { get; set; }
+
+        public int ResponseStatusCode { get; set; }
+
+        public string RequestPath { get; set; }
     }
 }

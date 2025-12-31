@@ -67,9 +67,23 @@ public class RegionVerificationFilter : IAsyncActionFilter
     private static string GetIpV4AddressFromExecutingContext(ActionExecutingContext context) =>
         context.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
 
-    private static void CreateBadRequestResponseResult(ActionExecutingContext context, string message) =>
-        context.Result = new BadRequestObjectResult(new ErrorResponse(message));
+    private static void CreateBadRequestResponseResult(ActionExecutingContext context, string message)
+    {
+        var errorResponse = new ErrorResponse
+        {
+            Message = message,
+        };
 
-    private static void CreateForbiddenResponseResult(ActionExecutingContext context, string message) =>
-        context.Result = new ForbiddenObjectResult(new ErrorResponse(message));
+        context.Result = new BadRequestObjectResult(errorResponse);
+    }
+
+    private static void CreateForbiddenResponseResult(ActionExecutingContext context, string message)
+    {
+        var errorResponse = new ErrorResponse
+        {
+            Message = message,
+        };
+
+        context.Result = new ForbiddenObjectResult(errorResponse);
+    }
 }
