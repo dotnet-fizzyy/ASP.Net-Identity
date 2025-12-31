@@ -81,7 +81,7 @@ dotnet_diagnostic.SA1517.severity = error
 dotnet_diagnostic.SA1633.severity = none
 
 # Keywords must be spaced
-dotnet_diagnostic.SA1000.severity = error
+dotnet_diagnostic.SA1000.severity = none
 
 # C# "using" directive is unnecessary
 dotnet_diagnostic.IDE0005.severity = error

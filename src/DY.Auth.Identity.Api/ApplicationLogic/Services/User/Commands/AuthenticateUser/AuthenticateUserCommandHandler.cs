@@ -79,7 +79,7 @@ public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCo
     }
 
     private static ServiceResult<AuthenticateUserResult> GenerateFailedAuthResult() =>
-        new (ServiceResultType.InvalidData, FailedAuthenticationErrorMessage);
+        new(ServiceResultType.InvalidData, FailedAuthenticationErrorMessage);
 
     private static IReadOnlyCollection<string> GetUserRoleNames(AppUser user) =>
         user.UserRoles.Select(userRole => userRole.Role.Name).ToList();

@@ -73,9 +73,18 @@ public class ExtensionsTests
         ClassicAssert.False(collection.IsNullOrEmpty());
     }
 
-    public static object[] EnumerableEmptyCollections = [null, Enumerable.Empty<int>()];
+    public static object[] EnumerableEmptyCollections =
+    [
+        null, Enumerable.Empty<int>()
+    ];
 
-    public static object[] SetEmptyCollections = [null, new HashSet<int>(), new SortedSet<int>()];
+    public static object[] SetEmptyCollections =
+    [
+        null, new HashSet<int>(), new SortedSet<int>()
+    ];
 
-    public static object[] CollectionEmptyCollections = [null, new List<int>(), Array.Empty<int>()];
+    public static object[] CollectionEmptyCollections =
+    [
+            null, new List<int>(), Array.Empty<int>()
+    ];
 }

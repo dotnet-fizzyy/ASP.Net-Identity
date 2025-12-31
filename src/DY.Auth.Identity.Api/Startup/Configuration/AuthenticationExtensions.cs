@@ -76,8 +76,8 @@ internal static class AuthenticationExtensions
                             AuthConstants.JwtBearerAuthType,
                         AuthType.Cookies =>
                             AuthConstants.CookiesAuthScheme,
-                        var _ =>
-                            throw new ArgumentException("Authentication type is not provided")
+                        _ =>
+                            throw new ArgumentException("Authentication type is not provided"),
                     };
                 };
             });

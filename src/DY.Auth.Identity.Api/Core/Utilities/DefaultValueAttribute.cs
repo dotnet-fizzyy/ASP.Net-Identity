@@ -19,6 +19,6 @@ public class DefaultValueAttribute : ValidationAttribute
             Guid guid => guid != default,
             string @string => !string.IsNullOrWhiteSpace(@string),
             int @int => @int != default,
-            var _ => true
+            var _ => true,
         };
 }

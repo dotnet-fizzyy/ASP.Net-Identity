@@ -28,9 +28,9 @@ public class RegionVerificationFilterTests
 {
     private const string ProhibitedRegion = "testrg";
 
-    private readonly Mock<ConnectionInfoMock> connectionInfoMock = new ();
-    private readonly Mock<HttpContext> httpContextMock = new ();
-    private readonly Mock<IRegionVerificationService> regionVerificationServiceMock = new ();
+    private readonly Mock<ConnectionInfoMock> connectionInfoMock = new();
+    private readonly Mock<HttpContext> httpContextMock = new();
+    private readonly Mock<IRegionVerificationService> regionVerificationServiceMock = new();
 
     [TearDown]
     public void TearDown()
