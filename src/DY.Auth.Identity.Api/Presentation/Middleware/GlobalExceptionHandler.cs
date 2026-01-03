@@ -29,7 +29,7 @@ public class GlobalExceptionHandler : IExceptionHandler
     /// <param name="logger">The instance of <see cref="ILogger{T}"/>.</param>
     public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
     {
-        this.logger = logger;
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <inheritdoc />
@@ -38,67 +38,85 @@ public class GlobalExceptionHandler : IExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        var exceptionDetails = ConstructExceptionDetails(httpContext, exception);
+        var exceptionDetails = this.ProcessErrorResponse(httpContext, exception);
 
         AddTelemetryTags(exception);
-
-        this.LogError(exceptionDetails);
 
         await HandleErrorResponseAsync(httpContext, exceptionDetails, cancellationToken);
 
         return true;
     }
 
-    private static ExceptionDetails ConstructExceptionDetails(
+    private ErrorResponse ProcessErrorResponse(
         HttpContext httpContext,
         Exception exception)
     {
         return exception switch
         {
             ModelValidationException modelValidationException =>
-                HandleModelValidationException(httpContext, modelValidationException),
+                this.HandleModelValidationException(httpContext, modelValidationException),
             OperationCanceledException canceledException =>
-                HandleOperationCancelledException(httpContext, canceledException),
+                HandleOperationCancelledException(canceledException),
             _ =>
-                HandleUnknownException(httpContext, exception),
+                this.HandleUnknownException(httpContext, exception),
         };
     }
 
-    private static ExceptionDetails HandleModelValidationException(
+    private ErrorResponse HandleModelValidationException(
         HttpContext httpContext,
         ModelValidationException modelValidationException)
     {
-        var exceptionDetails = CreateGeneralExceptionDetails(httpContext, modelValidationException);
+        var exceptionDetails = new ErrorResponse
+        {
+            ErrorCode = "VALIDATION_ERROR",
+            Message = modelValidationException.Errors.Aggregate((acc, message) => acc + $", {message}"),
+            StatusCode = StatusCodes.Status400BadRequest,
+            Source = modelValidationException.Source,
+        };
 
-        exceptionDetails.ErrorCode = "VALIDATION_ERROR";
-        exceptionDetails.ResponseStatusCode = StatusCodes.Status400BadRequest;
-        exceptionDetails.Message = modelValidationException.Errors.Aggregate((acc, message) => acc + $", {message}");
+        this.LogError(
+            exceptionDetails.ErrorId,
+            exceptionDetails.ErrorCode,
+            exceptionDetails.Timestamp,
+            exceptionDetails.Message,
+            httpContext.Request.Path,
+            modelValidationException.Source,
+            modelValidationException.StackTrace);
 
         return exceptionDetails;
     }
 
-    private static ExceptionDetails HandleOperationCancelledException(
-        HttpContext httpContext,
-        OperationCanceledException canceledException)
+    private static ErrorResponse HandleOperationCancelledException(OperationCanceledException canceledException)
     {
-        var exceptionDetails = CreateGeneralExceptionDetails(httpContext, canceledException);
-
-        exceptionDetails.ErrorCode = "OPERATION_CANCELLED";
-        exceptionDetails.ResponseStatusCode = StatusCodes.Status499ClientClosedRequest;
-        exceptionDetails.Message = GetErrorMessages(canceledException);
-
-        return exceptionDetails;
+        return new ErrorResponse
+        {
+            ErrorCode = "OPERATION_CANCELLED",
+            Message = GetErrorMessages(canceledException),
+            StatusCode = StatusCodes.Status499ClientClosedRequest,
+            Source = canceledException.Source,
+        };
     }
 
-    private static ExceptionDetails HandleUnknownException(
+    private ErrorResponse HandleUnknownException(
         HttpContext httpContext,
         Exception exception)
     {
-        var exceptionDetails = CreateGeneralExceptionDetails(httpContext, exception);
+        var exceptionDetails = new ErrorResponse
+        {
+            ErrorCode = "INTERNAL_SERVER_ERROR",
+            Message = GetErrorMessages(exception),
+            StatusCode = StatusCodes.Status500InternalServerError,
+            Source = exception.Source,
+        };
 
-        exceptionDetails.ErrorCode = "INTERNAL_SERVER_ERROR";
-        exceptionDetails.ResponseStatusCode = StatusCodes.Status500InternalServerError;
-        exceptionDetails.Message = GetErrorMessages(exception);
+        this.LogError(
+            exceptionDetails.ErrorId,
+            exceptionDetails.ErrorCode,
+            exceptionDetails.Timestamp,
+            exceptionDetails.Message,
+            httpContext.Request.Path,
+            exception.Source,
+            exception.StackTrace);
 
         return exceptionDetails;
     }
@@ -108,16 +126,6 @@ public class GlobalExceptionHandler : IExceptionHandler
         var parent = Activity.Current;
 
         parent?.AddException(exception);
-    }
-
-    private static Guid GenerateErrorId()
-    {
-        return Guid.CreateVersion7();
-    }
-
-    private static long GetTimestamp()
-    {
-        return ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
     }
 
     private static string GetErrorMessages(Exception exception)
@@ -138,67 +146,36 @@ public class GlobalExceptionHandler : IExceptionHandler
 
     private static Task HandleErrorResponseAsync(
         HttpContext httpContext,
-        ExceptionDetails exceptionDetails,
+        ErrorResponse errorResponse,
         CancellationToken cancellationToken)
     {
-        httpContext.Response.StatusCode = exceptionDetails.ResponseStatusCode;
+        httpContext.Response.StatusCode = errorResponse.StatusCode;
         httpContext.Response.ContentType = JsonContentType;
-
-        var errorResponse = new ErrorResponse
-        {
-            ErrorId = exceptionDetails.ErrorId,
-            ErrorCode = exceptionDetails.ErrorCode,
-            Source = exceptionDetails.Source,
-            Message = exceptionDetails.Message,
-            Timestamp = exceptionDetails.Timestamp,
-        };
 
         return httpContext.Response.WriteAsJsonAsync(errorResponse, cancellationToken);
     }
 
-    private static ExceptionDetails CreateGeneralExceptionDetails(HttpContext httpContext, Exception exception)
-    {
-        return new ExceptionDetails
-        {
-            ErrorId = GenerateErrorId(),
-            Timestamp = GetTimestamp(),
-            RequestPath = httpContext.Request.Path.ToString(),
-            Source = exception.Source,
-            StackTrace = exception.StackTrace,
-        };
-    }
-
-    private void LogError(ExceptionDetails exceptionDetails)
+    private void LogError(
+        Guid errorId,
+        string errorCode,
+        long timestamp,
+        string message,
+        string requestPath,
+        string source,
+        string stacktrace)
     {
         var errorMessage =
             $"""
-            Error ID: {exceptionDetails.ErrorId};
-            Timestamp: {exceptionDetails.Timestamp};
-            Path: {exceptionDetails.RequestPath};
-            Message: {exceptionDetails.Message};
-            Source: {exceptionDetails.Source};
-            Stacktrace: {exceptionDetails.StackTrace};
-            """;
+             An error occurred in app and was handled successfully.
+             Error ID: {errorId};
+             Error code: {errorCode};
+             Timestamp: {timestamp};
+             Request path: {requestPath};
+             Message: {message};
+             Source: {source};
+             Stacktrace: {stacktrace};
+             """;
 
         this.logger.LogError(errorMessage);
-    }
-
-    private record ExceptionDetails
-    {
-        public Guid ErrorId { get; set; }
-
-        public string ErrorCode { get; set; }
-
-        public long Timestamp { get; set; }
-
-        public string Message { get; set; }
-
-        public string Source { get; set; }
-
-        public string StackTrace { get; set; }
-
-        public int ResponseStatusCode { get; set; }
-
-        public string RequestPath { get; set; }
     }
 }

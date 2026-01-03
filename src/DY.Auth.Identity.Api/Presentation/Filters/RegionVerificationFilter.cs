@@ -2,6 +2,7 @@ using DY.Auth.Identity.Api.Core.Interfaces.Infrastructure;
 using DY.Auth.Identity.Api.Presentation.Models.Response;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -39,7 +40,7 @@ public class RegionVerificationFilter : IAsyncActionFilter
 
             if (userIpV4 == null)
             {
-                CreateBadRequestResponseResult(context, "Cannot identify request IP address");
+                CreateBadRequestResponseResult(context);
 
                 return;
             }
@@ -51,7 +52,7 @@ public class RegionVerificationFilter : IAsyncActionFilter
 
             if (isCountryCodeMissing || isRequestRegionProhibited)
             {
-                CreateForbiddenResponseResult(context, "IP address region is not supported");
+                CreateForbiddenResponseResult(context);
 
                 return;
             }
@@ -67,21 +68,27 @@ public class RegionVerificationFilter : IAsyncActionFilter
     private static string GetIpV4AddressFromExecutingContext(ActionExecutingContext context) =>
         context.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
 
-    private static void CreateBadRequestResponseResult(ActionExecutingContext context, string message)
+    private static void CreateBadRequestResponseResult(ActionExecutingContext context)
     {
         var errorResponse = new ErrorResponse
         {
-            Message = message,
+            ErrorCode = "REQUEST_REGION_UNDEFINED",
+            Message = "Cannot identify request IP address",
+            StatusCode = StatusCodes.Status400BadRequest,
+            Source = null,
         };
 
         context.Result = new BadRequestObjectResult(errorResponse);
     }
 
-    private static void CreateForbiddenResponseResult(ActionExecutingContext context, string message)
+    private static void CreateForbiddenResponseResult(ActionExecutingContext context)
     {
         var errorResponse = new ErrorResponse
         {
-            Message = message,
+            ErrorCode = "REQUEST_REGION_NOT_ALLOWED",
+            Message = "IP address region is not supported",
+            StatusCode = StatusCodes.Status403Forbidden,
+            Source = null,
         };
 
         context.Result = new ForbiddenObjectResult(errorResponse);
