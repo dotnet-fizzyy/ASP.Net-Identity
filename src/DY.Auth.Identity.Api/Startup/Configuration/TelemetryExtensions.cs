@@ -78,9 +78,6 @@ public static class TelemetryExtensions
 
     private static void ConfigureEntityFramework(EntityFrameworkInstrumentationOptions options)
     {
-        options.SetDbStatementForText = true;
-        options.SetDbStatementForStoredProcedure = true;
-
         options.EnrichWithIDbCommand = (activity, command) =>
         {
             activity.DisplayName = command.Connection?.Database ?? string.Empty;
