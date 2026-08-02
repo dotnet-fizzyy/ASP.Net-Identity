@@ -7,7 +7,7 @@ This project represents application that is responsible for handling users and r
 ### Built With
 
 * [C# 14](https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14);
-* [ASP.Net 9.0 WebAPI](https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-10.0);
+* [ASP.Net 10.0 WebAPI](https://docs.microsoft.com/en-us/aspnet/core/release-notes/aspnetcore-10.0);
 * [Entity Framework](https://entityframeworkcore.com);
 * [Identity Server Core](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-10.0);
 * [Handlebars](https://handlebarsjs.com/);
