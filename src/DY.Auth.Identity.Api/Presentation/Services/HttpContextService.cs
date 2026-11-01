@@ -58,4 +58,13 @@ public class HttpContextService : IHttpContextService
             "Role",
             new { id },
             this.httpContext.Request.Scheme);
+
+    /// <inheritdoc/>
+    public string GenerateEmailTemplateLink(Guid id) =>
+        this.linkGenerator.GetUriByAction(
+            this.httpContext,
+            "GetEmailTemplate",
+            "EmailTemplate",
+            new { id },
+            this.httpContext.Request.Scheme);
 }

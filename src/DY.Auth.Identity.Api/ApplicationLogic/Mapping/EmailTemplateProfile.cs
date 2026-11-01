@@ -1,5 +1,6 @@
 using AutoMapper;
 
+using DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Commands.CreateEmailTemplate;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Queries.GetEmailTemplateById;
 using DY.Auth.Identity.Api.Core.Entities;
 
@@ -15,6 +16,16 @@ public class EmailTemplateProfile : Profile
     /// </summary>
     public EmailTemplateProfile()
     {
+        this.CreateMap<CreateEmailTemplateCommand, EmailTemplate>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Layout, opt => opt.MapFrom(src => src.Layout));
+
+        this.CreateMap<EmailTemplate, CreateEmailTemplateResult>()
+            .ForMember(dest => dest.EmailTemplateId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Layout, opt => opt.MapFrom(src => src.Layout))
+            .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreationDate));
+
         this.CreateMap<EmailTemplate, GetEmailTemplateByIdResult>()
             .ForMember(dest => dest.EmailTemplateId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Layout, opt => opt.MapFrom(src => src.Layout))

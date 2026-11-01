@@ -37,4 +37,11 @@ public interface IHttpContextService
     /// <param name="id">Role identifier.</param>
     /// <returns>Link to get role action.</returns>
     string GenerateGetRoleLink(Guid id);
+
+    /// <summary>
+    /// Generates link to get email template action.
+    /// </summary>
+    /// <param name="id">Email template identifier.</param>
+    /// <returns>Link to get email template action.</returns>
+    string GenerateEmailTemplateLink(Guid id);
 }

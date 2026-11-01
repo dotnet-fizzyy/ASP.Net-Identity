@@ -1,7 +1,9 @@
 using AutoMapper;
 
+using DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Commands.CreateEmailTemplate;
 using DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Queries.GetEmailTemplateById;
 using DY.Auth.Identity.Api.Core.Constants;
+using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.EmailTemplate;
 
 using MediatR;
@@ -9,6 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using System;
 using System.Threading;
@@ -23,17 +26,20 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 [Route("api/email-template")]
 public class EmailTemplateController : ControllerBase
 {
+    private readonly IHttpContextService httpContextService;
     private readonly IMapper mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EmailTemplateController"/> class.
     /// </summary>
     /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
+    /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public EmailTemplateController(IMediator mediator, IMapper mapper)
+    public EmailTemplateController(IMediator mediator, IHttpContextService httpContextService, IMapper mapper)
         : base(mediator)
     {
-        this.mapper = mapper;
+        this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     /// <summary>
@@ -58,5 +64,35 @@ public class EmailTemplateController : ControllerBase
         }
 
         return this.mapper.Map<EmailTemplateDto>(emailTemplateResult.Data);
+    }
+
+    /// <summary>
+    /// Creates an email template.
+    /// </summary>
+    /// <param name="requestBody"><see cref="CreateEmailTemplateDto"/>.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <response code="201">Email template has been created.</response>
+    /// <response code="400">Email template with the same name already exists.</response>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    [HttpPost]
+    [ProducesResponseType(typeof(EmailTemplateDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<EmailTemplateDto>> CreateEmailTemplate(
+        [FromBody, BindRequired] CreateEmailTemplateDto requestBody,
+        CancellationToken cancellationToken)
+    {
+        var command = this.mapper.Map<CreateEmailTemplateCommand>(requestBody);
+        var creationResult = await this.Mediator.Send(command, cancellationToken);
+
+        if (creationResult.IsResultFailed)
+        {
+            return this.CreateBadResponseByServiceResult(creationResult);
+        }
+
+        var createdEmailTemplateDto = this.mapper.Map<EmailTemplateDto>(creationResult.Data);
+
+        var getEmailTemplateLink = this.httpContextService.GenerateEmailTemplateLink(createdEmailTemplateDto.EmailTemplateId);
+
+        return this.Created(getEmailTemplateLink, createdEmailTemplateDto);
     }
 }
