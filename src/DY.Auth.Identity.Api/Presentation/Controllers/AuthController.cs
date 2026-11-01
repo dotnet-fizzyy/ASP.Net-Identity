@@ -79,7 +79,7 @@ public class AuthController : ControllerBase
 
         if (creationResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(creationResult);
+            return this.CreateErrorResponse(creationResult);
         }
 
         var userDto = this.mapper.Map<UserDto>(creationResult.Data);
@@ -109,7 +109,7 @@ public class AuthController : ControllerBase
 
         if (authUserResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(authUserResult);
+            return this.CreateErrorResponse(authUserResult);
         }
 
         return await this.GetSuccessfulAuthenticationResponse(authUserResult.Data.AuthenticatedUser);
@@ -137,7 +137,7 @@ public class AuthController : ControllerBase
 
         if (confirmationResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(confirmationResult);
+            return this.CreateErrorResponse(confirmationResult);
         }
 
         return this.NoContent();

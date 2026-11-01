@@ -65,7 +65,7 @@ public class UserController : ControllerBase
 
         if (userIdResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(userIdResult);
+            return this.CreateErrorResponse(userIdResult);
         }
 
         var userId = userIdResult.Data;
@@ -75,7 +75,7 @@ public class UserController : ControllerBase
 
         if (userResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(userResult);
+            return this.CreateErrorResponse(userResult);
         }
 
         return this.mapper.Map<UserDto>(userResult.Data);
@@ -99,7 +99,7 @@ public class UserController : ControllerBase
 
         if (userResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(userResult);
+            return this.CreateErrorResponse(userResult);
         }
 
         return this.mapper.Map<UserDto>(userResult.Data);
@@ -129,7 +129,7 @@ public class UserController : ControllerBase
 
         if (userCreationResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(userCreationResult);
+            return this.CreateErrorResponse(userCreationResult);
         }
 
         var userDto = this.mapper.Map<UserDto>(userCreationResult.Data);
@@ -160,7 +160,7 @@ public class UserController : ControllerBase
 
         if (userUpdateResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(userUpdateResult);
+            return this.CreateErrorResponse(userUpdateResult);
         }
 
         return this.mapper.Map<UserDto>(userUpdateResult.Data);
@@ -185,7 +185,7 @@ public class UserController : ControllerBase
 
         if (userRemoveResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(userRemoveResult);
+            return this.CreateErrorResponse(userRemoveResult);
         }
 
         return this.NoContent();
@@ -210,7 +210,7 @@ public class UserController : ControllerBase
 
         if (userRemoveResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(userRemoveResult);
+            return this.CreateErrorResponse(userRemoveResult);
         }
 
         return this.NoContent();

@@ -60,7 +60,7 @@ public class EmailTemplateController : ControllerBase
 
         if (emailTemplateResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(emailTemplateResult);
+            return this.CreateErrorResponse(emailTemplateResult);
         }
 
         return this.mapper.Map<EmailTemplateDto>(emailTemplateResult.Data);
@@ -86,7 +86,7 @@ public class EmailTemplateController : ControllerBase
 
         if (creationResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(creationResult);
+            return this.CreateErrorResponse(creationResult);
         }
 
         var createdEmailTemplateDto = this.mapper.Map<EmailTemplateDto>(creationResult.Data);

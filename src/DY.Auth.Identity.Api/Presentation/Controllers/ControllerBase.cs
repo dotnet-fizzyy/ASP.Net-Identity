@@ -1,5 +1,6 @@
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Results;
+using DY.Auth.Identity.Api.Presentation.Models.Response;
 
 using MediatR;
 
@@ -36,18 +37,60 @@ public abstract class ControllerBase : AspControllerBase
     }
 
     /// <summary>
-    /// Generates response with status based on code in <see cref="ServiceResult"/>.
+    /// Generates an error response with a status based on the <see cref="ServiceResult"/>.
     /// </summary>
     /// <param name="serviceResult">Operation result.</param>
-    /// <returns>Response object with status code matching in result.</returns>
-    protected ObjectResult CreateBadResponseByServiceResult(ServiceResult serviceResult) =>
-        serviceResult.Result switch
+    /// <returns>An error response with status code matching the result.</returns>
+    protected ObjectResult CreateErrorResponse(ServiceResult serviceResult)
+    {
+        ArgumentNullException.ThrowIfNull(serviceResult);
+
+        if (!serviceResult.IsResultFailed)
         {
-            ServiceResultType.InvalidData => this.StatusCode(StatusCodes.Status400BadRequest, serviceResult.ErrorMessage),
-            ServiceResultType.Unauthenticated => this.StatusCode(StatusCodes.Status401Unauthorized, serviceResult.ErrorMessage),
-            ServiceResultType.Unauthorized => this.StatusCode(StatusCodes.Status403Forbidden, serviceResult.ErrorMessage),
-            ServiceResultType.NotFound => this.StatusCode(StatusCodes.Status404NotFound, serviceResult.ErrorMessage),
-            ServiceResultType.InternalError => this.StatusCode(StatusCodes.Status500InternalServerError, serviceResult.ErrorMessage),
-            var _ => throw new NotImplementedException($"Not-supported {serviceResult.Result} operation result type to generate response."),
-        };
+            throw new ArgumentException("Cannot create an error response for a successful result.", nameof(serviceResult));
+        }
+
+        var errorResponse = new ErrorResponse();
+
+        switch (serviceResult.Result)
+        {
+            case ServiceResultType.InvalidData:
+                errorResponse.StatusCode = StatusCodes.Status400BadRequest;
+                errorResponse.ErrorCode = "INVALID_DATA";
+                errorResponse.Message = serviceResult.ErrorMessage ?? "The request contains invalid data.";
+                break;
+
+            case ServiceResultType.Unauthenticated:
+                errorResponse.StatusCode = StatusCodes.Status401Unauthorized;
+                errorResponse.ErrorCode = "UNAUTHENTICATED";
+                errorResponse.Message = serviceResult.ErrorMessage ?? "Authentication is required.";
+                break;
+
+            case ServiceResultType.Unauthorized:
+                errorResponse.StatusCode = StatusCodes.Status403Forbidden;
+                errorResponse.ErrorCode = "UNAUTHORIZED";
+                errorResponse.Message = serviceResult.ErrorMessage ?? "You are not authorized to perform this operation.";
+                break;
+
+            case ServiceResultType.NotFound:
+                errorResponse.StatusCode = StatusCodes.Status404NotFound;
+                errorResponse.ErrorCode = "NOT_FOUND";
+                errorResponse.Message = serviceResult.ErrorMessage ?? "The requested resource was not found.";
+                break;
+
+            case ServiceResultType.InternalError:
+                errorResponse.StatusCode = StatusCodes.Status500InternalServerError;
+                errorResponse.ErrorCode = "INTERNAL_SERVER_ERROR";
+                errorResponse.Message = "An unexpected error occurred.";
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(
+                    nameof(serviceResult),
+                    serviceResult.Result,
+                    "Unsupported service result type.");
+        }
+
+        return this.StatusCode(errorResponse.StatusCode, errorResponse);
+    }
 }

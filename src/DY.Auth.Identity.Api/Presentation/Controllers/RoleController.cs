@@ -67,7 +67,7 @@ public class RoleController : ControllerBase
 
         if (roleResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(roleResult);
+            return this.CreateErrorResponse(roleResult);
         }
 
         return this.mapper.Map<RoleDto>(roleResult.Data);
@@ -93,7 +93,7 @@ public class RoleController : ControllerBase
 
         if (roleGrantResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(roleGrantResult);
+            return this.CreateErrorResponse(roleGrantResult);
         }
 
         return this.NoContent();
@@ -119,7 +119,7 @@ public class RoleController : ControllerBase
 
         if (roleRevokeResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(roleRevokeResult);
+            return this.CreateErrorResponse(roleRevokeResult);
         }
 
         return this.NoContent();
@@ -145,7 +145,7 @@ public class RoleController : ControllerBase
 
         if (roleCreationResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(roleCreationResult);
+            return this.CreateErrorResponse(roleCreationResult);
         }
 
         var createdRoleDto = this.mapper.Map<RoleDto>(roleCreationResult.Data);
@@ -175,7 +175,7 @@ public class RoleController : ControllerBase
 
         if (roleUpdateResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(roleUpdateResult);
+            return this.CreateErrorResponse(roleUpdateResult);
         }
 
         return this.mapper.Map<RoleDto>(roleUpdateResult.Data);
@@ -199,7 +199,7 @@ public class RoleController : ControllerBase
 
         if (roleRemoveResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(roleRemoveResult);
+            return this.CreateErrorResponse(roleRemoveResult);
         }
 
         return this.NoContent();
@@ -223,7 +223,7 @@ public class RoleController : ControllerBase
 
         if (roleRemoveResult.IsResultFailed)
         {
-            return this.CreateBadResponseByServiceResult(roleRemoveResult);
+            return this.CreateErrorResponse(roleRemoveResult);
         }
 
         return this.NoContent();
