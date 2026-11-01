@@ -30,7 +30,8 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 /// </summary>
 public class AuthController : ControllerBase
 {
-    private readonly IHttpContextService httpContextService;
+    private readonly ICookiesService cookiesService;
+    private readonly IControllersLinkService controllersLinkService;
     private readonly IMapper mapper;
     private readonly AppSettings appSettings;
 
@@ -38,17 +39,20 @@ public class AuthController : ControllerBase
     /// Initializes a new instance of the <see cref="AuthController"/> class.
     /// </summary>
     /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
-    /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
+    /// <param name="cookiesService">The instance of <see cref="ICookiesService"/>.</param>
+    /// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
     /// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
     public AuthController(
         IMediator mediator,
-        IHttpContextService httpContextService,
+        ICookiesService cookiesService,
+        IControllersLinkService controllersLinkService,
         IMapper mapper,
         AppSettings appSettings)
             : base(mediator)
     {
-        this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
+        this.cookiesService = cookiesService ?? throw new ArgumentNullException(nameof(cookiesService));
+        this.controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
     }
@@ -80,7 +84,7 @@ public class AuthController : ControllerBase
 
         var userDto = this.mapper.Map<UserDto>(creationResult.Data);
 
-        var getUserLink = this.httpContextService.GenerateGetUserLink(userDto.Id);
+        var getUserLink = this.controllersLinkService.GenerateGetUserLink(userDto.Id);
 
         return this.Created(getUserLink, userDto);
     }
@@ -148,7 +152,7 @@ public class AuthController : ControllerBase
             return this.Ok(authenticationResultDto);
         }
 
-        await this.httpContextService.SignInUsingCookiesAsync(userClaimsPrincipal);
+        await this.cookiesService.SignInUsingCookiesAsync(userClaimsPrincipal);
 
         return this.Ok();
     }

@@ -33,7 +33,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     private readonly DatabaseContext databaseContext;
     private readonly AppSettings appSettings;
     private readonly IEmailService emailService;
-    private readonly IHttpContextService httpContextService;
+    private readonly IControllersLinkService controllersLinkService;
     private readonly IMapper mapper;
 
     /// <summary>
@@ -44,7 +44,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
     /// <param name="databaseContext">Instance of <see cref="DatabaseContext"/>.</param>
     /// <param name="appSettings">Instance of <see cref="AppSettings"/>.</param>
     /// <param name="emailService">Instance of <see cref="IEmailService"/>.</param>
-    /// <param name="httpContextService">Instance of <see cref="IHttpContextService"/>.</param>
+    /// <param name="controllersLinkService">Instance of <see cref="IControllersLinkService"/>.</param>
     /// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
     public CreateUserCommandHandler(
         UserManager<AppUser> userManager,
@@ -52,7 +52,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         DatabaseContext databaseContext,
         AppSettings appSettings,
         IEmailService emailService,
-        IHttpContextService httpContextService,
+        IControllersLinkService controllersLinkService,
         IMapper mapper)
     {
         this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -60,7 +60,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
         this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
         this.emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
-        this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
+        this.controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
@@ -185,7 +185,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Servi
 
     private void HandleUserEmailConfirmationSending(string email, string confirmationToken)
     {
-        var confirmationLink = this.httpContextService.GenerateConfirmEmailLink(email, confirmationToken);
+        var confirmationLink = this.controllersLinkService.GenerateConfirmEmailLink(email, confirmationToken);
 
         var emailTemplate =
               this.databaseContext.EmailTemplates.Single(

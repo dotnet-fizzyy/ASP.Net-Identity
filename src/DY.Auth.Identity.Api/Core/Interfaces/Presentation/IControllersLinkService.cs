@@ -1,21 +1,12 @@
 using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace DY.Auth.Identity.Api.Core.Interfaces.Presentation;
 
 /// <summary>
-/// HTTP Context service.
+/// Controller link generation service.
 /// </summary>
-public interface IHttpContextService
+public interface IControllersLinkService
 {
-    /// <summary>
-    /// Signs in user using cookies authentication mechanism.
-    /// </summary>
-    /// <param name="user"><see cref="ClaimsPrincipal"/> user to perform authentication.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task SignInUsingCookiesAsync(ClaimsPrincipal user);
-
     /// <summary>
     /// Generates link to confirm email on registration process.
     /// </summary>
@@ -28,7 +19,7 @@ public interface IHttpContextService
     /// Generates link to get user profile action.
     /// </summary>
     /// <param name="id">User identifier.</param>
-    /// <returns>Link to to get user profile action.</returns>
+    /// <returns>Link to get user profile action.</returns>
     string GenerateGetUserLink(Guid id);
 
     /// <summary>

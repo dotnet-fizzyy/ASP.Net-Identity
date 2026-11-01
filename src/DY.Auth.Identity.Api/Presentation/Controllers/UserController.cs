@@ -30,22 +30,22 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 [Authorize]
 public class UserController : ControllerBase
 {
-    private readonly IHttpContextService httpContextService;
+    private readonly IControllersLinkService controllersLinkService;
     private readonly IMapper mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserController"/> class.
     /// </summary>
     /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
-    /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
+    /// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
     public UserController(
         IMediator mediator,
-        IHttpContextService httpContextService,
+        IControllersLinkService controllersLinkService,
         IMapper mapper)
             : base(mediator)
     {
-        this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
+        this.controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
@@ -134,7 +134,7 @@ public class UserController : ControllerBase
 
         var userDto = this.mapper.Map<UserDto>(userCreationResult.Data);
 
-        var getUserLink = this.httpContextService.GenerateGetUserLink(userDto.Id);
+        var getUserLink = this.controllersLinkService.GenerateGetUserLink(userDto.Id);
 
         return this.Created(getUserLink, userDto);
     }

@@ -29,6 +29,7 @@ internal static class ServicesExtensions
         services.AddSingleton<IRegionVerificationService, RegionVerificationService>();
         services.AddSingleton<IActivityTracing, OpenTelemetryTracing>();
 
-        services.AddScoped<IHttpContextService, HttpContextService>();
+        services.AddScoped<ICookiesService, CookiesService>();
+        services.AddScoped<IControllersLinkService, ControllersLinkService>();
     }
 }

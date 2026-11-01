@@ -1,36 +1,28 @@
-using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace DY.Auth.Identity.Api.Presentation.Services;
 
 /// <inheritdoc />
-public class HttpContextService : IHttpContextService
+public class ControllersLinkService : IControllersLinkService
 {
     private readonly HttpContext httpContext;
     private readonly LinkGenerator linkGenerator;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HttpContextService"/> class.
+    /// Initializes a new instance of the <see cref="ControllersLinkService"/> class.
     /// </summary>
     /// <param name="httpContextAccessor">The instance of <see cref="HttpContextAccessor"/>.</param>
     /// <param name="linkGenerator">The instance of <see cref="LinkGenerator"/>.</param>
-    public HttpContextService(IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
+    public ControllersLinkService(IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
     {
         this.httpContext = httpContextAccessor?.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         this.linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
     }
-
-    /// <inheritdoc/>
-    public Task SignInUsingCookiesAsync(ClaimsPrincipal user) =>
-        this.httpContext.SignInAsync(AuthConstants.CookiesAuthScheme, user);
 
     /// <inheritdoc/>
     public string GenerateConfirmEmailLink(string email, string token) =>

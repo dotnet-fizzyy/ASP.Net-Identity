@@ -26,19 +26,19 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 [Route("api/email-template")]
 public class EmailTemplateController : ControllerBase
 {
-    private readonly IHttpContextService httpContextService;
+    private readonly IControllersLinkService controllersLinkService;
     private readonly IMapper mapper;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EmailTemplateController"/> class.
     /// </summary>
     /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
-    /// <param name="httpContextService">The instance of <see cref="IHttpContextService"/>.</param>
+    /// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
     /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public EmailTemplateController(IMediator mediator, IHttpContextService httpContextService, IMapper mapper)
+    public EmailTemplateController(IMediator mediator, IControllersLinkService controllersLinkService, IMapper mapper)
         : base(mediator)
     {
-        this.httpContextService = httpContextService ?? throw new ArgumentNullException(nameof(httpContextService));
+        this.controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
@@ -91,7 +91,7 @@ public class EmailTemplateController : ControllerBase
 
         var createdEmailTemplateDto = this.mapper.Map<EmailTemplateDto>(creationResult.Data);
 
-        var getEmailTemplateLink = this.httpContextService.GenerateEmailTemplateLink(createdEmailTemplateDto.EmailTemplateId);
+        var getEmailTemplateLink = this.controllersLinkService.GenerateEmailTemplateLink(createdEmailTemplateDto.EmailTemplateId);
 
         return this.Created(getEmailTemplateLink, createdEmailTemplateDto);
     }
