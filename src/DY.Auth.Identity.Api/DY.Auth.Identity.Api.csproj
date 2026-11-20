@@ -13,7 +13,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.UI" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.SqlServer.Storage" />
-        <PackageReference Include="AutoMapper" />
+        <PackageReference Include="AutoMapperMIT" />
         <PackageReference Include="FluentValidation.AspNetCore" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
         <PackageReference Include="Handlebars.Net" />
