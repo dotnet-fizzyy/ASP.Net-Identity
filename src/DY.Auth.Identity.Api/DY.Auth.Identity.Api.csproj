@@ -10,36 +10,36 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
-        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
-        <PackageReference Include="AspNetCore.HealthChecks.UI.SqlServer.Storage" Version="9.0.0" />
-        <PackageReference Include="AutoMapper" Version="[14.0.0]" />
-        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1" />
-        <PackageReference Include="Handlebars.Net" Version="2.1.1" />
-        <PackageReference Include="MailKit" Version="4.17.0" />
-        <PackageReference Include="MediatR" Version="12.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
+        <PackageReference Include="AspNetCore.HealthChecks.UI" />
+        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
+        <PackageReference Include="AspNetCore.HealthChecks.UI.SqlServer.Storage" />
+        <PackageReference Include="AutoMapper" />
+        <PackageReference Include="FluentValidation.AspNetCore" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+        <PackageReference Include="Handlebars.Net" />
+        <PackageReference Include="MailKit" />
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.0" />
-        <PackageReference Include="MimeKit" Version="4.17.0" />
-        <PackageReference Include="NetEscapades.Configuration.Validation" Version="2.0.0" />
-        <PackageReference Include="OpenTelemetry" Version="1.17.0" />
-        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.17.0" />
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.17.0" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.17.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.17.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.17.0-beta.1" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.17.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="1.17.0-rc.1" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.17.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.1" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.Extensions.Identity.Core" />
+        <PackageReference Include="MimeKit" />
+        <PackageReference Include="NetEscapades.Configuration.Validation" />
+        <PackageReference Include="OpenTelemetry" />
+        <PackageReference Include="OpenTelemetry.Exporter.Console" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Process" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
+        <PackageReference Include="Swashbuckle.AspNetCore" />
     </ItemGroup>
 
     <ItemGroup>
