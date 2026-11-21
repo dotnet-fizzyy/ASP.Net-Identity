@@ -1,9 +1,9 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.AuthenticateUser;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUser;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.UpdateUser;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.User.Queries.GetUserById;
+using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.AuthenticateUser;
+using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.CreateUser;
+using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.UpdateUser;
+using DY.Auth.Identity.Api.ApplicationLogic.User.Queries.GetUserById;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.User;
 

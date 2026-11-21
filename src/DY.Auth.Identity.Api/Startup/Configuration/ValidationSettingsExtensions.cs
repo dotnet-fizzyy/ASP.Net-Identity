@@ -1,4 +1,4 @@
-using DY.Auth.Identity.Api.ApplicationLogic.Pipelines;
+using DY.Auth.Identity.Api.ApplicationLogic.Shared.Pipelines;
 
 using FluentValidation;
 

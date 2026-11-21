@@ -43,7 +43,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ApplicationLogic\Services\EmailTemplate\Queries" />
       <Folder Include="Infrastructure\Database\Migrations" />
     </ItemGroup>
 

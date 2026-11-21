@@ -1,6 +1,6 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Mapping;
+using DY.Auth.Identity.Api.ApplicationLogic.Shared.Mapping;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Infrastructure.Network.Services;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;

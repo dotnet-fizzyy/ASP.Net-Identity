@@ -1,7 +1,7 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Commands.CreateEmailTemplate;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Queries.GetEmailTemplateById;
+using DY.Auth.Identity.Api.ApplicationLogic.EmailTemplate.Commands.CreateEmailTemplate;
+using DY.Auth.Identity.Api.ApplicationLogic.EmailTemplate.Queries.GetEmailTemplateById;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.EmailTemplate;
 
 namespace DY.Auth.Identity.Api.Presentation.Mapping;

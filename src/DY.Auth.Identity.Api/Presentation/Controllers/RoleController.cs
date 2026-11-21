@@ -1,12 +1,12 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.CreateRole;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.GrantRoleToUser;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.HardRemoveRoleById;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.RevokeRoleFromUser;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.SoftRemoveRoleById;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.UpdateRole;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Queries.GetRoleById;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.CreateRole;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.GrantRoleToUser;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.HardRemoveRoleById;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.RevokeRoleFromUser;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.SoftRemoveRoleById;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.UpdateRole;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Queries.GetRoleById;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.Role;

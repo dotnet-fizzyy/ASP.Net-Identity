@@ -1,10 +1,10 @@
 using AutoMapper;
 
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.CreateRole;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.GrantRoleToUser;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.RevokeRoleFromUser;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.UpdateRole;
-using DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Queries.GetRoleById;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.CreateRole;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.GrantRoleToUser;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.RevokeRoleFromUser;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.UpdateRole;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Queries.GetRoleById;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.Role;
 
 namespace DY.Auth.Identity.Api.Presentation.Mapping;
