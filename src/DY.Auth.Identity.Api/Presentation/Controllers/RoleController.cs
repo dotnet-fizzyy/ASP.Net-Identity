@@ -1,14 +1,9 @@
-using AutoMapper;
-
-using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.CreateRole;
-using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.GrantRoleToUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.RemoveRoleById;
-using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.RevokeRoleFromUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.SoftRemoveRoleById;
-using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.UpdateRole;
 using DY.Auth.Identity.Api.ApplicationLogic.Role.Queries.GetRoleById;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
+using DY.Auth.Identity.Api.Presentation.Mapping;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.Role;
 
 using MediatR;
@@ -29,15 +24,12 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 /// </summary>
 /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
 /// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
-/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
 [Authorize(Roles = UserRoleConstants.Admin)]
 public class RoleController(
     IMediator mediator,
-    IControllersLinkService controllersLinkService,
-    IMapper mapper) : ControllerBase(mediator)
+    IControllersLinkService controllersLinkService) : ControllerBase(mediator)
 {
     private readonly IControllersLinkService controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
-    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <summary>
     /// Returns role.
@@ -60,7 +52,7 @@ public class RoleController(
             return this.CreateErrorResponse(roleResult);
         }
 
-        return this.mapper.Map<RoleDto>(roleResult.Data);
+        return RoleMapper.ToRoleDto(roleResult.Data);
     }
 
     /// <summary>
@@ -78,7 +70,7 @@ public class RoleController(
         [FromBody, BindRequired] UserRoleDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<GrantRoleToUserCommand>(requestBody);
+        var command = RoleMapper.ToGrantRoleToUserCommand(requestBody);
         var roleGrantResult = await this.Mediator.Send(command, cancellationToken);
 
         if (roleGrantResult.IsResultFailed)
@@ -104,7 +96,7 @@ public class RoleController(
         [FromBody, BindRequired] UserRoleDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<RevokeRoleFromUserCommand>(requestBody);
+        var command = RoleMapper.ToRevokeRoleFromUserCommand(requestBody);
         var roleRevokeResult = await this.Mediator.Send(command, cancellationToken);
 
         if (roleRevokeResult.IsResultFailed)
@@ -130,7 +122,7 @@ public class RoleController(
         [FromBody, BindRequired] CreateRoleDto roleDto,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<CreateRoleCommand>(roleDto);
+        var command = RoleMapper.ToCreateRoleCommand(roleDto);
         var roleCreationResult = await this.Mediator.Send(command, cancellationToken);
 
         if (roleCreationResult.IsResultFailed)
@@ -138,7 +130,7 @@ public class RoleController(
             return this.CreateErrorResponse(roleCreationResult);
         }
 
-        var createdRoleDto = this.mapper.Map<RoleDto>(roleCreationResult.Data);
+        var createdRoleDto = RoleMapper.ToRoleDto(roleCreationResult.Data);
 
         var getRoleLink = this.controllersLinkService.GenerateGetRoleLink(createdRoleDto.Id);
 
@@ -160,7 +152,7 @@ public class RoleController(
         [FromBody, BindRequired] UpdateRoleDto roleDto,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<UpdateRoleCommand>(roleDto);
+        var command = RoleMapper.ToUpdateRoleCommand(roleDto);
         var roleUpdateResult = await this.Mediator.Send(command, cancellationToken);
 
         if (roleUpdateResult.IsResultFailed)
@@ -168,7 +160,7 @@ public class RoleController(
             return this.CreateErrorResponse(roleUpdateResult);
         }
 
-        return this.mapper.Map<RoleDto>(roleUpdateResult.Data);
+        return RoleMapper.ToRoleDto(roleUpdateResult.Data);
     }
 
     /// <summary>

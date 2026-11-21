@@ -1,9 +1,7 @@
-using AutoMapper;
-
-using DY.Auth.Identity.Api.ApplicationLogic.EmailTemplate.Commands.CreateEmailTemplate;
 using DY.Auth.Identity.Api.ApplicationLogic.EmailTemplate.Queries.GetEmailTemplateById;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
+using DY.Auth.Identity.Api.Presentation.Mapping;
 using DY.Auth.Identity.Api.Presentation.Models.DTO.EmailTemplate;
 
 using MediatR;
@@ -24,13 +22,11 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 /// </summary>
 /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
 /// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
-/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
 [Authorize(Roles = UserRoleConstants.Admin)]
 [Route("api/email-template")]
-public class EmailTemplateController(IMediator mediator, IControllersLinkService controllersLinkService, IMapper mapper) : ControllerBase(mediator)
+public class EmailTemplateController(IMediator mediator, IControllersLinkService controllersLinkService) : ControllerBase(mediator)
 {
     private readonly IControllersLinkService controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
-    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <summary>
     /// Returns email template.
@@ -53,7 +49,7 @@ public class EmailTemplateController(IMediator mediator, IControllersLinkService
             return this.CreateErrorResponse(emailTemplateResult);
         }
 
-        return this.mapper.Map<EmailTemplateDto>(emailTemplateResult.Data);
+        return EmailTemplateMapper.ToEmailTemplateDto(emailTemplateResult.Data);
     }
 
     /// <summary>
@@ -71,7 +67,7 @@ public class EmailTemplateController(IMediator mediator, IControllersLinkService
         [FromBody, BindRequired] CreateEmailTemplateDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<CreateEmailTemplateCommand>(requestBody);
+        var command = EmailTemplateMapper.ToCreateEmailTemplateCommand(requestBody);
         var creationResult = await this.Mediator.Send(command, cancellationToken);
 
         if (creationResult.IsResultFailed)
@@ -79,7 +75,7 @@ public class EmailTemplateController(IMediator mediator, IControllersLinkService
             return this.CreateErrorResponse(creationResult);
         }
 
-        var createdEmailTemplateDto = this.mapper.Map<EmailTemplateDto>(creationResult.Data);
+        var createdEmailTemplateDto = EmailTemplateMapper.ToEmailTemplateDto(creationResult.Data);
 
         var getEmailTemplateLink = this.controllersLinkService.GenerateEmailTemplateLink(createdEmailTemplateDto.EmailTemplateId);
 

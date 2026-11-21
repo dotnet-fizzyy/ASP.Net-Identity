@@ -1,5 +1,4 @@
-using AutoMapper;
-
+using DY.Auth.Identity.Api.ApplicationLogic.Shared.Mapping;
 using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Infrastructure.Database;
@@ -16,11 +15,9 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Role.Queries.GetRoleById;
 /// Get role by id CQRS handler.
 /// </summary>
 /// <param name="databaseContext">Instance of <see cref="DatabaseContext"/>.</param>
-/// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
-public class GetRoleByIdQueryHandler(DatabaseContext databaseContext, IMapper mapper) : IRequestHandler<GetRoleByIdQuery, ServiceResult<GetRoleByIdResult>>
+public class GetRoleByIdQueryHandler(DatabaseContext databaseContext) : IRequestHandler<GetRoleByIdQuery, ServiceResult<GetRoleByIdResult>>
 {
     private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc />
     public async Task<ServiceResult<GetRoleByIdResult>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
@@ -32,7 +29,7 @@ public class GetRoleByIdQueryHandler(DatabaseContext databaseContext, IMapper ma
             return new ServiceResult<GetRoleByIdResult>();
         }
 
-        var mappedRole = this.mapper.Map<GetRoleByIdResult>(roleEntity);
+        var mappedRole = RoleMapper.ToGetRoleByIdResult(roleEntity);
 
         return new ServiceResult<GetRoleByIdResult>(mappedRole);
     }

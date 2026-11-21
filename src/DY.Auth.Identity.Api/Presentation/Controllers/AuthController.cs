@@ -1,8 +1,4 @@
-using AutoMapper;
-
-using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.AuthenticateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.ConfirmEmail;
-using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.CreateUser;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
@@ -31,18 +27,15 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
 /// <param name="cookiesService">The instance of <see cref="ICookiesService"/>.</param>
 /// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
-/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
 /// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
 public class AuthController(
     IMediator mediator,
     ICookiesService cookiesService,
     IControllersLinkService controllersLinkService,
-    IMapper mapper,
     AppSettings appSettings) : ControllerBase(mediator)
 {
     private readonly ICookiesService cookiesService = cookiesService ?? throw new ArgumentNullException(nameof(cookiesService));
     private readonly IControllersLinkService controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
-    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     private readonly AppSettings appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
     /// <summary>
@@ -60,9 +53,7 @@ public class AuthController(
         [FromBody, BindRequired] UserRegistrationDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<CreateUserCommand>(
-            requestBody,
-            opts => opts.Items[UserProfile.ConfirmUserEmailContextKey] = false);
+        var command = UserMapper.ToCreateUserCommand(requestBody);
         var creationResult = await this.Mediator.Send(command, cancellationToken);
 
         if (creationResult.IsResultFailed)
@@ -70,7 +61,7 @@ public class AuthController(
             return this.CreateErrorResponse(creationResult);
         }
 
-        var userDto = this.mapper.Map<UserDto>(creationResult.Data);
+        var userDto = UserMapper.ToUserDto(creationResult.Data);
 
         var getUserLink = this.controllersLinkService.GenerateGetUserLink(userDto.Id);
 
@@ -92,7 +83,7 @@ public class AuthController(
         [FromBody, BindRequired] UserSignInDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<AuthenticateUserCommand>(requestBody);
+        var command = UserMapper.ToAuthenticateUserCommand(requestBody);
         var authUserResult = await this.Mediator.Send(command, cancellationToken);
 
         if (authUserResult.IsResultFailed)

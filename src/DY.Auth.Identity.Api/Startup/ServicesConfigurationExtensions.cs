@@ -32,7 +32,6 @@ public static class ServicesConfigurationExtensions
         services.RegisterMediatr();
         services.RegisterValidationPipeline();
 
-        services.RegisterAutomapper();
         services.RegisterHttpClients(appSettings);
 
         services.RegisterHealthChecks(

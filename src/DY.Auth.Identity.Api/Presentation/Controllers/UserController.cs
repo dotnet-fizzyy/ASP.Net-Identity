@@ -1,9 +1,5 @@
-using AutoMapper;
-
-using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.CreateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.RemoveUserById;
 using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.SoftRemoveUserById;
-using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.UpdateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.User.Queries.GetUserById;
 using DY.Auth.Identity.Api.Core.Constants;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
@@ -29,15 +25,12 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 /// </summary>
 /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
 /// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
-/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
 [Authorize]
 public class UserController(
     IMediator mediator,
-    IControllersLinkService controllersLinkService,
-    IMapper mapper) : ControllerBase(mediator)
+    IControllersLinkService controllersLinkService) : ControllerBase(mediator)
 {
     private readonly IControllersLinkService controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
-    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <summary>
     /// Returns information about user by User HTTP context.
@@ -68,7 +61,7 @@ public class UserController(
             return this.CreateErrorResponse(userResult);
         }
 
-        return this.mapper.Map<UserDto>(userResult.Data);
+        return UserMapper.ToUserDto(userResult.Data);
     }
 
     /// <summary>
@@ -92,7 +85,7 @@ public class UserController(
             return this.CreateErrorResponse(userResult);
         }
 
-        return this.mapper.Map<UserDto>(userResult.Data);
+        return UserMapper.ToUserDto(userResult.Data);
     }
 
     /// <summary>
@@ -112,9 +105,7 @@ public class UserController(
         [FromBody, BindRequired] CreateUserDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<CreateUserCommand>(
-            requestBody,
-            opts => opts.Items[UserProfile.ConfirmUserEmailContextKey] = true);
+        var command = UserMapper.ToCreateUserCommand(requestBody, confirmEmailImmediately: true);
         var userCreationResult = await this.Mediator.Send(command, cancellationToken);
 
         if (userCreationResult.IsResultFailed)
@@ -122,7 +113,7 @@ public class UserController(
             return this.CreateErrorResponse(userCreationResult);
         }
 
-        var userDto = this.mapper.Map<UserDto>(userCreationResult.Data);
+        var userDto = UserMapper.ToUserDto(userCreationResult.Data);
 
         var getUserLink = this.controllersLinkService.GenerateGetUserLink(userDto.Id);
 
@@ -145,7 +136,7 @@ public class UserController(
         [FromBody, BindRequired] UserDto requestBody,
         CancellationToken cancellationToken)
     {
-        var command = this.mapper.Map<UpdateUserCommand>(requestBody);
+        var command = UserMapper.ToUpdateUserCommand(requestBody);
         var userUpdateResult = await this.Mediator.Send(command, cancellationToken);
 
         if (userUpdateResult.IsResultFailed)
@@ -153,7 +144,7 @@ public class UserController(
             return this.CreateErrorResponse(userUpdateResult);
         }
 
-        return this.mapper.Map<UserDto>(userUpdateResult.Data);
+        return UserMapper.ToUserDto(userUpdateResult.Data);
     }
 
     /// <summary>

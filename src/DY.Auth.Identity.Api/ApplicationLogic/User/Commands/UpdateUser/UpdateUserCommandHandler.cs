@@ -1,8 +1,7 @@
-using AutoMapper;
-
 using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Results;
+using DY.Auth.Identity.Api.ApplicationLogic.Shared.Mapping;
 using DY.Auth.Identity.Api.Infrastructure.Database;
 
 using MediatR;
@@ -19,11 +18,9 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.User.Commands.UpdateUser;
 /// Update user CQRS handler.
 /// </summary>
 /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-/// <param name="mapper"><see cref="IMapper"/>.</param>
-public class UpdateUserCommandHandler(DatabaseContext databaseContext, IMapper mapper) : IRequestHandler<UpdateUserCommand, ServiceResult<UpdateUserResult>>
+public class UpdateUserCommandHandler(DatabaseContext databaseContext) : IRequestHandler<UpdateUserCommand, ServiceResult<UpdateUserResult>>
 {
     private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc/>
     public async Task<ServiceResult<UpdateUserResult>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
@@ -35,11 +32,11 @@ public class UpdateUserCommandHandler(DatabaseContext databaseContext, IMapper m
             return new ServiceResult<UpdateUserResult>(ServiceResultType.NotFound);
         }
 
-        var userToUpdate = this.mapper.Map<AppUser>(command);
+        var userToUpdate = UserMapper.ToAppUser(command);
 
         var updatedUser = await this.UpdateUserDetailsAsync(userToUpdate, cancellationToken);
 
-        var updatedUserResult = this.mapper.Map<UpdateUserResult>(updatedUser);
+        var updatedUserResult = UserMapper.ToUpdateUserResult(updatedUser);
 
         return new ServiceResult<UpdateUserResult>(ServiceResultType.Success, updatedUserResult);
     }

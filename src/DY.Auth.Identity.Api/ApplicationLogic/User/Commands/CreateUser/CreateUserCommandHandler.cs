@@ -1,11 +1,10 @@
-using AutoMapper;
-
 using DY.Auth.Identity.Api.Core.Entities;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Interfaces.Infrastructure;
 using DY.Auth.Identity.Api.Core.Interfaces.Presentation;
 using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Core.Utilities;
+using DY.Auth.Identity.Api.ApplicationLogic.Shared.Mapping;
 using DY.Auth.Identity.Api.Infrastructure.Database;
 using DY.Auth.Identity.Api.Infrastructure.Database.Constants;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
@@ -32,15 +31,13 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.User.Commands.CreateUser;
 /// <param name="appSettings">Instance of <see cref="AppSettings"/>.</param>
 /// <param name="emailService">Instance of <see cref="IEmailService"/>.</param>
 /// <param name="controllersLinkService">Instance of <see cref="IControllersLinkService"/>.</param>
-/// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
 public class CreateUserCommandHandler(
     UserManager<AppUser> userManager,
     RoleManager<AppRole> roleManager,
     DatabaseContext databaseContext,
     AppSettings appSettings,
     IEmailService emailService,
-    IControllersLinkService controllersLinkService,
-    IMapper mapper) : IRequestHandler<CreateUserCommand, ServiceResult<CreateUserResult>>
+    IControllersLinkService controllersLinkService) : IRequestHandler<CreateUserCommand, ServiceResult<CreateUserResult>>
 {
     private readonly UserManager<AppUser> userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     private readonly RoleManager<AppRole> roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
@@ -48,7 +45,6 @@ public class CreateUserCommandHandler(
     private readonly AppSettings appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
     private readonly IEmailService emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
     private readonly IControllersLinkService controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
-    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc/>
     public async Task<ServiceResult<CreateUserResult>> Handle(
@@ -85,14 +81,14 @@ public class CreateUserCommandHandler(
             }
         }
 
-        var createUserResult = this.mapper.Map<CreateUserResult>(createdUser);
+        var createUserResult = UserMapper.ToCreateUserResult(createdUser);
 
         return new ServiceResult<CreateUserResult>(ServiceResultType.Success, createUserResult);
     }
 
     private async Task<ServiceResult<AppUser>> CreateUserAsync(CreateUserCommand command)
     {
-        var userEntity = this.mapper.Map<AppUser>(command);
+        var userEntity = UserMapper.ToAppUser(command);
 
         var userCreationResult = await this.userManager.CreateAsync(userEntity, command.Password);
 

@@ -1,6 +1,3 @@
-using AutoMapper;
-
-using DY.Auth.Identity.Api.ApplicationLogic.Shared.Mapping;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Infrastructure.Network.Services;
 using DY.Auth.Identity.Api.Startup.ApplicationSettings;
@@ -31,8 +28,6 @@ public class RegionVerificationServiceTests
             AccessKey = "TestAccessKey",
         },
     };
-
-    private readonly IMapper mapper = GetMapper();
 
     /// <summary>
     /// Tests <see cref="RegionVerificationService.GetIpAddressDetailsAsync"/> with successful execution.
@@ -78,13 +73,8 @@ public class RegionVerificationServiceTests
         ClassicAssert.ThrowsAsync<HttpRequestException>(() => service.GetIpAddressDetailsAsync(FakeIpAddress));
     }
 
-    private static IMapper GetMapper() =>
-        new MapperConfiguration(opt => opt.AddProfile(new RegionVerificationServiceProfile()))
-            .CreateMapper();
-
     private RegionVerificationService GetService(IHttpClientFactory httpClientFactory) =>
         new (
             httpClientFactory,
-            this.mapper,
             AppSettings);
 }

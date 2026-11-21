@@ -1,5 +1,4 @@
-using AutoMapper;
-
+using DY.Auth.Identity.Api.ApplicationLogic.Shared.Mapping;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Infrastructure.Database;
@@ -18,11 +17,9 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.User.Queries.GetUserById;
 /// Gets user by id query CQRS handler.
 /// </summary>
 /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-/// <param name="mapper"><see cref="IMapper"/>.</param>
-public class GetUserByIdQueryHandler(DatabaseContext databaseContext, IMapper mapper) : IRequestHandler<GetUserByIdQuery, ServiceResult<GetUserByIdResult>>
+public class GetUserByIdQueryHandler(DatabaseContext databaseContext) : IRequestHandler<GetUserByIdQuery, ServiceResult<GetUserByIdResult>>
 {
     private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc/>
     public async Task<ServiceResult<GetUserByIdResult>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
@@ -39,7 +36,7 @@ public class GetUserByIdQueryHandler(DatabaseContext databaseContext, IMapper ma
             return new ServiceResult<GetUserByIdResult>(ServiceResultType.NotFound);
         }
 
-        var userDto = this.mapper.Map<GetUserByIdResult>(userEntity);
+        var userDto = UserMapper.ToGetUserByIdResult(userEntity);
 
         return new ServiceResult<GetUserByIdResult>(userDto);
     }

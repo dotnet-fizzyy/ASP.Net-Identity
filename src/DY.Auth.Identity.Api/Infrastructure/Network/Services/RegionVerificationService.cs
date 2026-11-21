@@ -1,5 +1,3 @@
-using AutoMapper;
-
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Interfaces.Infrastructure;
 using DY.Auth.Identity.Api.Core.Models;
@@ -9,28 +7,25 @@ using DY.Auth.Identity.Api.Startup.ApplicationSettings;
 
 using Newtonsoft.Json;
 
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace DY.Auth.Identity.Api.Infrastructure.Network.Services;
 
-/// <inheritdoc />
 /// <summary>
-/// Initializes a new instance of the <see cref="RegionVerificationService"/> class.
+/// Region verification service.
 /// </summary>
 /// <param name="clientFactory">The instance of <see cref="IHttpClientFactory"/>.</param>
-/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
 /// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
 public class RegionVerificationService(
     IHttpClientFactory clientFactory,
-    IMapper mapper,
     AppSettings appSettings) : IRegionVerificationService
 {
     private const string AccessKeyQueryParameter = "access_key";
 
-    private readonly IHttpClientFactory clientFactory = clientFactory;
-    private readonly IMapper mapper = mapper;
-    private readonly AppSettings appSettings = appSettings;
+    private readonly IHttpClientFactory clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
+    private readonly AppSettings appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
     /// <inheritdoc />
     public async Task<IpAddressDetails> GetIpAddressDetailsAsync(string ipv4)
@@ -46,12 +41,29 @@ public class RegionVerificationService(
         var jsonResponseMessage = await responseMessage.Content.ReadAsStringAsync();
         var ipStackResponse = JsonConvert.DeserializeObject<IpStackResponseModel>(jsonResponseMessage);
 
-        return this.mapper.Map<IpAddressDetails>(ipStackResponse);
+        return Map(ipStackResponse);
     }
 
     private HttpClient GetHttpClient() =>
-        this.clientFactory.CreateClient(InternalApi.RegionVerification.ToString());
+        this.clientFactory.CreateClient(nameof(InternalApi.RegionVerification));
 
     private void SetAccessKeyQueryParameter(HttpRequestMessage httpRequestMessage) =>
         httpRequestMessage.AddQueryParameter(AccessKeyQueryParameter, this.appSettings.IpStackSettings.AccessKey);
+
+    private static IpAddressDetails Map(IpStackResponseModel source)
+    {
+        if (source is null)
+        {
+            return null;
+        }
+
+        return new IpAddressDetails
+        {
+            CountryCode = source.CountryCode,
+            CountryName = source.CountryName,
+            RegionCode = source.RegionCode,
+            RegionName = source.RegionName,
+            City = source.City,
+        };
+    }
 }

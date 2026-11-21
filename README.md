@@ -11,7 +11,6 @@ This project represents application that is responsible for handling users and r
 * [Entity Framework](https://entityframeworkcore.com);
 * [Identity Server Core](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-11.0);
 * [Handlebars](https://handlebarsjs.com/);
-* [Automapper](https://automapper.org/);
 * [MailKit](https://github.com/jstedfast/MailKit);
 * [HealthChecks UI](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/monitor-app-health);
 * [NUnit](https://nunit.org/);

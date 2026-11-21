@@ -1,5 +1,4 @@
-using AutoMapper;
-
+using DY.Auth.Identity.Api.ApplicationLogic.Shared.Mapping;
 using DY.Auth.Identity.Api.Core.Enums;
 using DY.Auth.Identity.Api.Core.Results;
 using DY.Auth.Identity.Api.Infrastructure.Database;
@@ -18,11 +17,9 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.EmailTemplate.Queries.GetEmailTe
 /// Gets email template by id query CQRS handler.
 /// </summary>
 /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-/// <param name="mapper"><see cref="IMapper"/>.</param>
-public class GetEmailTemplateByIdQueryHandler(DatabaseContext databaseContext, IMapper mapper) : IRequestHandler<GetEmailTemplateByIdQuery, ServiceResult<GetEmailTemplateByIdResult>>
+public class GetEmailTemplateByIdQueryHandler(DatabaseContext databaseContext) : IRequestHandler<GetEmailTemplateByIdQuery, ServiceResult<GetEmailTemplateByIdResult>>
 {
     private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc/>
     public async Task<ServiceResult<GetEmailTemplateByIdResult>> Handle(GetEmailTemplateByIdQuery query, CancellationToken cancellationToken)
@@ -34,7 +31,7 @@ public class GetEmailTemplateByIdQueryHandler(DatabaseContext databaseContext, I
             return new ServiceResult<GetEmailTemplateByIdResult>(ServiceResultType.NotFound);
         }
 
-        var emailTemplateDto = this.mapper.Map<GetEmailTemplateByIdResult>(emailTemplateEntity);
+        var emailTemplateDto = EmailTemplateMapper.ToGetEmailTemplateByIdResult(emailTemplateEntity);
 
         return new ServiceResult<GetEmailTemplateByIdResult>(emailTemplateDto);
     }

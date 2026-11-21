@@ -4,7 +4,6 @@
     <PackageVersion Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.SqlServer.Storage" Version="9.0.0" />
-    <PackageVersion Include="AutoMapperMIT" Version="14.0.3" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1" />
     <PackageVersion Include="Handlebars.Net" Version="2.1.1" />
