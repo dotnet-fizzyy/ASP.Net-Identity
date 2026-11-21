@@ -27,27 +27,17 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 /// <summary>
 /// User controller.
 /// </summary>
+/// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
+/// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
+/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
 [Authorize]
-public class UserController : ControllerBase
+public class UserController(
+    IMediator mediator,
+    IControllersLinkService controllersLinkService,
+    IMapper mapper) : ControllerBase(mediator)
 {
-    private readonly IControllersLinkService controllersLinkService;
-    private readonly IMapper mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserController"/> class.
-    /// </summary>
-    /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
-    /// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
-    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public UserController(
-        IMediator mediator,
-        IControllersLinkService controllersLinkService,
-        IMapper mapper)
-            : base(mediator)
-    {
-        this.controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
-        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+    private readonly IControllersLinkService controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
+    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <summary>
     /// Returns information about user by User HTTP context.

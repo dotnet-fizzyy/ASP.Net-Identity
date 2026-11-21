@@ -14,18 +14,10 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.SoftRemov
 /// <summary>
 /// Soft remove role by id CQRS handler.
 /// </summary>
-public class SoftRemoveRoleByIdCommandHandler : IRequestHandler<SoftRemoveRoleByIdCommand, ServiceResult>
+/// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
+public class SoftRemoveRoleByIdCommandHandler(DatabaseContext databaseContext) : IRequestHandler<SoftRemoveRoleByIdCommand, ServiceResult>
 {
-    private readonly DatabaseContext databaseContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SoftRemoveRoleByIdCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    public SoftRemoveRoleByIdCommandHandler(DatabaseContext databaseContext)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(SoftRemoveRoleByIdCommand command, CancellationToken cancellationToken)

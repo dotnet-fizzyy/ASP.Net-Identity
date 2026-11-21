@@ -10,19 +10,14 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.SoftRemov
 /// <summary>
 /// Soft remove role by id CQRS command.
 /// </summary>
-public class SoftRemoveRoleByIdCommand : IBaseId, IRequest<ServiceResult>
+/// <remarks>
+/// Initializes a new instance of the <see cref="SoftRemoveRoleByIdCommand"/> class.
+/// </remarks>
+/// <param name="id">Role id.</param>
+public class SoftRemoveRoleByIdCommand(Guid id) : IBaseId, IRequest<ServiceResult>
 {
     /// <summary>
     /// Gets role id.
     /// </summary>
-    public Guid Id { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SoftRemoveRoleByIdCommand"/> class.
-    /// </summary>
-    /// <param name="id">Role id.</param>
-    public SoftRemoveRoleByIdCommand(Guid id)
-    {
-        this.Id = id;
-    }
+    public Guid Id { get; } = id;
 }

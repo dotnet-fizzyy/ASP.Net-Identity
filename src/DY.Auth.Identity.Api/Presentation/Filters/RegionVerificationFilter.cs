@@ -15,21 +15,12 @@ namespace DY.Auth.Identity.Api.Presentation.Filters;
 /// <summary>
 /// Filter of allowed regions from HTTP requests.
 /// </summary>
-public class RegionVerificationFilter : IAsyncActionFilter
+/// <param name="regionVerificationService">The instance of <see cref="IRegionVerificationService"/>.</param>
+/// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
+public class RegionVerificationFilter(IRegionVerificationService regionVerificationService, AppSettings appSettings) : IAsyncActionFilter
 {
-    private readonly IRegionVerificationService regionVerificationService;
-    private readonly AppSettings appSettings;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RegionVerificationFilter"/> class.
-    /// </summary>
-    /// <param name="regionVerificationService">The instance of <see cref="IRegionVerificationService"/>.</param>
-    /// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
-    public RegionVerificationFilter(IRegionVerificationService regionVerificationService, AppSettings appSettings)
-    {
-        this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-        this.regionVerificationService = regionVerificationService ?? throw new ArgumentNullException(nameof(regionVerificationService));
-    }
+    private readonly IRegionVerificationService regionVerificationService = regionVerificationService ?? throw new ArgumentNullException(nameof(regionVerificationService));
+    private readonly AppSettings appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
     /// <inheritdoc/>
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)

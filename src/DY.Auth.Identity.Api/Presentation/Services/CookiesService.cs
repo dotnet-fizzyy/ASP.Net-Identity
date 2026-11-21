@@ -10,19 +10,13 @@ using System.Threading.Tasks;
 
 namespace DY.Auth.Identity.Api.Presentation.Services;
 
-/// <inheritdoc />
-public class CookiesService : ICookiesService
+/// <summary>
+/// Cookies service.
+/// </summary>
+/// <param name="httpContextAccessor">The instance of <see cref="HttpContextAccessor"/>.</param>
+public class CookiesService(IHttpContextAccessor httpContextAccessor) : ICookiesService
 {
-    private readonly HttpContext httpContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CookiesService"/> class.
-    /// </summary>
-    /// <param name="httpContextAccessor">The instance of <see cref="HttpContextAccessor"/>.</param>
-    public CookiesService(IHttpContextAccessor httpContextAccessor)
-    {
-        this.httpContext = httpContextAccessor?.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-    }
+    private readonly HttpContext httpContext = httpContextAccessor?.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
 
     /// <inheritdoc/>
     public Task SignInUsingCookiesAsync(ClaimsPrincipal user) =>

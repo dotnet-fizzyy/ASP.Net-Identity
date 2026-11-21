@@ -17,18 +17,10 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.HardRemov
 /// <summary>
 /// Hard remove role by id CQRS handler.
 /// </summary>
-public class HardRemoveRoleByIdCommandHandler : IRequestHandler<HardRemoveRoleByIdCommand, ServiceResult>
+/// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
+public class HardRemoveRoleByIdCommandHandler(DatabaseContext databaseContext) : IRequestHandler<HardRemoveRoleByIdCommand, ServiceResult>
 {
-    private readonly DatabaseContext databaseContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HardRemoveRoleByIdCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    public HardRemoveRoleByIdCommandHandler(DatabaseContext databaseContext)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(HardRemoveRoleByIdCommand command, CancellationToken cancellationToken)

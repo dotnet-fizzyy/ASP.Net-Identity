@@ -18,21 +18,12 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.UpdateUse
 /// <summary>
 /// Update user CQRS handler.
 /// </summary>
-public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ServiceResult<UpdateUserResult>>
+/// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
+/// <param name="mapper"><see cref="IMapper"/>.</param>
+public class UpdateUserCommandHandler(DatabaseContext databaseContext, IMapper mapper) : IRequestHandler<UpdateUserCommand, ServiceResult<UpdateUserResult>>
 {
-    private readonly DatabaseContext databaseContext;
-    private readonly IMapper mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UpdateUserCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-    /// <param name="mapper"><see cref="IMapper"/>.</param>
-    public UpdateUserCommandHandler(DatabaseContext databaseContext, IMapper mapper)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc/>
     public async Task<ServiceResult<UpdateUserResult>> Handle(UpdateUserCommand command, CancellationToken cancellationToken)

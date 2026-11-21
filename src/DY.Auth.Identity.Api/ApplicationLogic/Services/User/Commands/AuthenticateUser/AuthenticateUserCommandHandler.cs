@@ -21,25 +21,16 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.Authentic
 /// <summary>
 /// Authenticate user CQRS handler.
 /// </summary>
-public class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, ServiceResult<AuthenticateUserResult>>
+/// <param name="databaseContext">Instance of <see cref="DatabaseContext"/>.</param>
+/// <param name="signInManager">Instance of <see cref="SignInManager{T}"/>.</param>
+public class AuthenticateUserCommandHandler(
+    DatabaseContext databaseContext,
+    SignInManager<AppUser> signInManager) : IRequestHandler<AuthenticateUserCommand, ServiceResult<AuthenticateUserResult>>
 {
     private const string FailedAuthenticationErrorMessage = "Cannot authenticate user with provided email and password";
 
-    private readonly DatabaseContext databaseContext;
-    private readonly SignInManager<AppUser> signInManager;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AuthenticateUserCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">Instance of <see cref="DatabaseContext"/>.</param>
-    /// <param name="signInManager">Instance of <see cref="SignInManager{T}"/>.</param>
-    public AuthenticateUserCommandHandler(
-        DatabaseContext databaseContext,
-        SignInManager<AppUser> signInManager)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-        this.signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+    private readonly SignInManager<AppUser> signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
 
     /// <inheritdoc/>
     public async Task<ServiceResult<AuthenticateUserResult>> Handle(

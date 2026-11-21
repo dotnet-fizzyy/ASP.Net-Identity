@@ -8,21 +8,15 @@ using System;
 namespace DY.Auth.Identity.Api.Presentation.Services;
 
 /// <inheritdoc />
-public class ControllersLinkService : IControllersLinkService
+/// <summary>
+/// Initializes a new instance of the <see cref="ControllersLinkService"/> class.
+/// </summary>
+/// <param name="httpContextAccessor">The instance of <see cref="HttpContextAccessor"/>.</param>
+/// <param name="linkGenerator">The instance of <see cref="LinkGenerator"/>.</param>
+public class ControllersLinkService(IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator) : IControllersLinkService
 {
-    private readonly HttpContext httpContext;
-    private readonly LinkGenerator linkGenerator;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ControllersLinkService"/> class.
-    /// </summary>
-    /// <param name="httpContextAccessor">The instance of <see cref="HttpContextAccessor"/>.</param>
-    /// <param name="linkGenerator">The instance of <see cref="LinkGenerator"/>.</param>
-    public ControllersLinkService(IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
-    {
-        this.httpContext = httpContextAccessor?.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        this.linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
-    }
+    private readonly HttpContext httpContext = httpContextAccessor?.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+    private readonly LinkGenerator linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
 
     /// <inheritdoc/>
     public string GenerateConfirmEmailLink(string email, string token) =>

@@ -28,34 +28,22 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 /// <summary>
 /// Authentication controller.
 /// </summary>
-public class AuthController : ControllerBase
+/// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
+/// <param name="cookiesService">The instance of <see cref="ICookiesService"/>.</param>
+/// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
+/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
+/// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
+public class AuthController(
+    IMediator mediator,
+    ICookiesService cookiesService,
+    IControllersLinkService controllersLinkService,
+    IMapper mapper,
+    AppSettings appSettings) : ControllerBase(mediator)
 {
-    private readonly ICookiesService cookiesService;
-    private readonly IControllersLinkService controllersLinkService;
-    private readonly IMapper mapper;
-    private readonly AppSettings appSettings;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AuthController"/> class.
-    /// </summary>
-    /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
-    /// <param name="cookiesService">The instance of <see cref="ICookiesService"/>.</param>
-    /// <param name="controllersLinkService">The instance of <see cref="IControllersLinkService"/>.</param>
-    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    /// <param name="appSettings">The instance of <see cref="AppSettings"/>.</param>
-    public AuthController(
-        IMediator mediator,
-        ICookiesService cookiesService,
-        IControllersLinkService controllersLinkService,
-        IMapper mapper,
-        AppSettings appSettings)
-            : base(mediator)
-    {
-        this.cookiesService = cookiesService ?? throw new ArgumentNullException(nameof(cookiesService));
-        this.controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
-        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-    }
+    private readonly ICookiesService cookiesService = cookiesService ?? throw new ArgumentNullException(nameof(cookiesService));
+    private readonly IControllersLinkService controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
+    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+    private readonly AppSettings appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
     /// <summary>
     /// User account registration.

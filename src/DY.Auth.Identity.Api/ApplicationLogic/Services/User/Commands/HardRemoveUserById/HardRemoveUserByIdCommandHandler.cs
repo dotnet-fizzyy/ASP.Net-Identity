@@ -17,18 +17,10 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.HardRemov
 /// <summary>
 /// Hard remove user by id CQRS command handler.
 /// </summary>
-public class HardRemoveUserByIdCommandHandler : IRequestHandler<HardRemoveUserByIdCommand, ServiceResult>
+/// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
+public class HardRemoveUserByIdCommandHandler(DatabaseContext databaseContext) : IRequestHandler<HardRemoveUserByIdCommand, ServiceResult>
 {
-    private readonly DatabaseContext databaseContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HardRemoveUserByIdCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-    public HardRemoveUserByIdCommandHandler(DatabaseContext databaseContext)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc/>
     public async Task<ServiceResult> Handle(HardRemoveUserByIdCommand command, CancellationToken cancellationToken)

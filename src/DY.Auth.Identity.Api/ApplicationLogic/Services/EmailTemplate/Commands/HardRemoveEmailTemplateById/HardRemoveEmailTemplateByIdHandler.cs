@@ -18,18 +18,10 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Commands.
 /// <summary>
 /// Hard remove email template by ID CQRS handler.
 /// </summary>
-public class HardRemoveEmailTemplateByIdHandler : IRequestHandler<HardRemoveEmailTemplateByIdCommand, ServiceResult>
+/// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
+public class HardRemoveEmailTemplateByIdHandler(DatabaseContext databaseContext) : IRequestHandler<HardRemoveEmailTemplateByIdCommand, ServiceResult>
 {
-    private readonly DatabaseContext databaseContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HardRemoveEmailTemplateByIdHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    public HardRemoveEmailTemplateByIdHandler(DatabaseContext databaseContext)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(HardRemoveEmailTemplateByIdCommand command, CancellationToken cancellationToken)

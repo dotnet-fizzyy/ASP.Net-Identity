@@ -16,21 +16,12 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.UpdateRol
 /// <summary>
 /// Update role CQRS handler.
 /// </summary>
-public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommand, ServiceResult<UpdateRoleResult>>
+/// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
+/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
+public class UpdateRoleCommandHandler(DatabaseContext databaseContext, IMapper mapper) : IRequestHandler<UpdateRoleCommand, ServiceResult<UpdateRoleResult>>
 {
-    private readonly DatabaseContext databaseContext;
-    private readonly IMapper mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UpdateRoleCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public UpdateRoleCommandHandler(DatabaseContext databaseContext, IMapper mapper)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc />.
     public async Task<ServiceResult<UpdateRoleResult>> Handle(UpdateRoleCommand command, CancellationToken cancellationToken)

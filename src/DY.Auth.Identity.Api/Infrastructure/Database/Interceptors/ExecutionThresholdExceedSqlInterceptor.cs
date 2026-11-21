@@ -9,24 +9,14 @@ using System.Threading.Tasks;
 namespace DY.Auth.Identity.Api.Infrastructure.Database.Interceptors;
 
 /// <summary>
-/// EF Sql interceptor identifying long time execution queries exceeding threshold.
+/// EF SQL interceptor identifying long time execution queries exceeding threshold.
 /// </summary>
-public class ExecutionThresholdExceedSqlInterceptor : DbCommandInterceptor
+/// <param name="logger">The instance of <see cref="ILogger"/>.</param>
+/// <param name="sqlQueryExecutionThresholdInMilliseconds">Long time execution SQL query threshold.</param>
+/// <exception cref="ArgumentNullException">Will be thrown if no constructor arguments are provided.</exception>
+public class ExecutionThresholdExceedSqlInterceptor(ILogger<ExecutionThresholdExceedSqlInterceptor> logger, int sqlQueryExecutionThresholdInMilliseconds) : DbCommandInterceptor
 {
-    private readonly ILogger<ExecutionThresholdExceedSqlInterceptor> logger;
-    private readonly int sqlQueryExecutedThresholdInMilliseconds;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ExecutionThresholdExceedSqlInterceptor"/> class.
-    /// </summary>
-    /// <param name="logger">The instance of <see cref="ILogger"/>.</param>
-    /// <param name="sqlQueryExecutionThresholdInMilliseconds">Long time execution SQL query threshold.</param>
-    /// <exception cref="ArgumentNullException">Will be thrown if no constructor arguments are provided.</exception>
-    public ExecutionThresholdExceedSqlInterceptor(ILogger<ExecutionThresholdExceedSqlInterceptor> logger, int sqlQueryExecutionThresholdInMilliseconds)
-    {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.sqlQueryExecutedThresholdInMilliseconds = sqlQueryExecutionThresholdInMilliseconds;
-    }
+    private readonly ILogger<ExecutionThresholdExceedSqlInterceptor> logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     /// <inheritdoc />
     public override DbDataReader ReaderExecuted(
@@ -53,7 +43,7 @@ public class ExecutionThresholdExceedSqlInterceptor : DbCommandInterceptor
 
     private void TrackThresholdLimitExceededQueries(DbCommand command, CommandExecutedEventData eventData)
     {
-        if (eventData.Duration.Milliseconds < this.sqlQueryExecutedThresholdInMilliseconds)
+        if (eventData.Duration.Milliseconds < sqlQueryExecutionThresholdInMilliseconds)
         {
             return;
         }

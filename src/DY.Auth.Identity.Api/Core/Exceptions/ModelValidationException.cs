@@ -7,26 +7,17 @@ namespace DY.Auth.Identity.Api.Core.Exceptions;
 /// <summary>
 /// Model validation exception.
 /// </summary>
-public class ModelValidationException : Exception
+/// <param name="modelName">Name of model errors occured.</param>
+/// <param name="errors">Collection of model fields errors.</param>
+public class ModelValidationException(string modelName, IEnumerable<string> errors) : Exception
 {
     /// <summary>
     /// Gets model name.
     /// </summary>
-    public string ModelName { get; }
+    public string ModelName { get; } = modelName;
 
     /// <summary>
     /// Gets model fields errors.
     /// </summary>
-    public List<string> Errors { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ModelValidationException"/> class.
-    /// </summary>
-    /// <param name="modelName">Name of model errors occured.</param>
-    /// <param name="errors">Collection of model fields errors.</param>
-    public ModelValidationException(string modelName, IEnumerable<string> errors)
-    {
-        this.ModelName = modelName;
-        this.Errors = errors.ToList();
-    }
+    public List<string> Errors { get; } = errors.ToList();
 }

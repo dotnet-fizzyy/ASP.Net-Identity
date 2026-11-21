@@ -14,18 +14,10 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.SoftRemov
 /// <summary>
 /// Soft remove user by id CQRS command handler.
 /// </summary>
-public class SoftRemoveUserByIdCommandHandler : IRequestHandler<SoftRemoveUserByIdCommand, ServiceResult>
+/// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
+public class SoftRemoveUserByIdCommandHandler(DatabaseContext databaseContext) : IRequestHandler<SoftRemoveUserByIdCommand, ServiceResult>
 {
-    private readonly DatabaseContext databaseContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SoftRemoveUserByIdCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-    public SoftRemoveUserByIdCommandHandler(DatabaseContext databaseContext)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc/>
     public async Task<ServiceResult> Handle(SoftRemoveUserByIdCommand command, CancellationToken cancellationToken)

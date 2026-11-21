@@ -16,18 +16,10 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.ConfirmEm
 /// <summary>
 /// Confirm user email CQRS handler.
 /// </summary>
-public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, ServiceResult>
+/// <param name="userManager"><see cref="UserManager{T}"/>.</param>
+public class ConfirmEmailCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<ConfirmEmailCommand, ServiceResult>
 {
-    private readonly UserManager<AppUser> userManager;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ConfirmEmailCommandHandler"/> class.
-    /// </summary>
-    /// <param name="userManager"><see cref="UserManager{T}"/>.</param>
-    public ConfirmEmailCommandHandler(UserManager<AppUser> userManager)
-    {
-        this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-    }
+    private readonly UserManager<AppUser> userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
 
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(ConfirmEmailCommand command, CancellationToken cancellationToken)

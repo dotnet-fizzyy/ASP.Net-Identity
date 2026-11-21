@@ -6,23 +6,18 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using MimeKit.Text;
 
+using System;
 using System.Threading.Tasks;
 
 namespace DY.Auth.Identity.Api.Infrastructure.Network.Services;
 
-/// <inheritdoc cref="IEmailService" />
-public class EmailService : IEmailService
+/// <summary>
+/// Email service.
+/// </summary>
+/// <param name="appSettings">Instance of <see cref="AppSettings"/>.</param>
+public class EmailService(AppSettings appSettings) : IEmailService
 {
-    private readonly AppSettings appSettings;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EmailService"/> class.
-    /// </summary>
-    /// <param name="appSettings">Instance of <see cref="AppSettings"/>.</param>
-    public EmailService(AppSettings appSettings)
-    {
-        this.appSettings = appSettings;
-    }
+    private readonly AppSettings appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
     /// <inheritdoc/>
     public async Task SendEmailAsync(string emailToSend, string subject, string message)

@@ -19,21 +19,13 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.EmailTemplate.Commands.
 /// <summary>
 /// Create email template CQRS handler.
 /// </summary>
-public class CreateEmailTemplateCommandHandler : IRequestHandler<CreateEmailTemplateCommand, ServiceResult<CreateEmailTemplateResult>>
+/// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
+/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
+public class CreateEmailTemplateCommandHandler(DatabaseContext databaseContext, IMapper mapper)
+    : IRequestHandler<CreateEmailTemplateCommand, ServiceResult<CreateEmailTemplateResult>>
 {
-    private readonly DatabaseContext databaseContext;
-    private readonly IMapper mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CreateEmailTemplateCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public CreateEmailTemplateCommandHandler(DatabaseContext databaseContext, IMapper mapper)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc />
     public async Task<ServiceResult<CreateEmailTemplateResult>> Handle(

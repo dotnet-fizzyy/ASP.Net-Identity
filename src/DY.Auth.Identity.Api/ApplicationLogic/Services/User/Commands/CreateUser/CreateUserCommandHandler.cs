@@ -26,43 +26,29 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.User.Commands.CreateUse
 /// <summary>
 /// Create user CQRS handler.
 /// </summary>
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ServiceResult<CreateUserResult>>
+/// <param name="userManager">Instance of <see cref="UserManager{T}"/>.</param>
+/// <param name="roleManager">Instance of <see cref="RoleManager{T}"/>.</param>
+/// <param name="databaseContext">Instance of <see cref="DatabaseContext"/>.</param>
+/// <param name="appSettings">Instance of <see cref="AppSettings"/>.</param>
+/// <param name="emailService">Instance of <see cref="IEmailService"/>.</param>
+/// <param name="controllersLinkService">Instance of <see cref="IControllersLinkService"/>.</param>
+/// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
+public class CreateUserCommandHandler(
+    UserManager<AppUser> userManager,
+    RoleManager<AppRole> roleManager,
+    DatabaseContext databaseContext,
+    AppSettings appSettings,
+    IEmailService emailService,
+    IControllersLinkService controllersLinkService,
+    IMapper mapper) : IRequestHandler<CreateUserCommand, ServiceResult<CreateUserResult>>
 {
-    private readonly UserManager<AppUser> userManager;
-    private readonly RoleManager<AppRole> roleManager;
-    private readonly DatabaseContext databaseContext;
-    private readonly AppSettings appSettings;
-    private readonly IEmailService emailService;
-    private readonly IControllersLinkService controllersLinkService;
-    private readonly IMapper mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CreateUserCommandHandler"/> class.
-    /// </summary>
-    /// <param name="userManager">Instance of <see cref="UserManager{T}"/>.</param>
-    /// <param name="roleManager">Instance of <see cref="RoleManager{T}"/>.</param>
-    /// <param name="databaseContext">Instance of <see cref="DatabaseContext"/>.</param>
-    /// <param name="appSettings">Instance of <see cref="AppSettings"/>.</param>
-    /// <param name="emailService">Instance of <see cref="IEmailService"/>.</param>
-    /// <param name="controllersLinkService">Instance of <see cref="IControllersLinkService"/>.</param>
-    /// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
-    public CreateUserCommandHandler(
-        UserManager<AppUser> userManager,
-        RoleManager<AppRole> roleManager,
-        DatabaseContext databaseContext,
-        AppSettings appSettings,
-        IEmailService emailService,
-        IControllersLinkService controllersLinkService,
-        IMapper mapper)
-    {
-        this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        this.roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-        this.appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-        this.emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
-        this.controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
-        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+    private readonly UserManager<AppUser> userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+    private readonly RoleManager<AppRole> roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+    private readonly AppSettings appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+    private readonly IEmailService emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+    private readonly IControllersLinkService controllersLinkService = controllersLinkService ?? throw new ArgumentNullException(nameof(controllersLinkService));
+    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc/>
     public async Task<ServiceResult<CreateUserResult>> Handle(

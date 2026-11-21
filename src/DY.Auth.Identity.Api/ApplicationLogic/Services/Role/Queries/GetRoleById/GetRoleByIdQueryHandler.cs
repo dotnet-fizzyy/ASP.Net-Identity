@@ -15,21 +15,12 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Queries.GetRoleByI
 /// <summary>
 /// Get role by id CQRS handler.
 /// </summary>
-public class GetRoleByIdQueryHandler : IRequestHandler<GetRoleByIdQuery, ServiceResult<GetRoleByIdResult>>
+/// <param name="databaseContext">Instance of <see cref="DatabaseContext"/>.</param>
+/// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
+public class GetRoleByIdQueryHandler(DatabaseContext databaseContext, IMapper mapper) : IRequestHandler<GetRoleByIdQuery, ServiceResult<GetRoleByIdResult>>
 {
-    private readonly DatabaseContext databaseContext;
-    private readonly IMapper mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GetRoleByIdQueryHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">Instance of <see cref="DatabaseContext"/>.</param>
-    /// <param name="mapper">Instance of <see cref="IMapper"/>.</param>
-    public GetRoleByIdQueryHandler(DatabaseContext databaseContext, IMapper mapper)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc />
     public async Task<ServiceResult<GetRoleByIdResult>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)

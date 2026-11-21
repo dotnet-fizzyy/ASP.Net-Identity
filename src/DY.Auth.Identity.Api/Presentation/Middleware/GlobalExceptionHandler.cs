@@ -17,20 +17,12 @@ namespace DY.Auth.Identity.Api.Presentation.Middleware;
 /// <summary>
 /// Application global exception handler.
 /// </summary>
-public class GlobalExceptionHandler : IExceptionHandler
+/// <param name="logger">The instance of <see cref="ILogger{T}"/>.</param>
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     private const string JsonContentType = "application/json";
 
-    private readonly ILogger<GlobalExceptionHandler> logger;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GlobalExceptionHandler"/> class.
-    /// </summary>
-    /// <param name="logger">The instance of <see cref="ILogger{T}"/>.</param>
-    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
-    {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+    private readonly ILogger<GlobalExceptionHandler> logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     /// <inheritdoc />
     public async ValueTask<bool> TryHandleAsync(

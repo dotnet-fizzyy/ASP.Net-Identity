@@ -15,18 +15,10 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.GrantRole
 /// <summary>
 /// Grant role to user CQRS handler.
 /// </summary>
-public class GrantRoleToUserCommandHandler : IRequestHandler<GrantRoleToUserCommand, ServiceResult>
+/// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
+public class GrantRoleToUserCommandHandler(DatabaseContext databaseContext) : IRequestHandler<GrantRoleToUserCommand, ServiceResult>
 {
-    private readonly DatabaseContext databaseContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GrantRoleToUserCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    public GrantRoleToUserCommandHandler(DatabaseContext databaseContext)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(GrantRoleToUserCommand request, CancellationToken cancellationToken)

@@ -18,21 +18,12 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.CreateRol
 /// <summary>
 /// Create role CQRS handler.
 /// </summary>
-public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, ServiceResult<CreateRoleResult>>
+/// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
+/// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
+public class CreateRoleCommandHandler(DatabaseContext databaseContext, IMapper mapper) : IRequestHandler<CreateRoleCommand, ServiceResult<CreateRoleResult>>
 {
-    private readonly DatabaseContext databaseContext;
-    private readonly IMapper mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CreateRoleCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    /// <param name="mapper">The instance of <see cref="IMapper"/>.</param>
-    public CreateRoleCommandHandler(DatabaseContext databaseContext, IMapper mapper)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+    private readonly IMapper mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
     /// <inheritdoc />.
     public async Task<ServiceResult<CreateRoleResult>> Handle(CreateRoleCommand command, CancellationToken cancellationToken)

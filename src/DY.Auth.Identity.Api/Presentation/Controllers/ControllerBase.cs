@@ -18,23 +18,15 @@ namespace DY.Auth.Identity.Api.Presentation.Controllers;
 /// <summary>
 /// Base controller with reusable logic.
 /// </summary>
+/// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
 [ApiController]
 [Route("api/[controller]")]
-public abstract class ControllerBase : AspControllerBase
+public abstract class ControllerBase(IMediator mediator) : AspControllerBase
 {
     /// <summary>
     /// The instance of <see cref="IMediator"/>.
     /// </summary>
-    protected readonly IMediator Mediator;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ControllerBase"/> class.
-    /// </summary>
-    /// <param name="mediator">The instance of <see cref="IMediator"/>.</param>
-    protected ControllerBase(IMediator mediator)
-    {
-        this.Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    }
+    protected readonly IMediator Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
     /// <summary>
     /// Generates an error response with a status based on the <see cref="ServiceResult"/>.

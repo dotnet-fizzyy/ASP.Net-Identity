@@ -15,18 +15,10 @@ namespace DY.Auth.Identity.Api.ApplicationLogic.Services.Role.Commands.RevokeRol
 /// <summary>
 /// Revoke role from user CQRS handler.
 /// </summary>
-public class RevokeRoleFromUserCommandHandler : IRequestHandler<RevokeRoleFromUserCommand, ServiceResult>
+/// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
+public class RevokeRoleFromUserCommandHandler(DatabaseContext databaseContext) : IRequestHandler<RevokeRoleFromUserCommand, ServiceResult>
 {
-    private readonly DatabaseContext databaseContext;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RevokeRoleFromUserCommandHandler"/> class.
-    /// </summary>
-    /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-    public RevokeRoleFromUserCommandHandler(DatabaseContext databaseContext)
-    {
-        this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
-    }
+    private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc />
     public async Task<ServiceResult> Handle(RevokeRoleFromUserCommand request, CancellationToken cancellationToken)
