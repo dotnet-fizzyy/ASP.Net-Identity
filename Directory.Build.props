@@ -12,4 +12,8 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
+    
+    <PropertyGroup>
+        <Features>$(Features);runtime-async=on</Features>
+    </PropertyGroup>
 </Project>
