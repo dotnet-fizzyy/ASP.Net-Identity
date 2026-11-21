@@ -2,7 +2,7 @@ using AutoMapper;
 
 using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.CreateRole;
 using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.GrantRoleToUser;
-using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.HardRemoveRoleById;
+using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.RemoveRoleById;
 using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.RevokeRoleFromUser;
 using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.SoftRemoveRoleById;
 using DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.UpdateRole;
@@ -203,12 +203,12 @@ public class RoleController(
     /// <response code="204">Role has been removed from DB.</response>
     /// <response code="404">Unable to find role.</response>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [HttpDelete("id/{id:guid}/hard-remove")]
+    [HttpDelete("id/{id:guid}/remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> RemoveRole(Guid id, CancellationToken cancellationToken)
     {
-        var command = new HardRemoveRoleByIdCommand(id);
+        var command = new RemoveRoleByIdCommand(id);
         var roleRemoveResult = await this.Mediator.Send(command, cancellationToken);
 
         if (roleRemoveResult.IsResultFailed)

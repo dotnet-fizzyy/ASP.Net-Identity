@@ -12,18 +12,18 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.HardRemoveRoleById;
+namespace DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.RemoveRoleById;
 
 /// <summary>
-/// Hard remove role by id CQRS handler.
+/// Remove role by id CQRS handler.
 /// </summary>
 /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-public class HardRemoveRoleByIdCommandHandler(DatabaseContext databaseContext) : IRequestHandler<HardRemoveRoleByIdCommand, ServiceResult>
+public class RemoveRoleByIdCommandHandler(DatabaseContext databaseContext) : IRequestHandler<RemoveRoleByIdCommand, ServiceResult>
 {
     private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc />
-    public async Task<ServiceResult> Handle(HardRemoveRoleByIdCommand command, CancellationToken cancellationToken)
+    public async Task<ServiceResult> Handle(RemoveRoleByIdCommand command, CancellationToken cancellationToken)
     {
         var isRoleExisting = await this.databaseContext.ExistsByIdAsync<AppRole>(command.Id, cancellationToken);
 

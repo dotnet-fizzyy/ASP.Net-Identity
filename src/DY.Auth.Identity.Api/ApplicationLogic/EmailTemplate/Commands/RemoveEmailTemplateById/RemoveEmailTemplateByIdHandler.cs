@@ -13,18 +13,18 @@ using System.Threading.Tasks;
 
 using EmailTemplateEntity = DY.Auth.Identity.Api.Core.Entities.EmailTemplate;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.EmailTemplate.Commands.HardRemoveEmailTemplateById;
+namespace DY.Auth.Identity.Api.ApplicationLogic.EmailTemplate.Commands.RemoveEmailTemplateById;
 
 /// <summary>
-/// Hard remove email template by ID CQRS handler.
+/// Remove email template by ID CQRS handler.
 /// </summary>
 /// <param name="databaseContext">The instance of <see cref="DatabaseContext"/>.</param>
-public class HardRemoveEmailTemplateByIdHandler(DatabaseContext databaseContext) : IRequestHandler<HardRemoveEmailTemplateByIdCommand, ServiceResult>
+public class RemoveEmailTemplateByIdHandler(DatabaseContext databaseContext) : IRequestHandler<RemoveEmailTemplateByIdCommand, ServiceResult>
 {
     private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc />
-    public async Task<ServiceResult> Handle(HardRemoveEmailTemplateByIdCommand command, CancellationToken cancellationToken)
+    public async Task<ServiceResult> Handle(RemoveEmailTemplateByIdCommand command, CancellationToken cancellationToken)
     {
         var isEmailTemplateExisting = await this.databaseContext.ExistsByIdAsync<EmailTemplateEntity>(command.Id, cancellationToken);
 

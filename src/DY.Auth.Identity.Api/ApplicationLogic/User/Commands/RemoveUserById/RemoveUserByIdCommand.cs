@@ -5,12 +5,12 @@ using MediatR;
 
 using System;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.User.Commands.HardRemoveUserById;
+namespace DY.Auth.Identity.Api.ApplicationLogic.User.Commands.RemoveUserById;
 
 /// <summary>
-/// Hard remove user by id CQRS command.
+/// Remove user by id CQRS command.
 /// </summary>
-public record HardRemoveUserByIdCommand : IBaseId, IRequest<ServiceResult>
+public record RemoveUserByIdCommand : IBaseId, IRequest<ServiceResult>
 {
     /// <summary>
     /// Gets user id.
@@ -18,10 +18,10 @@ public record HardRemoveUserByIdCommand : IBaseId, IRequest<ServiceResult>
     public Guid Id { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HardRemoveUserByIdCommand"/> class.
+    /// Initializes a new instance of the <see cref="RemoveUserByIdCommand"/> class.
     /// </summary>
     /// <param name="id">User id.</param>
-    public HardRemoveUserByIdCommand(Guid id)
+    public RemoveUserByIdCommand(Guid id)
     {
         this.Id = id;
     }

@@ -12,18 +12,18 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.User.Commands.HardRemoveUserById;
+namespace DY.Auth.Identity.Api.ApplicationLogic.User.Commands.RemoveUserById;
 
 /// <summary>
-/// Hard remove user by id CQRS command handler.
+/// Remove user by id CQRS command handler.
 /// </summary>
 /// <param name="databaseContext"><see cref="DatabaseContext"/>.</param>
-public class HardRemoveUserByIdCommandHandler(DatabaseContext databaseContext) : IRequestHandler<HardRemoveUserByIdCommand, ServiceResult>
+public class RemoveUserByIdCommandHandler(DatabaseContext databaseContext) : IRequestHandler<RemoveUserByIdCommand, ServiceResult>
 {
     private readonly DatabaseContext databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
 
     /// <inheritdoc/>
-    public async Task<ServiceResult> Handle(HardRemoveUserByIdCommand command, CancellationToken cancellationToken)
+    public async Task<ServiceResult> Handle(RemoveUserByIdCommand command, CancellationToken cancellationToken)
     {
         var isUserExisting = await this.databaseContext.ExistsByIdAsync<AppUser>(command.Id, cancellationToken);
 

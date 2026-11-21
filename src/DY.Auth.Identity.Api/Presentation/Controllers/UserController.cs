@@ -1,7 +1,7 @@
 using AutoMapper;
 
 using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.CreateUser;
-using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.HardRemoveUserById;
+using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.RemoveUserById;
 using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.SoftRemoveUserById;
 using DY.Auth.Identity.Api.ApplicationLogic.User.Commands.UpdateUser;
 using DY.Auth.Identity.Api.ApplicationLogic.User.Queries.GetUserById;
@@ -190,12 +190,12 @@ public class UserController(
     /// <response code="404">Unable to find user.</response>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [Authorize(Roles = UserRoleConstants.Admin)]
-    [HttpDelete("id/{id:guid}/hard-remove")]
+    [HttpDelete("id/{id:guid}/remove")]
     [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> HardRemoveUser(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> RemoveUser(Guid id, CancellationToken cancellationToken)
     {
-        var command = new HardRemoveUserByIdCommand(id);
+        var command = new RemoveUserByIdCommand(id);
         var userRemoveResult = await this.Mediator.Send(command, cancellationToken);
 
         if (userRemoveResult.IsResultFailed)

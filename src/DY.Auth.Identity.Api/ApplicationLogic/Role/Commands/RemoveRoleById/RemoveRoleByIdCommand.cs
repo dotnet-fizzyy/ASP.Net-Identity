@@ -5,12 +5,12 @@ using MediatR;
 
 using System;
 
-namespace DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.HardRemoveRoleById;
+namespace DY.Auth.Identity.Api.ApplicationLogic.Role.Commands.RemoveRoleById;
 
 /// <summary>
-/// Hard remove role by id command CQRS command.
+/// Remove role by id command CQRS command.
 /// </summary>
-public record HardRemoveRoleByIdCommand : IBaseId, IRequest<ServiceResult>
+public record RemoveRoleByIdCommand : IBaseId, IRequest<ServiceResult>
 {
     /// <summary>
     /// Gets role id.
@@ -18,10 +18,10 @@ public record HardRemoveRoleByIdCommand : IBaseId, IRequest<ServiceResult>
     public Guid Id { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HardRemoveRoleByIdCommand"/> class.
+    /// Initializes a new instance of the <see cref="RemoveRoleByIdCommand"/> class.
     /// </summary>
     /// <param name="id">Role id.</param>
-    public HardRemoveRoleByIdCommand(Guid id)
+    public RemoveRoleByIdCommand(Guid id)
     {
         this.Id = id;
     }
